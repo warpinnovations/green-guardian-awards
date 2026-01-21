@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Logo from "../../public/logos/Trophy.png";
-import Background from "../../public/HeroSectionBg.png";
+import Logo from "../../../public/logos/Trophy.png";
+import Background from "../../../public/HeroSectionBg.png";
 
 export default function HeroSection() {
   const scrollToId = (id: string) => {
