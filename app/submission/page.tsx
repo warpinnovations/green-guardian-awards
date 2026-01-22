@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CircleCheck } from "lucide-react";
 import DragDropUpload from "../components/DragDropUpload";
 import DropdownMenu, { DropdownOption } from "../components/Dropdown";
+import Header from "../components/Header";
 
 interface BidEntryProps {
    orgName: string;
@@ -27,13 +28,14 @@ export default function EntrySubmission({
    searchParams,
 }: {
    searchParams: Promise<{ nominee?: string }>;
-   }) {
+}) {
    const router = useRouter();
    const params = use(searchParams);
    const nominee = params.nominee === "msme" ? "MSME" : "LGU";
 
    const [acceptTerms, setAcceptTerms] = useState(false);
    const [hasConsented, setHasConsented] = useState(false);
+   const [hasCertified, setHasCertified] = useState(false);
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [submissionCompleted, setSubmissionCompleted] = useState(false);
 
@@ -150,21 +152,23 @@ export default function EntrySubmission({
       if (response.ok) {
          resetEntryFields();
          setHasConsented(false);
+         setHasCertified(false);
+         setAcceptTerms(false);
          setIsSubmitting(false);
          setSubmissionCompleted(true);
-         
       } else {
          alert(`Submission failed: ${data.error || "Unknown error"}`);
       }
    };
 
    const handleSuccess = () => {
-      setSubmissionCompleted(true)
-      router.push('/')
-   }
+      setSubmissionCompleted(true);
+      router.push("/");
+   };
 
    return (
       <>
+         <Header showCTA={false} />
          {!acceptTerms && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900/70">
                <div className="flex flex-col max-w-2xl bg-white rounded-2xl shadow-sm py-16 px-24 gap-2 min-w-1/2">
@@ -196,7 +200,7 @@ export default function EntrySubmission({
          )}
          <form
             onSubmit={handleSubmit}
-            className="flex flex-col items-center justify-center relative min-h-screen bg-[radial-gradient(circle_at_top_center,rgba(170,190,60,0.5),rgba(40,90,60,0.9)_30%),linear-gradient(105deg,#ffff,#0f3d1f,#1a7f3a)]"
+            className="flex flex-col mt-16 items-center justify-center relative min-h-screen bg-[radial-gradient(circle_at_top_center,rgba(170,190,60,0.5),rgba(40,90,60,0.9)_30%),linear-gradient(105deg,#ffff,#0f3d1f,#1a7f3a)]"
          >
             <div className="relative z-10 flex flex-col min-w-4xl min-h-screen p-8 my-10 bg-white/20 rounded-2xl gap-6">
                <p className="font-semibold text-2xl text-white -mb-2">
@@ -414,18 +418,38 @@ export default function EntrySubmission({
                      </div>
                   </div>
                </div>
-               <label className="flex items-start gap-3 rounded-2xl bg-amber-100/10 border-green-900/20 px-5 py-6 -mt-2">
-                  <input
-                     type="checkbox"
-                     className="mt-1 h-4 w-4 rounded"
-                     required
-                     checked={hasConsented}
-                     onChange={(e) => setHasConsented(e.target.checked)}
-                  />
-                  <div>
-                     <p className="text-base text-white uppercase italic">
-                        *I Consent to Use Information for Awards Documentation
-                     </p>
+               <label className="flex flex-col rounded-2xl bg-amber-100/10 border-green-900/20 px-5 py-6 -mt-2">
+                  <div className="flex items-start gap-3">
+                     <input
+                        type="checkbox"
+                        className="h-4 w-4 rounded"
+                        required
+                        checked={hasCertified}
+                        onChange={(e) => setHasCertified(e.target.checked)}
+                     />
+                     <div>
+                        <p className="text-sm font-semibold max-w-3xl text-white uppercase">
+                           *I certify that all information provided is accurate
+                           and that the Awards Secretariat may verify the
+                           submitted information through document review,
+                           interviews, or site inspection.
+                        </p>
+                     </div>
+                  </div>
+                  <div className="flex items-start gap-3 mt-2">
+                     <input
+                        type="checkbox"
+                        className="h-4 w-4 rounded"
+                        required
+                        checked={hasConsented}
+                        onChange={(e) => setHasConsented(e.target.checked)}
+                     />
+                     <div>
+                        <p className="text-sm text-white uppercase font-semibold">
+                           *I Consent to Use Information for Awards
+                           Documentation.
+                        </p>
+                     </div>
                   </div>
                </label>
                <div className="flex flex-col items-center justify-center mt-5">
