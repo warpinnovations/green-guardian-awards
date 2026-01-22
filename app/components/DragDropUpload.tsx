@@ -82,7 +82,7 @@ export default function DragDropUpload({
           }
         `}
          >
-            <p className="text-white/60 max-w-lg font-semibold whitespace-pre-line mx-auto">
+            <p className="text-white/60 max-w-lg lg:text-base text-md font-semibold whitespace-pre-line mx-auto">
                {value ? value.name : placeholder}
             </p>
 

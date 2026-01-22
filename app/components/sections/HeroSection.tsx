@@ -19,7 +19,7 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-6xl px-4 pt-24 pb-14 md:px-2 md:pt-24 md:pb-20">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 md:px-2 md:pt-24 md:pb-20">
         <div className="grid items-center gap-10 md:grid-cols-2">
           {/* Left text */}
           <div className="max-w-xl">

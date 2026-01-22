@@ -3,7 +3,11 @@
 import Image from "next/image";
 import ColoredLogo from "@/public/logos/asset-colored.png";
 
-export default function Header() {
+interface HeaderProps {
+  showCTA?: boolean;
+}
+
+export default function Header({ showCTA = true }: HeaderProps) {
   const scrollToId = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -19,7 +23,7 @@ export default function Header() {
       className="fixed top-0 left-0 right-0 z-50  bg-[#0A2724] backdrop-blur-md border-b-8 border-[#D4AF37]">
     
       <div className="mx-auto max-w-7xl">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between lg:mx-0 mx-5">
           <div className="flex items-center gap-3">
           <Image
             src={ColoredLogo}
@@ -32,10 +36,9 @@ export default function Header() {
               Green Guardian Awards</p>
           </div>
 
-        
-
           {/* CTA BUTTONS */}
-          <div className="flex items-center gap-3">
+          {showCTA && (
+            <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => scrollToId("primer")}
@@ -62,7 +65,8 @@ export default function Header() {
               Enter now!
             </button>
           </div>
-        </div>
+          )}
+        </div>     
       </div>
     </header>
   );
