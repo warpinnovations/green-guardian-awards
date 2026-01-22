@@ -1,5 +1,6 @@
 import Header from "./components/Header";
 import CategoriesSection from "./components/sections/Categories";
+import FooterSection from "./components/sections/FooterSection";
 import HeroSection from "./components/sections/HeroSection";
 import NominationSection from "./components/sections/NominationSection";
 import VideoSection from "./components/sections/Video";
@@ -13,6 +14,7 @@ export default function Home() {
       <VideoSection />     
       <CategoriesSection/>
       <NominationSection />
+      <FooterSection />
     </main>
   );
 }

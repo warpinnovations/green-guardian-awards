@@ -72,7 +72,7 @@ export default function DropdownMenu({
                ref={listRef}
                tabIndex={-1}
                className="
-            absolute z-50 mt-2 w-198 overflow-hidden rounded-lg
+            absolute z-50 mt-2 lg:w-198 w-[81%] overflow-hidden rounded-lg
             border border-white/15 bg-white/20 backdrop-blur shadow-lg
           "
             >

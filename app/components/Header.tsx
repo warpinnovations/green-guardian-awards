@@ -4,7 +4,11 @@ import Image from "next/image";
 import ColoredLogo from "@/public/logos/asset-colored.png";
 import Link from "next/link";
 
-export default function Header() {
+interface HeaderProps {
+  showCTA?: boolean;
+}
+
+export default function Header({ showCTA = true }: HeaderProps) {
   const scrollToId = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -35,10 +39,9 @@ export default function Header() {
             </div>
           </Link>
 
-        
-
           {/* CTA BUTTONS */}
-          <div className="flex items-center gap-3">
+          {showCTA && (
+            <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => scrollToId("primer")}
@@ -65,7 +68,8 @@ export default function Header() {
               Enter now!
             </button>
           </div>
-        </div>
+          )}
+        </div>     
       </div>
     </header>
   );

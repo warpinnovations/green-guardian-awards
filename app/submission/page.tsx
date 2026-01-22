@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CircleCheck } from "lucide-react";
 import DragDropUpload from "../components/DragDropUpload";
 import DropdownMenu, { DropdownOption } from "../components/Dropdown";
+import Header from "../components/Header";
 
 interface BidEntryProps {
    orgName: string;
@@ -27,13 +28,14 @@ export default function EntrySubmission({
    searchParams,
 }: {
    searchParams: Promise<{ nominee?: string }>;
-   }) {
+}) {
    const router = useRouter();
    const params = use(searchParams);
    const nominee = params.nominee === "msme" ? "MSME" : "LGU";
 
    const [acceptTerms, setAcceptTerms] = useState(false);
    const [hasConsented, setHasConsented] = useState(false);
+   const [hasCertified, setHasCertified] = useState(false);
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [submissionCompleted, setSubmissionCompleted] = useState(false);
 
@@ -150,34 +152,36 @@ export default function EntrySubmission({
       if (response.ok) {
          resetEntryFields();
          setHasConsented(false);
+         setHasCertified(false);
+         setAcceptTerms(false);
          setIsSubmitting(false);
          setSubmissionCompleted(true);
-         
       } else {
          alert(`Submission failed: ${data.error || "Unknown error"}`);
       }
    };
 
    const handleSuccess = () => {
-      setSubmissionCompleted(true)
-      router.push('/')
-   }
+      setSubmissionCompleted(true);
+      router.push("/");
+   };
 
    return (
       <>
+         <Header showCTA={false} />
          {!acceptTerms && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900/70">
-               <div className="flex flex-col max-w-2xl bg-white rounded-2xl shadow-sm py-16 px-24 gap-2 min-w-1/2">
-                  <h3 className="text-2xl font-bold text-green-900 text-center uppercase mb-4">
+               <div className="flex flex-col w-full lg:min-w-1/2 lg:max-w-2xl max-w-[90%] bg-white rounded-2xl shadow-sm py-16 lg:px-24 px-8 gap-2  min-w-[90%]">
+                  <h3 className="lg:text-2xl text-lg font-bold text-green-900 text-center uppercase mb-4">
                      Data Privacy Consent
                   </h3>
-                  <p className="text-green-800/70 mb-6 text-center font-sans text-[16px]">
+                  <p className="text-green-800/70 mb-6 text-center font-sans lg:text-[16px] text-sm">
                      By submitting this nomination, you authorize the Green
                      Guardian Awards to collect and process the information
                      provided solely for purposes related to the administration,
                      evaluation, and promotion of the Awards.
                   </p>
-                  <p className="text-green-800/70 mb-6 text-center font-sans text-md">
+                  <p className="text-green-800/70 mb-6 text-center font-sans lg:text-[16px] text-sm">
                      All data will be handled in accordance with the{" "}
                      <b>Data Privacy Act of 2012 (RA 10173)</b> and accessed
                      only by authorized personnel and partner agencies for
@@ -186,7 +190,7 @@ export default function EntrySubmission({
                   </p>
                   <button
                      onClick={() => setAcceptTerms(true)}
-                     className="font-semibold w-full inline-flex items-center justify-center rounded-xl bg-linear-to-r from-yellow-100/90 to-yellow-100/70 px-20 py-2.5 text-sm text-black/30 transition hover:from-yellow-600 hover:to-yellow-400 hover:text-white uppercase cursor-pointer"
+                     className="lg:text-sm text-xs font-semibold w-full inline-flex items-center justify-center rounded-xl bg-linear-to-r from-yellow-100/90 to-yellow-100/70 lg:px-20 px-6 py-2.5 text-black/30 transition hover:from-yellow-600 hover:to-yellow-400 hover:text-white uppercase cursor-pointer"
                   >
                      I consent to the collection and processing of my data for
                      Green Guardian Awards.
@@ -196,20 +200,20 @@ export default function EntrySubmission({
          )}
          <form
             onSubmit={handleSubmit}
-            className="flex flex-col items-center justify-center relative min-h-screen bg-[radial-gradient(circle_at_top_center,rgba(170,190,60,0.5),rgba(40,90,60,0.9)_30%),linear-gradient(105deg,#ffff,#0f3d1f,#1a7f3a)]"
+            className="flex flex-col mt-16 items-center justify-center relative min-h-screen bg-[radial-gradient(circle_at_top_center,rgba(170,190,60,0.5),rgba(40,90,60,0.9)_30%),linear-gradient(105deg,#ffff,#0f3d1f,#1a7f3a)]"
          >
-            <div className="relative z-10 flex flex-col min-w-4xl min-h-screen p-8 my-10 bg-white/20 rounded-2xl gap-6">
+            <div className="relative z-10 mx-5 flex flex-col lg:min-w-4xl min-w-sm min-h-screen lg:p-8 p-4 my-10 bg-white/20 rounded-2xl gap-6">
                <p className="font-semibold text-2xl text-white -mb-2">
                   {nominee} Entry Submission
                </p>
                {/* Nominee details */}
-               <div className="rounded-2xl border-green-900/20 bg-amber-100/10 border p-5">
-                  <p className="text-white/90 text-lg font-semibold mb-2">
+               <div className="rounded-2xl border-green-900/20 bg-amber-100/10 border lg:p-5 p-3">
+                  <p className="text-white/90 lg:text-lg font-semibold mb-2">
                      Nominator Information and Requirements
                   </p>
                   <div className="flex flex-col gap-2">
                      <div className="flex flex-col gap-2 mt-2">
-                        <label className="text-white/90 font-sans font-semibold">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            {nominee === "LGU"
                               ? "*Name of LGU"
                               : "*Name of Company/Corporation"}
@@ -225,7 +229,7 @@ export default function EntrySubmission({
                         />
                      </div>
                      <div className="flex flex-col gap-2">
-                        <label className="text-white/90 font-sans font-semibold">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Address
                         </label>
                         <input
@@ -239,9 +243,9 @@ export default function EntrySubmission({
                            autoComplete="street-address"
                         />
                      </div>
-                     <div className="grid grid-cols-2 gap-4 mt-2">
+                     <div className="lg:grid grid-cols-2 gap-4 mt-2">
                         <div className="flex flex-col gap-2">
-                           <label className="text-white/90 font-sans font-semibold">
+                           <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                               *Full Name
                            </label>
                            <input
@@ -256,7 +260,7 @@ export default function EntrySubmission({
                            />
                         </div>
                         <div className="flex flex-col gap-2">
-                           <label className="text-white/90 font-sans font-semibold">
+                           <label className="lg:text-base lg:mt-0 mt-2 text-md text-white/90 font-sans font-semibold">
                               *Position/Designation
                            </label>
                            <input
@@ -270,9 +274,9 @@ export default function EntrySubmission({
                            />
                         </div>
                      </div>
-                     <div className="grid grid-cols-2 gap-4 mt-2">
+                     <div className="lg:grid grid-cols-2 gap-4 mt-2">
                         <div className="flex flex-col gap-2">
-                           <label className="text-white/90 font-sans font-semibold">
+                           <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                               *Email Address
                            </label>
                            <input
@@ -287,7 +291,7 @@ export default function EntrySubmission({
                            />
                         </div>
                         <div className="flex flex-col gap-2">
-                           <label className="text-white/90 font-sans font-semibold">
+                           <label className="lg:text-base lg:mt-0 mt-2 text-md text-white/90 font-sans font-semibold">
                               *Contact Number
                            </label>
                            <input
@@ -316,11 +320,11 @@ export default function EntrySubmission({
                   </div>
                </div>
                <div className="rounded-2xl border-green-900/20 bg-amber-100/10 border p-5 flex flex-col gap-5 mt-4">
-                  <p className="text-white/90 text-lg font-semibold">
+                  <p className="text-white/90 lg:text-lg font-semibold">
                      Bid Submission
                   </p>
                   <div className="flex flex-col gap-2">
-                     <label className="text-white/90 font-sans font-semibold">
+                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                         *Award Category
                      </label>
                      <DropdownMenu
@@ -332,7 +336,7 @@ export default function EntrySubmission({
                         options={AWARD_CATEGORIES}
                      />
                      <div className="flex flex-col gap-2">
-                        <label className="text-white/90 font-sans font-semibold">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Title of the Project/Program Initiative
                         </label>
                         <input
@@ -347,7 +351,7 @@ export default function EntrySubmission({
                         />
                      </div>
                      <div className="flex flex-col gap-2 mt-1">
-                        <label className="text-white/90 font-sans font-semibold">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Brief Project Description{" "}
                            <span className="text-white/50 text-sm">
                               (200-300 words)
@@ -396,7 +400,7 @@ export default function EntrySubmission({
                         helperText="(PDF)"
                      />
                      <div className="flex flex-col gap-2 mt-2">
-                        <label className="text-white/90 font-sans font-semibold">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Video{" "}
                            <span className="text-white/50 text-sm ml-1">
                               (Google Drive or YouTube link)
@@ -414,18 +418,38 @@ export default function EntrySubmission({
                      </div>
                   </div>
                </div>
-               <label className="flex items-start gap-3 rounded-2xl bg-amber-100/10 border-green-900/20 px-5 py-6 -mt-2">
-                  <input
-                     type="checkbox"
-                     className="mt-1 h-4 w-4 rounded"
-                     required
-                     checked={hasConsented}
-                     onChange={(e) => setHasConsented(e.target.checked)}
-                  />
-                  <div>
-                     <p className="text-base text-white uppercase italic">
-                        *I Consent to Use Information for Awards Documentation
-                     </p>
+               <label className="flex flex-col rounded-2xl bg-amber-100/10 border-green-900/20 px-5 py-6 -mt-2">
+                  <div className="flex items-start gap-3">
+                     <input
+                        type="checkbox"
+                        className="h-4 w-4 rounded"
+                        required
+                        checked={hasCertified}
+                        onChange={(e) => setHasCertified(e.target.checked)}
+                     />
+                     <div>
+                        <p className="text-sm font-semibold max-w-3xl text-white uppercase">
+                           *I certify that all information provided is accurate
+                           and that the Awards Secretariat may verify the
+                           submitted information through document review,
+                           interviews, or site inspection.
+                        </p>
+                     </div>
+                  </div>
+                  <div className="flex items-start gap-3 mt-2">
+                     <input
+                        type="checkbox"
+                        className="h-4 w-4 rounded"
+                        required
+                        checked={hasConsented}
+                        onChange={(e) => setHasConsented(e.target.checked)}
+                     />
+                     <div>
+                        <p className="text-sm text-white uppercase font-semibold">
+                           *I Consent to Use Information for Awards
+                           Documentation.
+                        </p>
+                     </div>
                   </div>
                </label>
                <div className="flex flex-col items-center justify-center mt-5">
@@ -436,7 +460,7 @@ export default function EntrySubmission({
                   >
                      {isSubmitting ? "Submitting..." : "Submit Entry"}
                   </button>
-                  <p className="text-white/40 text-sm mt-2 italic">
+                  <p className="text-white/40 text-center px-8 text-sm mt-2 italic">
                      You will be receiving a confirmation email shortly after
                      submission.
                   </p>

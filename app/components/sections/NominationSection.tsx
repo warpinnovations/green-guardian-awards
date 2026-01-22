@@ -17,7 +17,7 @@ export default function NominationSection() {
       >
          <div className="flex flex-col min-h-screen max-w-4xl mx-auto items-center justify-center">
             <div className="text-center mb-10">
-               <h2 className="font-alviona text-5xl font-sans text-white py-8">
+               <h2 className="font-alviona lg:text-5xl text-4xl font-sans text-white lg:py-8 py-3">
                   Nominate a Green Guardian
                </h2>
             </div>

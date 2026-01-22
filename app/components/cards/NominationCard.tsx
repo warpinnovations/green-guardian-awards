@@ -15,7 +15,7 @@ export function NominationCard(props: NominationCardProps) {
       >
          <div className="py-8 px-8 flex flex-col h-full">
             <div className="flex justify-between items-center">
-               <h4 className="text-[28px] font-semibold text-white/90">
+               <h4 className="lg:text-[28px] text-xl font-semibold text-white/90">
                   {props.title}
                </h4>
                <Image
