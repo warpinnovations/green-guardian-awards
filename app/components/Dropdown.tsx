@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 export type DropdownOption = {
    value: string;
@@ -61,12 +62,8 @@ export default function DropdownMenu({
                {selected?.label ?? placeholder}
             </span>
 
-            <span
-               className={`text-white/60 transition-transform ${
-                  open ? "rotate-180" : ""
-               }`}
-            >
-               ▼
+            <span>
+               {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </span>
          </button>
 
