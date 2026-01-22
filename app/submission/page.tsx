@@ -83,9 +83,10 @@ export default function EntrySubmission({
       return (
          REQUIRED_FIELDS.some((field) => isEmpty(entry[field])) ||
          !hasConsented ||
+         !hasCertified ||
          !acceptTerms
       );
-   }, [entry, hasConsented, acceptTerms]);
+   }, [hasConsented, hasCertified, acceptTerms, entry]);
 
    const handleOnChange = (
       field: keyof BidEntryProps,
