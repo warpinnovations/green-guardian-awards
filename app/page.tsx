@@ -1,4 +1,5 @@
 import Header from "./components/Header";
+import FooterSection from "./components/sections/FooterSection";
 import HeroSection from "./components/sections/HeroSection";
 import NominationSection from "./components/sections/NominationSection";
 
@@ -9,6 +10,7 @@ export default function Home() {
       <div className="h-16" />
       <HeroSection />
       <NominationSection />
+      <FooterSection />
     </main>
   );
 }
