@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import ColoredLogo from "@/public/logos/asset-colored.png";
+import Link from "next/link";
 
 export default function Header() {
   const scrollToId = (id: string) => {
@@ -20,6 +21,7 @@ export default function Header() {
     
       <div className="mx-auto max-w-7xl">
         <div className="flex h-16 items-center justify-between">
+          <Link href={"/"}>
           <div className="flex items-center gap-3">
           <Image
             src={ColoredLogo}
@@ -30,7 +32,8 @@ export default function Header() {
           />
             <p className="font-alviona text-xl font-semibold text-[#eefaf5] leading-tight"            >
               Green Guardian Awards</p>
-          </div>
+            </div>
+          </Link>
 
         
 
