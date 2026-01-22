@@ -445,7 +445,7 @@ export default function EntrySubmission({
                         onChange={(e) => setHasConsented(e.target.checked)}
                      />
                      <div>
-                        <p className="lg:text-base text-sm text-white uppercase font-semibold">
+                        <p className="text-sm text-white uppercase font-semibold">
                            *I Consent to Use Information for Awards
                            Documentation.
                         </p>
