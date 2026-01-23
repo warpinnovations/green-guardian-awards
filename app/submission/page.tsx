@@ -154,7 +154,6 @@ export default function EntrySubmission({
          resetEntryFields();
          setHasConsented(false);
          setHasCertified(false);
-         setAcceptTerms(false);
          setIsSubmitting(false);
          setSubmissionCompleted(true);
       } else {
