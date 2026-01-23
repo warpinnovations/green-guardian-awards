@@ -28,8 +28,8 @@ export const mockBids: Bid[] = [
         image: '/logos/manila-lgu.png',
         keyVisual: '/key_visuals/cleanup.png',
         projectVideo: 'https://youtu.be/XsvT8nitV8Q?si=7fvtJelFo56QlZnR',
-        bidDocument: '/pdfs/cleanup_proposal.pdf',
-        supportingDocuments: '/pdfs/cleanup_supporting.pdf',
+        bidDocument: '/documents/1bid-sample.pdf',
+        supportingDocuments: '/documents/1bid-sample.pdf',
         description: 'A program to clean and restore Manila Bay coastal areas.'
     },
     {
@@ -42,8 +42,8 @@ export const mockBids: Bid[] = [
         image: '/images/mangrove.jpg',
         keyVisual: '/key_visuals/mangrove.png',
         projectVideo: 'https://drive.google.com/drive/folders/14y_ygWCIJpkChRCurmvkI87cbkJX5hfm?usp=drive_link',
-        bidDocument: '/pdfs/mangrove_proposal.pdf',
-        supportingDocuments: '/pdfs/mangrove_supporting.pdf',
+        bidDocument: '/documents/2bid-sample.pdf',
+        supportingDocuments: '/documents/1bid-sample.pdf',
         description: 'Planting mangroves to prevent coastal erosion and protect wildlife.'
     },
 ];
