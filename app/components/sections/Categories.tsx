@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Background from "../../../public/YellowGreenBG.png";
 import LGUAsset from "../../../public/lgu.png";
+import MSMEAsset from "../../../public/msme.png";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function CategoriesSection() {
@@ -32,64 +33,64 @@ export default function CategoriesSection() {
 
   const toggleDropdown = (id: string) => {
     setOpenDropdowns(prev => ({
-      ...prev,
       [id]: !prev[id]
     }));
   };
 
   return (
-    <section id="top" className="relative min-h-screen overflow-hidden">
+    <section id="top" className="flex relative min-h-screen overflow-hidden pt-16">
       <div className="absolute inset-0 z-0">
         <Image
           src={Background}
           alt=""
           fill
           priority
-          className="object-cover"
+         className="object-cover blur-xs scale-x-125"
         />
+      <div className="absolute inset-0 bg-black/3"/>
       </div>
-      <div className="relative z-10 mx-auto max-w-6xl px-2 pt-10">
-        <h1 className="font-alviona text-[55px] text-white text-center tracking-wide font-bold">
+      <div className="relative z-10 mx-auto lg:max-w-7xl lg:px-8 px-4 lg:py-10 py-5">
+        <h1 className="font-alviona lg:text-[55px] text-3xl text-white text-center tracking-wide">
           AWARD CATEGORIES
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-10">
           {/* LEFT column */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col lg:items-center lg:gap-4 gap-2">
             <div className="flex items-center gap-4">
               <Image
                 src={LGUAsset}
-                alt="MSMEs and Large Corporations"
+                alt="Local Government Units"
                 width={60}
                 height={20}
                 className="object-contain"
               />
-              <p className="font-roboto font-semibold text-lg md:text-xl text-white">
+              <p className="font-roboto font-semibold text-lg lg:text-2xl text-white">
                 Local Government Units
               </p>
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 my-8">
               {lguCategories.map((category) => (
-                <div key={`left-${category.id}`} className="space-y-2">
+                <div key={`left-${category.id}`} className="lg:space-y-4 space-y-2">
                   <button
                     onClick={() => toggleDropdown(`left-${category.id}`)}
-                    className="w-full rounded-full border border-white/70 px-6 py-3 text-left text-base text-white hover:bg-white/10 transition flex items-center justify-between gap-2"
+                    className="cursor-pointer w-full lg:rounded-3xl border rounded-2xl border-white/70 px-6 py-3 text-left text-base text-white bg-white/10 hover:bg-white/20 transition flex items-center justify-between gap-2"
                   >
-                    <span>{category.title}</span>
+                    <span className="font-semibold lg:text-base text-md">{category.title}</span>
                     {openDropdowns[`left-${category.id}`] ? (
-                      <ChevronUp className="w-5 h-5 flex-shrink-0" />
+                      <ChevronUp className="w-5 h-5 shrink-0" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 flex-shrink-0" />
+                      <ChevronDown className="w-5 h-5 shrink-0" />
                     )}
                   </button>
 
                   <div
                     className={`overflow-hidden transition-all duration-300 ease-in-out ${openDropdowns[`left-${category.id}`]
-                        ? 'max-h-96 opacity-100'
+                        ? 'lg:max-h-96 opacity-100'
                         : 'max-h-0 opacity-0'
                       }`}
                   >
-                    <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-                      <p className="text-gray-700 leading-relaxed text-sm">
+                    <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                      <p className="text-white leading-relaxed lg:text-md text-sm">
                         {category.description.split(" e.g. ").map((part, i) => (
                           <span key={i}>
                             {i === 1 && <><br /><br /><strong>e.g.</strong> </>}
@@ -106,42 +107,42 @@ export default function CategoriesSection() {
           </div>
 
           {/* RIGHT column */}
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center  gap-4">
+          <div className="flex flex-col lg:items-center lg:gap-4 gap-2">
+            <div className="flex items-center gap-4">
               <Image
-                src={LGUAsset}
+                src={MSMEAsset}
                 alt="MSMEs and Large Corporations"
                 width={60}
                 height={20}
                 className="object-contain"
               />
-              <p className="font-roboto font-semibold text-lg md:text-xl text-white">
+              <p className="font-roboto font-semibold text-lg lg:text-2xl text-white">
                 MSMEs and Large Corporations
               </p>
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 my-8">
               {msmeCategories.map((category) => (
-                <div key={`right-${category.id}`} className="space-y-2">
+                <div key={`right-${category.id}`} className="lg:space-y-4 space-y-2">
                   <button
                     onClick={() => toggleDropdown(`right-${category.id}`)}
-                    className="w-full rounded-full border border-white/70 px-6 py-3 text-left text-base text-white hover:bg-white/10 transition flex items-center justify-between gap-2"
+                    className="cursor-pointer w-full lg:rounded-3xl border rounded-2xl border-white/70 px-6 py-3 text-left text-base text-white bg-white/10 hover:bg-white/20 transition flex items-center justify-between gap-2"
                   >
-                    <span>{category.title}</span>
+                    <span className="font-semibold lg:text-base text-md">{category.title}</span>
                     {openDropdowns[`right-${category.id}`] ? (
-                      <ChevronUp className="w-5 h-5 flex-shrink-0" />
+                      <ChevronUp className="w-5 h-5 shrink-0" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 flex-shrink-0" />
+                      <ChevronDown className="w-5 h-5 shrink-0" />
                     )}
                   </button>
 
                   <div
                     className={`overflow-hidden transition-all duration-300 ease-in-out ${openDropdowns[`right-${category.id}`]
-                        ? 'max-h-96 opacity-100'
+                        ? 'lg:max-h-96 opacity-100'
                         : 'max-h-0 opacity-0'
                       }`}
                   >
-                    <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-                      <p className="text-gray-700 leading-relaxed text-sm">
+                    <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                      <p className="text-white leading-relaxed text-md">
                         {category.description.split(" e.g. ").map((part, i) => (
                           <span key={i}>
                             {i === 1 && <><br /><br /><strong>e.g.</strong> </>}
