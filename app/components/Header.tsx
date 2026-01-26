@@ -45,11 +45,12 @@ export default function Header({ showCTA = true }: HeaderProps) {
             <button
               type="button"
               onClick={() => scrollToId("primer")}
-              className="
+                className="
+                cursor-pointer
                 hidden sm:inline-flex
                 rounded-full border border-neutral-300
                 px-4 py-2 text-sm font-medium
-                hover:bg-neutral-50 transition text-white
+                hover:bg-neutral-50 hover:text-black/70  transition text-white
               "
             >
               Download Primer
@@ -59,10 +60,12 @@ export default function Header({ showCTA = true }: HeaderProps) {
               type="button"
               onClick={() => scrollToId("nominate")}
               className="
+                cursor-pointer
                 inline-flex rounded-full
                 bg-[#0A2724] text-white
                 px-4 py-2 text-sm font-semibold
-                hover:opacity-90 transition
+                transition-transform duration-300 ease-out
+                hover:scale-110
               "
             >
               Enter now!

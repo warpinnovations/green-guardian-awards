@@ -53,7 +53,7 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => scrollToId("nominate")}
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-[#0A2724] px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition shadow-md"
+                className="cursor-pointer inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-[#0A2724] px-6 py-3 text-sm font-semibold text-white hover:opacity-85 transition shadow-md"
               >
                 Join the Awards
               </button>
@@ -61,7 +61,7 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => scrollToId("primer")}
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-emerald-950 hover:bg-neutral-50 transition shadow-sm"
+                className="cursor-pointer inline-flex w-full sm:w-auto items-center justify-center rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-emerald-950 hover:bg-neutral-50 transition shadow-sm"
               >
                 Download Primer
               </button>
@@ -72,7 +72,7 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => scrollToId("contact")}
-                className="font-semibold text-emerald-900 hover:underline"
+                className="font-semibold text-emerald-900 hover:underline cursor-pointer"
               >
                 Contact the committee
               </button>
