@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Logo from "../../../public/logos/Trophy.png";
 import Background from "../../../public/HeroSectionBg.png";
-
+import DGLogo from "../../../public/logos/dg-logo-black.png";
 export default function HeroSection() {
   const scrollToId = (id: string) => {
     const el = document.getElementById(id);
@@ -18,11 +18,18 @@ export default function HeroSection() {
         <Image src={Background} alt="" fill priority className="object-cover" />
       </div>
 
-      {/* Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-4 md:px-2 md:pt-24 md:pb-20">
         <div className="grid items-center gap-10 md:grid-cols-2">
           {/* Left text */}
           <div className="max-w-xl">
+            <Image
+              src={DGLogo}
+              alt="Daily Guardian"
+              width={180}
+              height={100}
+              className="mb-2 mt-2 object-contain"
+            />
+
             <h1 className="font-alviona text-[42px] leading-[1.05] sm:text-5xl md:text-6xl font-semibold text-emerald-950">
               Green Guardian Awards
             </h1>
@@ -37,7 +44,7 @@ export default function HeroSection() {
             </p>
 
             <p className="mt-4 text-base leading-relaxed text-neutral-700">
-              The Green Guardian Awards honors <b>LGUs and businesses</b> advancing{" "}
+              The Green Guardian Awards honors <b>MSMEs and Large Corporations</b> advancing{" "}
               <b>environmental stewardship </b>- through initiatives that are measurable, community-driven,
               and built to last beyond headlines.
             </p>
@@ -46,7 +53,7 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => scrollToId("nominate")}
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-[#0A2724] px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition shadow-md"
+                className="cursor-pointer inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-[#0A2724] px-6 py-3 text-sm font-semibold text-white hover:opacity-85 transition shadow-md"
               >
                 Join the Awards
               </button>
@@ -54,7 +61,7 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => scrollToId("primer")}
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-emerald-950 hover:bg-neutral-50 transition shadow-sm"
+                className="cursor-pointer inline-flex w-full sm:w-auto items-center justify-center rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-emerald-950 hover:bg-neutral-50 transition shadow-sm"
               >
                 Download Primer
               </button>
@@ -65,7 +72,7 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => scrollToId("contact")}
-                className="font-semibold text-emerald-900 hover:underline"
+                className="font-semibold text-emerald-900 hover:underline cursor-pointer"
               >
                 Contact the committee
               </button>
