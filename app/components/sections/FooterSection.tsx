@@ -12,7 +12,7 @@ export default function FooterSection() {
 
            {/* Credentials */}
            <p className="text-xs text-white/50 leading-relaxed">
-              Powered by <span className="font-medium text-white/70">WARP</span>
+              Powered by <span className="font-medium text-white/70">Prometheus WARP</span>
               .
               <br />
               Organized and administered by{" "}
