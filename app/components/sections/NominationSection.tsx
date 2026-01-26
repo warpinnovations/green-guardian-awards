@@ -40,7 +40,7 @@ export default function NominationSection() {
          </div>
          <div className="flex flex-col min-h-screen lg:max-w-6xl lg:px-0 px-4 mx-auto items-center justify-center">
             <div className="text-center mb-10">
-               <h2 className="font-alviona lg:text-[55px] text-4xl font-sans text-white lg:py-8 py-3">
+               <h2 className="font-alviona lg:text-[55px] text-4xl font-sans text-white lg:py-8 pt-14">
                   Nominate a Green Guardian
                </h2>
             </div>
@@ -65,7 +65,7 @@ export default function NominationSection() {
 const categories = [
    {
       id: "lgu",
-      title: "Local Government Units (LGUs)",
+      title: "Local Government Units",
    },
    {
       id: "msme",
