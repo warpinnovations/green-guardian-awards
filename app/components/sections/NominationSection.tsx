@@ -38,23 +38,22 @@ export default function NominationSection() {
                className="object-cover opacity-10"
             />
          </div>
-         <div className="flex flex-col min-h-screen max-w-4xl mx-auto items-center justify-center">
+         <div className="flex flex-col min-h-screen lg:max-w-6xl lg:px-0 px-4 mx-auto items-center justify-center">
             <div className="text-center mb-10">
                <h2 className="font-alviona lg:text-5xl text-4xl font-sans text-white lg:py-8 py-3">
                   Nominate a Green Guardian
                </h2>
             </div>
             <div className="mb-16 z-10">
-               <div className="grid md:grid-cols-2 gap-12">
-                  {categories.map((award, index) => (
-                     <div key={index}>
-                        <NominationCard
-                           description={award.description}
-                           title={award.title}
-                           imgSrc={`/${award.key}.png`}
-                           onClick={() => handleOnCardClick(award.key)}
-                        ></NominationCard>
-                     </div>
+               <div className="flex lg:flex-row flex-col lg:gap-x-12 gap-y-8">
+                  {categories.map((award) => (
+                     <NominationCard
+                        key={award.id}
+                        title={award.title}
+                        type={award.id}
+                        imgSrc={`/${award.id}.png`}
+                        onClick={() => handleOnCardClick(award.id)}
+                     ></NominationCard>
                   ))}
                </div>
             </div>
@@ -65,15 +64,11 @@ export default function NominationSection() {
 
 const categories = [
    {
-      key: "msme",
-      title: "MSMEs / Large Corporations",
-      description:
-         "Eligible nominees include MSMEs (micro, small, and medium enterprises) and large corporations",
+      id: "lgu",
+      title: "Local Government Units (LGUs)",
    },
    {
-      key: "lgu",
-      title: "Local Government Units (LGUs)",
-      description:
-         "Eligible nominees include LGUs (municipalities, component cities, and highly urbanized cities)",
+      id: "msme",
+      title: "MSMEs & Large Corporations",
    },
 ];
