@@ -13,6 +13,7 @@ export default function NominationSection() {
 
    return (
       <section
+         id="nominate"
          className="min-h-screen relative overflow-hidden
     bg-[radial-gradient(circle_at_top_center,rgba(170,190,60,0.9),rgba(40,120,60,0.9)_30%,rgba(0,0,0,1)_85%),linear-gradient(135deg,#0a0a0a,#0f3d1f,#1a7f3a)]"
       >
