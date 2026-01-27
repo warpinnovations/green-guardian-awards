@@ -84,7 +84,7 @@ export default function HeroSection() {
                      className="flex flex-col sm:flex-row gap-6 animate-fade-in-up mt-10"
                      style={{ animationDelay: "1s" }}
                   >
-                     <button className="cursor-pointer px-10 py-3 rounded-2xl bg-linear-to-r from-[#f3d107]/90 to-amber-400/90 text-neutral-900/90 hover:shadow-xl hover:shadow-amber-400/50 transition-all duration-300 font-bold text-xl hover:-translate-y-1">
+                     <button onClick={() => scrollToId("nominate")} className="cursor-pointer px-10 py-3 rounded-2xl bg-linear-to-r from-[#f3d107]/90 to-amber-400/90 text-neutral-900/90 hover:shadow-xl hover:shadow-amber-400/50 transition-all duration-300 font-bold text-xl hover:-translate-y-1">
                         Join the Awards
                      </button>
                      <button className="cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-xl hover:-translate-y-1">
@@ -98,7 +98,7 @@ export default function HeroSection() {
                   >
                      Need help?{" "}
                      <a
-                        href="#"
+                        href="mailto:dailyguardianmarketing@gmail.com"
                         className="text-white/90 font-bold hover:underline"
                      >
                         Contact the committee
