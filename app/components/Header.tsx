@@ -23,7 +23,7 @@ export default function Header({ showCTA = true }: HeaderProps) {
     <header
       className="fixed top-0 left-0 right-0 z-50  bg-[#0A2724] backdrop-blur-md border-b-8 border-[#D4AF37]">
     
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl px-3">
         <div className="flex h-16 items-center justify-between">
           <Link href={"/"}>
           <div className="flex items-center gap-3">
