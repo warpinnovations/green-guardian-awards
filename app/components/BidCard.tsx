@@ -11,13 +11,13 @@ export default function BidCard({ bid }: { bid: Bid }) {
 
   const statusConfig = isPending
     ? {
-        style: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-        icon: Clock,
-      }
+      style: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+      icon: Clock,
+    }
     : {
-        style: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-        icon: CheckCircle,
-      };
+      style: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+      icon: CheckCircle,
+    };
 
   const StatusIcon = statusConfig.icon;
 
