@@ -251,8 +251,9 @@ export default function EntrySubmission({
          )}
          <form
             onSubmit={handleSubmit}
-            className="flex flex-col mt-16 items-center justify-center relative min-h-screen bg-[radial-gradient(circle_at_top_center,rgba(170,190,60,0.5),rgba(40,90,60,0.9)_30%),linear-gradient(105deg,#ffff,#0f3d1f,#1a7f3a)]"
+            className="flex flex-col mt-16 items-center justify-center relative min-h-screen"
          >
+            <div className="fixed inset-0 bg-gradient-radial " />
             <div className="relative z-10 mx-5 flex flex-col lg:min-w-4xl min-w-sm min-h-screen lg:p-8 p-4 my-10 bg-white/20 rounded-2xl gap-6">
                <p className="font-semibold text-2xl text-white -mb-2">
                   {nominee} Entry Submission
@@ -705,6 +706,74 @@ export default function EntrySubmission({
                </div>
             </div>
          )}
+         <style jsx>{`
+            @keyframes pulse-slow {
+               0%,
+               100% {
+                  transform: scale(1);
+                  opacity: 0.5;
+               }
+               50% {
+                  transform: scale(1.2);
+                  opacity: 0.8;
+               }
+            }
+
+            @keyframes fade-in-up {
+               from {
+                  opacity: 0;
+                  transform: translateY(40px);
+               }
+               to {
+                  opacity: 1;
+                  transform: translateY(0);
+               }
+            }
+
+            @keyframes fade-in-down {
+               from {
+                  opacity: 0;
+                  transform: translateY(-20px);
+               }
+               to {
+                  opacity: 1;
+                  transform: translateY(0);
+               }
+            }
+
+            @keyframes fade-in {
+               from {
+                  opacity: 0;
+               }
+               to {
+                  opacity: 1;
+               }
+            }
+
+            .animate-pulse-slow {
+               animation: pulse-slow 3s ease-in-out infinite;
+            }
+
+            .animate-fade-in-up {
+               animation: fade-in-up 0.8s ease-out backwards;
+            }
+
+            .animate-fade-in-down {
+               animation: fade-in-down 0.6s ease-out;
+            }
+
+            .animate-fade-in {
+               animation: fade-in 1s ease-out backwards;
+            }
+
+            .bg-gradient-radial {
+               background: radial-gradient(
+                  ellipse at bottom left,
+                  #8fc73f 0%,
+                  #1f5238 60%
+               );
+            }
+         `}</style>
       </>
    );
 }
