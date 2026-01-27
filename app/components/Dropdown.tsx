@@ -63,7 +63,7 @@ export default function DropdownMenu({
             </span>
 
             <span>
-               {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+               {open ? <ChevronUp color="white" size={16} /> : <ChevronDown color="white" size={16} />}
             </span>
          </button>
 

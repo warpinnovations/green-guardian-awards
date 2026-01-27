@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import ColoredLogo from "@/public/logos/asset-colored.png";
+import DGLogo from "@/public/logos/dg-logo-black.png";
+
 import Link from "next/link";
 
 interface HeaderProps {
@@ -20,46 +22,54 @@ export default function Header({ showCTA = true }: HeaderProps) {
   };
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50  bg-[#0A2724] backdrop-blur-md border-b-8 border-[#D4AF37]">
-    
-      <div className="mx-auto max-w-7xl px-3">
-        <div className="flex h-16 items-center justify-between">
-          <Link href={"/"}>
-          <div className="flex items-center gap-3">
-          <Image
-            src={ColoredLogo}
-            alt="Green Guardian Awards"
-            className="h-10 w-auto object-contain"
-            height={40}
-            priority
-          />
-            <p className="font-alviona text-xl font-semibold text-[#eefaf5] leading-tight"            >
-              Green Guardian Awards</p>
-            </div>
-          </Link>
+     <header className="fixed top-0 left-0 right-0 z-50  bg-[#0A2724] backdrop-blur-md border-b-8 border-[#D4AF37]">
+        <div className="mx-auto max-w-7xl px-3">
+           <div className="flex h-20 items-center justify-between">
+              <Link href={"/"} className="cursor-pointer">
+                 <Image
+                    src={DGLogo}
+                    alt="Daily Guardian"
+                    width={180}
+                    height={100}
+                    className="mb-2 mt-2 object-contain lg:w-56 w-48 invert"
+                 />
+              </Link>
+              <Link href={"/"}>
+                 <div className="flex items-center gap-3">
+                    <Image
+                       src={ColoredLogo}
+                       alt="Green Guardian Awards"
+                       className="h-10 w-auto object-contain"
+                       height={40}
+                       priority
+                    />
+                    <p className="font-alviona text-xl font-semibold text-[#eefaf5] leading-tight">
+                       Green Guardian Awards
+                    </p>
+                 </div>
+              </Link>
 
-          {/* CTA BUTTONS */}
-          {showCTA && (
-            <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => scrollToId("primer")}
-                className="
+              {/* CTA BUTTONS */}
+              {showCTA && (
+                 <div className="flex items-center gap-3">
+                    <button
+                       type="button"
+                       onClick={() => scrollToId("primer")}
+                       className="
                 cursor-pointer
                 hidden sm:inline-flex
                 rounded-full border border-neutral-300
                 px-4 py-2 text-sm font-medium
                 hover:bg-neutral-50 hover:text-black/70  transition text-white
               "
-            >
-              Download Primer
-            </button>
+                    >
+                       Download Primer
+                    </button>
 
-            <button
-              type="button"
-              onClick={() => scrollToId("nominate")}
-              className="
+                    <button
+                       type="button"
+                       onClick={() => scrollToId("nominate")}
+                       className="
                 cursor-pointer
                 inline-flex rounded-full
                 bg-[#0A2724] text-white
@@ -67,13 +77,13 @@ export default function Header({ showCTA = true }: HeaderProps) {
                 transition-transform duration-300 ease-out
                 hover:scale-110
               "
-            >
-              Enter now!
-            </button>
-          </div>
-          )}
-        </div>     
-      </div>
-    </header>
+                    >
+                       Enter now!
+                    </button>
+                 </div>
+              )}
+           </div>
+        </div>
+     </header>
   );
 }
