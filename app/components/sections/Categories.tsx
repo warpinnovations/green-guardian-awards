@@ -107,7 +107,7 @@ export default function CategoriesSection() {
           </div>
 
           {/* RIGHT column */}
-          <div className="flex flex-col lg:items-center lg:gap-4 gap-2">
+          <div className="flex flex-col lg:items-center lg:mt-0 -mt-8 lg:gap-4 gap-2">
             <div className="flex items-center gap-4">
               <Image
                 src={MSMEAsset}
