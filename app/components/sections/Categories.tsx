@@ -50,16 +50,16 @@ export default function CategoriesSection() {
            </h1>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-10">
               {/* LEFT column */}
-              <div className="flex flex-col lg:items-center lg:gap-4 gap-2">
+              <div className="flex flex-col items-center lg:gap-4 gap-2">
                  <div className="flex items-center gap-4">
                     <Image
                        src={LGUAsset}
                        alt="Local Government Units"
                        width={60}
                        height={20}
-                       className="object-contain"
+                       className="object-contain lg:w-16 w-12"
                     />
-                    <p className="font-roboto font-semibold text-lg lg:text-2xl text-white">
+                    <p className="font-roboto font-semibold text-xl lg:text-2xl text-white">
                        Local Government Units
                     </p>
                  </div>
@@ -75,13 +75,14 @@ export default function CategoriesSection() {
                              }
                              className="cursor-pointer w-full lg:rounded-3xl border rounded-2xl border-white/70 px-6 py-3 text-left text-base text-white bg-white/10 hover:bg-white/20 transition flex items-center justify-between gap-2"
                           >
-                             <span className="flex flex-row gap-3 font-semibold lg:text-base text-md">
+                             <span className="flex flex-row lg:items-start items-center gap-3 font-semibold lg:text-base text-md">
                                 <span>
                                    <Image
                                       alt="green-guardian-logo"
                                       src={"/logos/asset-white.png"}
                                       width={12}
                                       height={20}
+                                      className="lg:w-3 w-5 h-5"
                                    />
                                 </span>
                                 {category.title}
@@ -125,16 +126,16 @@ export default function CategoriesSection() {
               </div>
 
               {/* RIGHT column */}
-              <div className="flex flex-col lg:items-center lg:mt-0 -mt-8 lg:gap-4 gap-2">
+              <div className="flex flex-col items-center lg:mt-0 -mt-12 lg:gap-4 gap-2">
                  <div className="flex items-center gap-4">
                     <Image
                        src={MSMEAsset}
                        alt="MSMEs and Large Corporations"
                        width={60}
                        height={20}
-                       className="object-contain"
+                       className="object-contain lg:w-16 w-12"
                     />
-                    <p className="font-roboto font-semibold text-lg lg:text-2xl text-white">
+                    <p className="font-roboto font-semibold text-xl lg:text-2xl text-white">
                        MSMEs and Large Corporations
                     </p>
                  </div>
@@ -150,13 +151,14 @@ export default function CategoriesSection() {
                              }
                              className="cursor-pointer w-full lg:rounded-3xl border rounded-2xl border-white/70 px-6 py-3 text-left text-base text-white bg-white/10 hover:bg-white/20 transition flex items-center justify-between gap-2"
                           >
-                             <span className="flex flex-row gap-3 font-semibold lg:text-base text-md">
+                             <span className="flex flex-row lg:items-start items-center gap-3 font-semibold lg:text-base text-md">
                                 <span>
                                    <Image
                                       alt="green-guardian-logo"
                                       src={"/logos/asset-white.png"}
                                       width={12}
                                       height={20}
+                                      className="lg:w-3 w-5 h-5"
                                    />
                                 </span>
                                 {category.title}

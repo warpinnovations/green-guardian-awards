@@ -15,47 +15,50 @@ export default function HeroSection() {
          <div className="fixed inset-0 bg-gradient-radial " />
          {/* Navigation */}
          <nav className="relative z-50 px-6 lg:px-20 py-6">
-            <div className="max-w-400 mx-auto flex justify-between items-center">
+            <div className="max-w-400 mx-auto flex lg:justify-between justify-center items-center">
                <div className="flex items-center gap-4">
                   <Image
                      src={DGLogo}
                      alt="Daily Guardian"
                      width={250}
                      height={150}
-                     className="mb-2 mt-2 object-contain lg:w-62.5 w-58 invert"
+                     className="mb-2 mt-2 object-contain lg:w-62.5 w-48 invert"
                   />
                </div>
-               <div className="flex gap-4">
-                  <button className="px-8 py-3 rounded-xl border-2 border-[#f3d107]/90 text-[#f3d107]/90 hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-[#8FC73F]/30 cursor-pointer">
+               <div className="lg:flex hidden gap-4">
+                  <button className=" px-8 py-3 rounded-xl border-2 border-[#f3d107]/90 text-[#f3d107]/90 hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-[#8FC73F]/30 cursor-pointer">
                      Download Primer
                   </button>
-                  <button onClick={() => scrollToId("nominate")} className="text-neutral-900/90 px-8 py-3 rounded-xl bg-linear-to-r from-[#8FC73F] to-[#b5d443] hover:shadow-xl hover:shadow-[#b5d443]/50 transition-all duration-300 font-bold hover:-translate-y-1 cursor-pointer">
+                  <button
+                     onClick={() => scrollToId("nominate")}
+                     className="text-neutral-900/90 lg:px-8 px-3 py-3 rounded-xl bg-linear-to-r from-[#8FC73F] to-[#b5d443] lg:text-base text-sm hover:shadow-xl hover:shadow-[#b5d443]/50 transition-all duration-300 font-bold hover:-translate-y-1 cursor-pointer"
+                  >
                      Enter Now!
                   </button>
                </div>
             </div>
          </nav>
          {/* Hero Section */}
-         <div className="relative z-10 max-w-400 mx-auto px-6 lg:px-20">
-            <div className="grid lg:grid-cols-[1.5fr_1fr] gap-16 items-start">
-               <div className="space-y-4">
-                  <h1 className="text-3xl lg:text-[60px] font-black leading-none mb-5 tracking-tighter animate-fade-in-up">
-                     <span className="font-alviona block bg-white/90 bg-clip-text text-transparent">
+         <div className="relative max-w-400 mx-auto px-5 lg:px-20">
+            <div className="grid lg:grid-cols-[1.5fr_1fr] lg:gap-16 items-start">
+               <div className="lg:space-y-4 space-y-6">
+                  <h1 className="text-[48px] lg:text-[60px] font-black leading-none lg:mb-5 tracking-tighter animate-fade-in-up">
+                     <span className="font-alviona block bg-white/90 bg-clip-text text-transparent text-center lg:text-left">
                         GREEN GUARDIAN
                      </span>
-                     <span className="font-alviona block bg-linear-to-r from-[#f3d107]/90 to-[#f3d107]/90 bg-clip-text text-transparent">
+                     <span className="font-alviona block bg-linear-to-r from-[#f3d107]/90 to-[#f3d107]/90 bg-clip-text text-transparent text-center lg:text-left">
                         AWARDS
                      </span>
                   </h1>
                   <h2
-                     className="text-2xl font-semibold text-white animate-fade-in-up"
+                     className="lg:text-2xl text-[20px] font-semibold text-white animate-fade-in-up text-center lg:text-left"
                      style={{ animationDelay: "0.2s" }}
                   >
                      Celebrating Sustainability and Ecological Innovation in
                      Iloilo
                   </h2>
                   <p
-                     className="text-lg text-white leading-relaxed animate-fade-in-up mt-8 mb-5"
+                     className="lg:text-lg text-[16px] text-white leading-relaxed animate-fade-in-up mt-8 mb-5 text-center lg:text-left"
                      style={{ animationDelay: "0.4s" }}
                   >
                      For 25 years, Daily Guardian has told the stories that
@@ -66,7 +69,7 @@ export default function HeroSection() {
                      className="animate-fade-in-up"
                      style={{ animationDelay: "0.8s" }}
                   >
-                     <p className="text-lg leading-relaxed text-white/90">
+                     <p className="lg:text-lg text-[16px] leading-relaxed text-white/90 text-center lg:text-left">
                         The Green Guardian Awards honors{" "}
                         <span className="text-[#f3d107] font-bold">
                            local government units, MSMEs, and large corporations
@@ -84,7 +87,10 @@ export default function HeroSection() {
                      className="flex flex-col sm:flex-row gap-6 animate-fade-in-up mt-10"
                      style={{ animationDelay: "1s" }}
                   >
-                     <button onClick={() => scrollToId("nominate")} className="cursor-pointer px-10 py-3 rounded-2xl bg-linear-to-r from-[#f3d107]/90 to-amber-400/90 text-neutral-900/90 hover:shadow-xl hover:shadow-amber-400/50 transition-all duration-300 font-bold text-xl hover:-translate-y-1">
+                     <button
+                        onClick={() => scrollToId("nominate")}
+                        className="cursor-pointer px-10 py-3 rounded-2xl bg-linear-to-r from-[#f3d107]/90 to-amber-400/90 text-neutral-900/90 hover:shadow-xl hover:shadow-amber-400/50 transition-all duration-300 font-bold text-xl hover:-translate-y-1"
+                     >
                         Join the Awards
                      </button>
                      <button className="cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-xl hover:-translate-y-1">
@@ -93,7 +99,7 @@ export default function HeroSection() {
                   </div>
 
                   <p
-                     className="text-white/90 animate-fade-in-up"
+                     className="text-white/90 animate-fade-in-up text-center lg:text-left"
                      style={{ animationDelay: "1.2s" }}
                   >
                      Need help?{" "}
