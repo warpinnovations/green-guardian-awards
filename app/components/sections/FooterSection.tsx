@@ -2,7 +2,7 @@
 
 export default function FooterSection() {
   return (
-     <footer className="bg-[#010a01] text-white py-6">
+     <footer className="bg-[#010a01] text-white py-6 absolute bottom-0 w-full">
         <div className="mx-auto max-w-7xl px-4 text-center space-y-3">
            {/* Legal */}
            <p className="text-sm text-white/70">

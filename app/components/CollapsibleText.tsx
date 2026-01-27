@@ -17,7 +17,7 @@ export default function CollapsibleText({
 
    return (
       <div
-         className={`cursor-pointer ${open ? "border-white/2 bg-white/10 cursor-pointer border-t border-b" : "border-t-[0.5px] border-b-[0.5px] border-white/2 bg-white/2"} ${className}`}
+         className={`cursor-pointer ${open ? "border-white/2 bg-white/20 cursor-pointer border-t border-b" : "border-t-[0.5px] border-b-[0.5px] border-white/2 bg-white/7"} ${className}`}
       >
          <button
             type="button"

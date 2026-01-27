@@ -12,7 +12,7 @@ interface NominationCardProps {
 export function NominationCard(props: NominationCardProps) {
    return (
       <div
-         className={`flex-1 h-full bg-white/5 rounded-2xl shadow-xs transition hover:bg-yellow-100/10 ${props.className}`}
+         className={`flex-1 h-full bg-white/10 rounded-2xl shadow-xs transition hover:bg-yellow-100/10 ${props.className}`}
       >
          <div className="lg:py-8 lg:px-8 p-4.5 flex flex-col h-full">
             <div className="flex justify-between items-center gap-6">
