@@ -129,37 +129,6 @@ export default function HeroSection() {
          </div>
 
          <style jsx>{`
-            @keyframes grid-move {
-               0% {
-                  transform: translate(0, 0);
-               }
-               100% {
-                  transform: translate(50px, 50px);
-               }
-            }
-
-            @keyframes float-trophy {
-               0%,
-               100% {
-                  transform: translateY(0);
-               }
-               50% {
-                  transform: translateY(-15px);
-               }
-            }
-
-            @keyframes float-particle {
-               0%,
-               100% {
-                  transform: translateY(0);
-                  opacity: 0;
-               }
-               50% {
-                  transform: translateY(-50px);
-                  opacity: 1;
-               }
-            }
-
             @keyframes pulse-slow {
                0%,
                100% {
@@ -202,19 +171,7 @@ export default function HeroSection() {
                   opacity: 1;
                }
             }
-
-            .animate-grid-move {
-               animation: grid-move 20s linear infinite;
-            }
-
-            .animate-float-trophy {
-               animation: float-trophy 4s ease-in-out infinite;
-            }
-
-            .animate-float-particle {
-               animation: float-particle 8s ease-in-out infinite;
-            }
-
+               
             .animate-pulse-slow {
                animation: pulse-slow 3s ease-in-out infinite;
             }
