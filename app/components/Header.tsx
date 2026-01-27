@@ -25,13 +25,15 @@ export default function Header({ showCTA = true }: HeaderProps) {
      <header className="fixed top-0 left-0 right-0 z-50  bg-[#0A2724] backdrop-blur-md border-b-8 border-[#D4AF37]">
         <div className="mx-auto max-w-7xl px-3">
            <div className="flex h-20 items-center justify-between">
-              <Image
-                 src={DGLogo}
-                 alt="Daily Guardian"
-                 width={180}
-                 height={100}
-                 className="mb-2 mt-2 object-contain lg:w-56 w-48 invert"
-              />
+              <Link href={"/"} className="cursor-pointer">
+                 <Image
+                    src={DGLogo}
+                    alt="Daily Guardian"
+                    width={180}
+                    height={100}
+                    className="mb-2 mt-2 object-contain lg:w-56 w-48 invert"
+                 />
+              </Link>
               <Link href={"/"}>
                  <div className="flex items-center gap-3">
                     <Image
