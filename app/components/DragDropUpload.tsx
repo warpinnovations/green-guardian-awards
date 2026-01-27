@@ -1,5 +1,7 @@
-import { useMemo, useRef, useState } from "react";
+import { JSX, useMemo, useRef, useState } from "react";
 import { fileMatchesAccept, normalizeAccept } from "../utils/file-handler";
+import { FileUp } from "lucide-react";
+
 
 interface DragDropUploadProps {
    name: string;
@@ -7,6 +9,7 @@ interface DragDropUploadProps {
    value: File[] | null;
    onChange: (files: File[]) => void;
    placeholder: string;
+   uploadIcon?: JSX.Element;
    helperText?: string;
    className?: string;
    multiple?: boolean;
@@ -19,6 +22,7 @@ export default function DragDropUpload({
    onChange,
    placeholder,
    helperText,
+   uploadIcon = <FileUp size={34} className="text-white/50" />,
    className = "",
    multiple = false,
 }: DragDropUploadProps) {
@@ -105,7 +109,7 @@ export default function DragDropUpload({
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className={`
+        className={`flex flex-col items-center gap-2
           cursor-pointer rounded-xl border-2 border-dashed py-16 px-6 text-center transition
           ${
             isDragging
@@ -114,9 +118,9 @@ export default function DragDropUpload({
           }
         `}
       >
-        <p className="mx-auto max-w-lg whitespace-pre-line text-md font-semibold text-white/60 lg:text-base">
+        {value?.length && value?.length > 0 ?   <p className="mx-auto max-w-lg whitespace-pre-line text-md font-semibold text-white/60 lg:text-base">
           {displayText}
-        </p>
+        </p> : uploadIcon}
 
         {helperText && <p className="mt-1 text-sm text-white/40">{helperText}</p>}
       </div>

@@ -2,7 +2,7 @@
 
 import { useState, use, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, FileDown, ImageUp } from "lucide-react";
 import DragDropUpload from "../components/DragDropUpload";
 import DropdownMenu, { DropdownOption } from "../components/Dropdown";
 import Header from "../components/Header";
@@ -154,7 +154,7 @@ export default function EntrySubmission({
          formData.append("email", entry.email);
          formData.append("contact_number", entry.contactNumber);
          if (entry.website) formData.append("website", entry.website);
-         if (nominee === 'MSME' && entry.companyDescription)
+         if (nominee === "MSME" && entry.companyDescription)
             formData.append("company_description", entry.companyDescription);
          if (entry.altContactPerson)
             formData.append("alt_contact_person", entry.altContactPerson);
@@ -444,6 +444,9 @@ export default function EntrySubmission({
                            />
                         </div>
                      </div>
+                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
+                        *Upload DILG Environmental Audit Certificate
+                     </label>
                      <DragDropUpload
                         name="DILGDocument"
                         value={entry?.DILGDocument}
@@ -454,6 +457,9 @@ export default function EntrySubmission({
                         helperText="(PDF, JPG, or PNG)"
                         className="mt-6"
                      />
+                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
+                        *Upload Business Permit
+                     </label>
                      <DragDropUpload
                         name="businessPermitDocument"
                         value={entry?.businessPermitDocument}
@@ -464,6 +470,9 @@ export default function EntrySubmission({
                         helperText="(PDF, JPG, or PNG)"
                         className="mt-6"
                      />
+                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
+                        *Upload SEC/DTI Permit
+                     </label>
                      <DragDropUpload
                         name="DTISecDocument"
                         value={entry?.DTISecDocument}
@@ -532,15 +541,35 @@ export default function EntrySubmission({
                            required
                         ></textarea>
                      </div>
+                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-2">
+                        *Upload Key Visual
+                     </label>
                      <DragDropUpload
                         name="keyVisual"
                         value={entry?.keyVisual}
+                        uploadIcon={
+                           <ImageUp size={34} className="text-white/50" />
+                        }
                         accept=".jpg,.png"
                         onChange={(file) => handleOnChange("keyVisual", file)}
                         placeholder={`Upload Key Visual`}
                         helperText="(recommended size: 1920 × 1080 px, JPG, or PNG)"
                         className="mt-4"
                      />
+                     <div className="flex justify-between items-center mt-2 -mb-2">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
+                           *Upload Bid Documentation
+                        </label>
+                        <span className="flex items-center">
+                           <button className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 px-3 cursor-pointer text-white/90 text-sm font-semibold">
+                              <FileDown
+                                 size={18}
+                                 className="inline-block text-white/70"
+                              />
+                              Download Guide
+                           </button>
+                        </span>
+                     </div>
                      <DragDropUpload
                         name="bidDocument"
                         value={entry?.bidDocument}
@@ -548,8 +577,20 @@ export default function EntrySubmission({
                         onChange={(file) => handleOnChange("bidDocument", file)}
                         placeholder={`Upload Bid Document`}
                         helperText="(PDF)"
-                        className="my-4"
+                        className="mt-4"
                      />
+                     <div className="flex justify-between items-center mt-2 -mb-2">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
+                           *Upload Project Documentation
+                        </label>
+                        <button className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 px-3 cursor-pointer text-white/90 text-sm font-semibold">
+                           <FileDown
+                              size={18}
+                              className="inline-block text-white/70"
+                           />
+                           Download Guide
+                        </button>
+                     </div>
                      <DragDropUpload
                         name="projectDocument"
                         value={entry?.projectDocument}
@@ -559,8 +600,11 @@ export default function EntrySubmission({
                         }
                         placeholder={`Upload Project Documentation`}
                         helperText="(PDF)"
-                        className="my-4"
+                        className="mt-4"
                      />
+                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold my-2">
+                        *Upload Supporting Document(s)
+                     </label>
                      <DragDropUpload
                         name="supportingDocument"
                         value={entry?.supportingDocument}
