@@ -31,7 +31,7 @@ export default function Header({ showCTA = true }: HeaderProps) {
                     alt="Daily Guardian"
                     width={180}
                     height={100}
-                    className="mb-2 mt-2 object-contain lg:w-56 w-48 invert"
+                    className="mb-2 mt-2 object-contain lg:w-56 w-38 invert"
                  />
               </Link>
               <Link href={"/"}>
@@ -39,11 +39,11 @@ export default function Header({ showCTA = true }: HeaderProps) {
                     <Image
                        src={ColoredLogo}
                        alt="Green Guardian Awards"
-                       className="h-10 w-auto object-contain"
+                       className="lg:h-10 h-8 w-auto object-contain"
                        height={40}
                        priority
                     />
-                    <p className="font-alviona text-xl font-semibold text-[#eefaf5] leading-tight">
+                    <p className="font-alviona lg:text-xl text-[15px] font-semibold text-[#eefaf5] leading-tight">
                        Green Guardian Awards
                     </p>
                  </div>
