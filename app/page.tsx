@@ -1,90 +1,80 @@
 'use client';
 
+import { supabase } from "@/app/lib/supabaseClient";
 import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function EvaluatorLoginPage() {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const router = useRouter();
 
-  const handleAccess = () => {
-    if (!email) return;
+  const handleAccess = async () => {
+    if (!email || !password) return;
 
-    localStorage.setItem('evaluatorEmail', email.toLowerCase());
+    setErrorMsg('');
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.toLowerCase().trim(),
+      password,
+    });
+
+    if (error) {
+      console.error("Auth error:", error.message);
+      setErrorMsg('Invalid email or password.');
+      return;
+    }
+
     router.push('/dashboard');
   };
-
-  const handleGoogleLogin = () => {
-    const mockEmail = 'margarita@greenguardian.ph';
-    localStorage.setItem('evaluatorEmail', mockEmail);
-    router.push('/dashboard');
-  };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0c1f1a] via-[#0e2a22] to-[#2f7f4f]">
       <div className="w-full max-w-md rounded-2xl border border-white/20 bg-[#0f2a23]/90 p-8 shadow-xl backdrop-blur-md">
 
         <div className="flex items-center justify-center gap-4 mb-6">
-          <Image
-            src="/logos/asset-colored.png"
-            alt="Green Guardian Logo"
-            width={64}
-            height={64}
-            priority
-          />
-
+          <Image src="/logos/asset-colored.png" alt="Green Guardian Logo" width={64} height={64} priority />
           <div className="leading-tight">
-            <h1 className="text-3xl font-alviona text-white tracking-wide">
-              Green
-            </h1>
-            <h1 className="text-3xl font-alviona text-white tracking-wide">
-              Guardian
-            </h1>
-            <h1 className="text-3xl font-alviona text-white tracking-wide">
-              Awards
-            </h1>
+            <h1 className="text-3xl font-alviona text-white">Green</h1>
+            <h1 className="text-3xl font-alviona text-white">Guardian</h1>
+            <h1 className="text-3xl font-alviona text-white">Awards</h1>
           </div>
         </div>
 
-        <h2 className="text-center text-xl font-semibold text-white">
-          Evaluator Access
-        </h2>
-        <p className="mt-2 text-center text-sm text-white/70">
-          Enter your registered email to access assigned bids
-        </p>
+        <h2 className="text-center text-xl font-semibold text-white">Evaluator Login</h2>
 
-        {/* Email */}
         <div className="mt-6">
           <label className="block text-sm text-white mb-2">Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-white/30 bg-transparent px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-lime-400"
+            className="w-full rounded-lg border border-white/30 bg-transparent px-4 py-3 text-white"
           />
         </div>
 
-        <button
-          onClick={handleAccess}
-          disabled={!email}
-          className="mt-6 w-full rounded-lg bg-lime-400 py-3 font-semibold text-[#0f2a23] transition hover:bg-lime-300 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Access Dashboard
-        </button>
-
-        <div className="my-6 flex items-center gap-3">
-          <div className="h-px flex-1 bg-white/30" />
-          <span className="text-xs text-white/60">or</span>
-          <div className="h-px flex-1 bg-white/30" />
+        <div className="mt-4">
+          <label className="block text-sm text-white mb-2">Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-lg border border-white/30 bg-transparent px-4 py-3 text-white"
+          />
         </div>
 
+        {errorMsg && (
+          <p className="mt-3 text-sm text-red-500">{errorMsg}</p>
+        )}
+
         <button
-          onClick={handleGoogleLogin}
-          className="w-full rounded-lg border border-white/30 py-3 text-white transition hover:bg-white/10"
+          onClick={handleAccess}
+          disabled={!email || !password}
+          className="mt-6 w-full rounded-lg bg-lime-400 py-3 font-semibold text-[#0f2a23]"
         >
-          Login as Margarita Lizardo
+          Login
         </button>
       </div>
     </div>

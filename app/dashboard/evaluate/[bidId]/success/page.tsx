@@ -13,7 +13,7 @@ export default function EvaluationSuccessPage() {
             router.replace("/dashboard");
             router.refresh();
 
-        }, 2500);
+        }, 2500); // 2.5s like your reference
 
         return () => clearTimeout(t);
     }, [router]);
@@ -41,6 +41,7 @@ export default function EvaluationSuccessPage() {
                         Redirecting to dashboard...
                     </p>
 
+                    {/* Optional: give user a manual fallback */}
                     <div className="mt-3">
                         <Link
                             href="/dashboard"

@@ -1,9 +1,40 @@
+/**
+ * EvaluatorScoresheet
+ * -------------------
+ * This page handles the evaluation of a single bid by a logged-in evaluator.
+ *
+ * Core logic:
+ * 1. Uses Supabase Auth (browser client) to get the currently logged-in evaluator.
+ *    - Evaluator name and email are auto-filled from the Supabase session.
+ *    - If no authenticated user is found, the evaluator is redirected to the login page.
+ *
+ * 2. Loads an existing evaluation for the given bid (if any) via `/api/evaluations`.
+ *    - The backend is expected to scope this fetch by BOTH bid ID and evaluator identity.
+ *    - If an evaluation already exists, the scoresheet is locked in read-only mode.
+ *
+ * 3. Allows the evaluator to score multiple criteria using a weighted star-rating system.
+ *    - Each criterion contributes to the overall score based on its weight.
+ *    - All criteria must be scored before submission is allowed.
+ *
+ * 4. On submit:
+ *    - Sends scores, overall score, remarks, and evaluator identity to `/api/evaluations`.
+ *    - The backend enforces one evaluation per evaluator per bid.
+ *    - Once submitted, the evaluation becomes locked and cannot be edited.
+ *
+ * Important:
+ * - Evaluator name and email are NOT manually editable; Supabase Auth is the source of truth.
+ * - This file is a client component and relies on a browser Supabase client.
+ */
+
+
+
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/app/lib/supabase/client";
 
 interface Criterion {
     id: string;
@@ -137,7 +168,7 @@ type EvaluationRecord = {
     submittedAt: string;
 };
 
-export default function Page({ params }: { params: { bidId: string } }) {
+export default function EvaluatorScoresheet({ params }: { params: { bidId: string } }) {
     const bidId = params.bidId;
     const router = useRouter();
 
@@ -193,6 +224,27 @@ export default function Page({ params }: { params: { bidId: string } }) {
     const [isLocked, setIsLocked] = useState(false);
     const [loadedEval, setLoadedEval] = useState<EvaluationRecord | null>(null);
 
+    // 1) Load logged-in evaluator identity from Supabase Auth
+    useEffect(() => {
+        const loadEvaluator = async () => {
+            const { data, error } = await supabase.auth.getUser();
+
+            if (error || !data?.user) {
+                router.push("/login"); // change to your evaluator login route if different
+                return;
+            }
+
+            const user = data.user;
+            const fullName = user.user_metadata?.full_name || user.user_metadata?.name || "";
+
+            setEvaluatorName(fullName);
+            setEvaluatorEmail(user.email ?? "");
+        };
+
+        loadEvaluator();
+    }, [router]);
+
+    // 2) Load previously submitted evaluation for THIS bid (server should scope per evaluator)
     useEffect(() => {
         const safeBidId = String(bidId ?? "").trim();
         if (!safeBidId) return;
@@ -209,14 +261,17 @@ export default function Page({ params }: { params: { bidId: string } }) {
                     setLoadedEval(ev);
                     setScores(ev.scores || {});
                     setOverallRemarks(ev.overallRemarks || "");
-                    setEvaluatorName(ev.evaluatorName || "");
-                    setEvaluatorEmail(ev.evaluatorEmail || "");
+                    setEvaluatorName(ev.evaluatorName || evaluatorName);
+                    setEvaluatorEmail(ev.evaluatorEmail || evaluatorEmail);
                     setIsLocked(true);
                 }
-            } catch { }
+            } catch {
+                // ignore
+            }
         };
 
         load();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bidId]);
 
     const handleScoreChange = (id: string, value: number) => {
@@ -236,11 +291,6 @@ export default function Page({ params }: { params: { bidId: string } }) {
     const handleSubmit = async () => {
         if (isLocked) return;
 
-        if (!evaluatorEmail.trim()) {
-            setError("Evaluator email is required before submitting.");
-            return;
-        }
-
         if (!allCriteriaScored) {
             setError("Please score all criteria before submitting.");
             return;
@@ -254,6 +304,12 @@ export default function Page({ params }: { params: { bidId: string } }) {
         const safeBidId = String(bidId ?? "").trim();
         if (!safeBidId) {
             setError("Missing bid id. Please reload the page.");
+            return;
+        }
+
+        // If evaluator is missing, user likely isn't logged in (or auth not ready)
+        if (!evaluatorEmail) {
+            setError("You must be logged in to submit an evaluation.");
             return;
         }
 
@@ -335,12 +391,10 @@ export default function Page({ params }: { params: { bidId: string } }) {
                         <label className="text-[12px] text-white/70">Evaluator Name</label>
                         <input
                             value={evaluatorName}
-                            onChange={(e) => setEvaluatorName(e.target.value)}
                             placeholder="Juan Dela Cruz"
-                            readOnly={isLocked}
-                            className={`w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-[13px] text-white placeholder:text-white/40
-                focus:outline-none focus:ring-2 focus:ring-emerald-400/40
-                ${isLocked ? "opacity-70 cursor-not-allowed" : ""}`}
+                            readOnly
+                            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-[13px] text-white placeholder:text-white/40
+                focus:outline-none focus:ring-2 focus:ring-emerald-400/40 opacity-90"
                         />
                     </div>
 
@@ -348,12 +402,10 @@ export default function Page({ params }: { params: { bidId: string } }) {
                         <label className="text-[12px] text-white/70">Evaluator Email</label>
                         <input
                             value={evaluatorEmail}
-                            onChange={(e) => setEvaluatorEmail(e.target.value)}
                             placeholder="evaluator@email.com"
-                            readOnly={isLocked}
-                            className={`w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-[13px] text-white placeholder:text-white/40
-                focus:outline-none focus:ring-2 focus:ring-emerald-400/40
-                ${isLocked ? "opacity-70 cursor-not-allowed" : ""}`}
+                            readOnly
+                            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-[13px] text-white placeholder:text-white/40
+                focus:outline-none focus:ring-2 focus:ring-emerald-400/40 opacity-90"
                         />
                     </div>
                 </div>

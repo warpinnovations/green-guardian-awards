@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Bid, BidStatus } from "@/app/data/mockBids";
+import { Bid, BidStatus } from "@/app/types/bid";
 import { FileText, Video, CheckCircle, Clock } from "lucide-react";
 
 function getVideoPlatform(url: string) {
@@ -31,7 +31,7 @@ export default function BidView({ bid }: { bid: Bid }) {
   const [playVideo, setPlayVideo] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  const [liveStatus, setLiveStatus] = useState<BidStatus>(bid.status);
+  const [liveStatus, setLiveStatus] = useState<BidStatus>("Pending");
 
   useEffect(() => {
     setIsMounted(true);
@@ -75,6 +75,11 @@ export default function BidView({ bid }: { bid: Bid }) {
   const statusStyle = isCompleted
     ? "bg-emerald-200/90 text-black"
     : "bg-yellow-200/90 text-black";
+
+  const formattedDate = bid.submittedAt
+    ? new Date(bid.submittedAt).toLocaleDateString()
+    : "—";
+
 
   return (
     <div
@@ -124,7 +129,7 @@ export default function BidView({ bid }: { bid: Bid }) {
 
             {isMounted && (
               <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/60">
-                Submitted: {bid.submittedAt}
+                Submitted: {formattedDate}
               </span>
             )}
           </div>

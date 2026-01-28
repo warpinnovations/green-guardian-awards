@@ -1,14 +1,19 @@
-import { mockBids } from "@/app/data/mockBids";
 import BidView from "@/app/components/BidView";
+import { getAssignedBids } from "@/app/lib/assignedBids";
+import { Bid } from "@/app/types/bid";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+interface PageProps {
+  params: { id: string };
+}
 
-  const bid = mockBids.find((b) => b.id === id);
+export default async function Page({ params }: PageProps) {
+  const { id } = params;
+
+  // fetch assigned bids
+  const assignedBids: Bid[] = await getAssignedBids();
+
+  // find the bid with the matching id
+  const bid = assignedBids.find((b) => b.id === id);
 
   if (!bid) return <div className="p-6">Bid not found</div>;
 

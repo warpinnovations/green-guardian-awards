@@ -2,8 +2,8 @@
 
 :root {
   /* Gradient background from your inspo */
-  --background: 
-    radial-gradient(circle at top center, rgba(170,190,60,0.5), rgba(40,90,60,0.9) 30%),
+  --background:
+    radial-gradient(circle at top center, rgba(170, 190, 60, 0.5), rgba(40, 90, 60, 0.9) 30%),
     linear-gradient(105deg, #ffff, #0f3d1f, #1a7f3a);
   --foreground: #171717;
 }
@@ -26,8 +26,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark mode gradient (optional: could tweak colors if needed) */
-    --background: 
-      radial-gradient(circle at top center, rgba(40,90,60,0.5), rgba(0,30,20,0.9) 30%),
+    --background:
+      radial-gradient(circle at top center, rgba(40, 90, 60, 0.5), rgba(0, 30, 20, 0.9) 30%),
       linear-gradient(105deg, #0a0a0a, #07301a, #0f3d1f);
     --foreground: #ededed;
   }

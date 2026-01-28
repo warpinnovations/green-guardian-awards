@@ -1,28 +1,38 @@
 import { NextResponse } from "next/server";
-
-declare global {
-    // eslint-disable-next-line no-var
-    var __EVAL_STORE__: Map<string, any> | undefined;
-}
-
-const store = global.__EVAL_STORE__ ?? new Map<string, any>();
-global.__EVAL_STORE__ = store;
+import { createSupabaseServerClient } from "@/app/lib/supabase/server";
 
 export async function GET(req: Request) {
-    const { searchParams } = new URL(req.url);
-    const bidId = (searchParams.get("bidId") || "").trim();
+    const supabase = await createSupabaseServerClient();
 
-    if (!bidId) {
-        return NextResponse.json({ error: "bidId is required" }, { status: 400 });
+    const { data: authData, error: authErr } = await supabase.auth.getUser();
+    if (authErr || !authData?.user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const evaluation = store.get(bidId) || null;
-    return NextResponse.json({ evaluation });
+    const { searchParams } = new URL(req.url);
+    const bidId = (searchParams.get("bidId") || "").trim();
+    if (!bidId) return NextResponse.json({ error: "bidId is required" }, { status: 400 });
+
+    const { data, error } = await supabase
+        .from("evaluations")
+        .select("*")
+        .eq("bid_id", bidId)
+        .eq("evaluator_id", authData.user.id)
+        .maybeSingle();
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ evaluation: data ?? null });
 }
 
 export async function POST(req: Request) {
-    let body: any;
+    const supabase = await createSupabaseServerClient();
 
+    const { data: authData, error: authErr } = await supabase.auth.getUser();
+    if (authErr || !authData?.user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    let body: any;
     try {
         body = await req.json();
     } catch {
@@ -48,22 +58,49 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "overallRemarks is required" }, { status: 400 });
     }
 
-    if (store.has(bidId)) {
+    const user = authData.user;
+
+    // lock per evaluator per bid
+    const { data: existing, error: existingErr } = await supabase
+        .from("evaluations")
+        .select("id")
+        .eq("bid_id", bidId)
+        .eq("evaluator_id", user.id)
+        .maybeSingle();
+
+    if (existingErr) return NextResponse.json({ error: existingErr.message }, { status: 500 });
+    if (existing?.id) {
         return NextResponse.json(
-            { error: "Evaluation already submitted. Locked." },
+            { error: "You already submitted an evaluation for this bid. Locked." },
             { status: 409 }
         );
     }
 
     const payload = {
-        bidId,
+        bid_id: bidId,
+        evaluator_id: user.id,
+        evaluator_name:
+            (typeof body?.evaluatorName === "string" ? body.evaluatorName.trim() : "") ||
+            user.user_metadata?.full_name ||
+            user.user_metadata?.name ||
+            "",
+        evaluator_email:
+            (typeof body?.evaluatorEmail === "string" ? body.evaluatorEmail.trim() : "") ||
+            user.email ||
+            "",
         scores,
-        overallScore,
-        overallRemarks,
+        overall_score: overallScore,
+        overall_remarks: overallRemarks,
         status: "Completed",
-        submittedAt: body?.submittedAt || new Date().toISOString(),
+        submitted_at: body?.submittedAt || new Date().toISOString(),
     };
 
-    store.set(bidId, payload);
-    return NextResponse.json({ ok: true, evaluation: payload });
+    const { data: inserted, error: insertErr } = await supabase
+        .from("evaluations")
+        .insert(payload)
+        .select("*")
+        .single();
+
+    if (insertErr) return NextResponse.json({ error: insertErr.message }, { status: 500 });
+    return NextResponse.json({ ok: true, evaluation: inserted });
 }
