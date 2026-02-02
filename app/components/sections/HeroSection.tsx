@@ -30,7 +30,7 @@ export default function HeroSection() {
                <div className="lg:flex hidden gap-4">
                   <a
                      href={`/api/download/${encodeURIComponent(primer)}`}
-                     className=" px-8 py-3 rounded-xl border-2 border-[#f3d107]/90 text-[#f3d107]/90 hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-[#8FC73F]/30 cursor-pointer"
+                     className="text-center px-8 py-3 rounded-xl border-2 border-[#f3d107]/90 text-[#f3d107]/90 hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-[#8FC73F]/30 cursor-pointer"
                   >
                      Download Primer
                   </a>
@@ -100,7 +100,7 @@ export default function HeroSection() {
                      </button>
                      <a
                         href={`/api/download/${encodeURIComponent(primer)}`}
-                        className="cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-xl hover:-translate-y-1"
+                        className="text-center cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-xl hover:-translate-y-1"
                      >
                         Download Primer
                      </a>
