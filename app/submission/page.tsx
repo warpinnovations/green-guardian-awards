@@ -41,6 +41,8 @@ export default function EntrySubmission({
    const params = use(searchParams);
    const nominee = params.nominee === "msme" ? "MSME" : "LGU";
 
+   const bidDocument = nominee === "MSME" ? "MSME Bid Requirement Template (Green Guardian Awards).pdf" : "LGU Bid Requirement Template (Green Guardian Awards).pdf";
+
    const [dataPrivacyConcerns, setDataPrivacyConcerns] = useState(false);
    const [termsAccepted, setTermsAccepted] = useState(false);
    const [infoCertified, setInfoCertified] = useState(false);
@@ -562,13 +564,13 @@ export default function EntrySubmission({
                            *Upload Bid Documentation
                         </label>
                         <span className="flex items-center">
-                           <button className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
+                           <a href={`/api/download/${encodeURIComponent(bidDocument)}`} className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
                               <FileDown
                                  size={18}
                                  className="inline-block text-white/70"
                               />
                               Download Guide
-                           </button>
+                           </a>
                         </span>
                      </div>
                      <DragDropUpload
