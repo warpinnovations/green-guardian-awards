@@ -26,9 +26,9 @@ export default function HeroSection() {
                   />
                </div>
                <div className="lg:flex hidden gap-4">
-                  <button className=" px-8 py-3 rounded-xl border-2 border-[#f3d107]/90 text-[#f3d107]/90 hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-[#8FC73F]/30 cursor-pointer">
+                  <a href="/api/download-primer" className=" px-8 py-3 rounded-xl border-2 border-[#f3d107]/90 text-[#f3d107]/90 hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-[#8FC73F]/30 cursor-pointer">
                      Download Primer
-                  </button>
+                  </a>
                   <button
                      onClick={() => scrollToId("nominate")}
                      className="text-neutral-900/90 lg:px-8 px-3 py-3 rounded-xl bg-linear-to-r from-[#8FC73F] to-[#b5d443] lg:text-base text-sm hover:shadow-xl hover:shadow-[#b5d443]/50 transition-all duration-300 font-bold hover:-translate-y-1 cursor-pointer"
@@ -93,9 +93,9 @@ export default function HeroSection() {
                      >
                         Join the Awards
                      </button>
-                     <button className="cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-xl hover:-translate-y-1">
+                     <a href="/api/download-primer" className="cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-xl hover:-translate-y-1">
                         Download Primer
-                     </button>
+                     </a>
                   </div>
 
                   <p
