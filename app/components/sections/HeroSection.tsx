@@ -4,11 +4,13 @@ import Image from "next/image";
 import DGLogo from "../../../public/logos/dg-logo-black.png";
 
 export default function HeroSection() {
-     const scrollToId = (id: string) => {
-       const el = document.getElementById(id);
-       if (!el) return;
-       el.scrollIntoView({ behavior: "smooth", block: "start" });
-     };
+   const primer = "Green Guardian Awards Primer.pdf";
+
+   const scrollToId = (id: string) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+   };
 
    return (
       <div className="min-h-screen bg-slate-100 text-white relative overflow-hidden">
@@ -26,7 +28,10 @@ export default function HeroSection() {
                   />
                </div>
                <div className="lg:flex hidden gap-4">
-                  <a href="/api/download-primer" className=" px-8 py-3 rounded-xl border-2 border-[#f3d107]/90 text-[#f3d107]/90 hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-[#8FC73F]/30 cursor-pointer">
+                  <a
+                     href={`/api/download/${encodeURIComponent(primer)}`}
+                     className=" px-8 py-3 rounded-xl border-2 border-[#f3d107]/90 text-[#f3d107]/90 hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-[#8FC73F]/30 cursor-pointer"
+                  >
                      Download Primer
                   </a>
                   <button
@@ -93,7 +98,10 @@ export default function HeroSection() {
                      >
                         Join the Awards
                      </button>
-                     <a href="/api/download-primer" className="cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-xl hover:-translate-y-1">
+                     <a
+                        href={`/api/download/${encodeURIComponent(primer)}`}
+                        className="cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-xl hover:-translate-y-1"
+                     >
                         Download Primer
                      </a>
                   </div>
@@ -171,7 +179,7 @@ export default function HeroSection() {
                   opacity: 1;
                }
             }
-               
+
             .animate-pulse-slow {
                animation: pulse-slow 3s ease-in-out infinite;
             }
