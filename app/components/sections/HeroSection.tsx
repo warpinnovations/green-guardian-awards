@@ -4,11 +4,11 @@ import Image from "next/image";
 import DGLogo from "../../../public/logos/dg-logo-black.png";
 
 export default function HeroSection() {
-     const scrollToId = (id: string) => {
-       const el = document.getElementById(id);
-       if (!el) return;
-       el.scrollIntoView({ behavior: "smooth", block: "start" });
-     };
+   const scrollToId = (id: string) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+   };
 
    return (
       <div className="min-h-screen bg-slate-100 text-white relative overflow-hidden">
@@ -70,16 +70,15 @@ export default function HeroSection() {
                      style={{ animationDelay: "0.8s" }}
                   >
                      <p className="lg:text-lg text-[16px] leading-relaxed text-white/90 text-center lg:text-left">
-                        The Green Guardian Awards honors{" "}
+                        The Green Guardian Awards aims to foster a culture of
+                        environmental stewardship by recognizing, celebrating,
+                        and amplifying the efforts of{" "}
                         <span className="text-[#f3d107] font-bold">
-                           local government units, MSMEs, and large corporations
-                        </span>{" "}
-                        advancing{" "}
-                        <span className="text-[#f3d107] font-bold">
-                           environmental stewardship
-                        </span>{" "}
-                        through initiatives that are measurable,
-                        community-driven, and built to last beyond headlines.
+                           Local Government Units (LGUs) in the Province of
+                           Iloilo - including municipalities, highly urbanized
+                           city (HUCs) and component city as well as businesses
+                           in the Province of Iloilo.
+                        </span>
                      </p>
                   </div>
                   {/* CTA Buttons */}
@@ -171,7 +170,7 @@ export default function HeroSection() {
                   opacity: 1;
                }
             }
-               
+
             .animate-pulse-slow {
                animation: pulse-slow 3s ease-in-out infinite;
             }
