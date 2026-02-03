@@ -6,6 +6,7 @@ import { CircleCheck, FileDown, ImageUp } from "lucide-react";
 import DragDropUpload from "../components/DragDropUpload";
 import DropdownMenu, { DropdownOption } from "../components/Dropdown";
 import Header from "../components/Header";
+import { uploadWithToken, withRetry } from "../utils/upload";
 
 interface BidEntryProps {
    orgName: string;
@@ -41,7 +42,10 @@ export default function EntrySubmission({
    const params = use(searchParams);
    const nominee = params.nominee === "msme" ? "MSME" : "LGU";
 
-   const bidDocument = nominee === "MSME" ? "MSME Bid Requirement Template (Green Guardian Awards).pdf" : "LGU Bid Requirement Template (Green Guardian Awards).pdf";
+   const bidDocument =
+      nominee === "MSME"
+         ? "MSME Bid Requirement Template (Green Guardian Awards).pdf"
+         : "LGU Bid Requirement Template (Green Guardian Awards).pdf";
 
    const [dataPrivacyConcerns, setDataPrivacyConcerns] = useState(false);
    const [termsAccepted, setTermsAccepted] = useState(false);
@@ -148,60 +152,140 @@ export default function EntrySubmission({
       setIsSubmitting(true);
 
       try {
-         const formData = new FormData();
-         formData.append("org_name", entry.orgName);
-         formData.append("org_address", entry.orgAddress);
-         formData.append("full_name", entry.fullName);
-         formData.append("position", entry.position);
-         formData.append("email", entry.email);
-         formData.append("contact_number", entry.contactNumber);
-         if (entry.website) formData.append("website", entry.website);
-         if (nominee === "MSME" && entry.companyDescription)
-            formData.append("company_description", entry.companyDescription);
-         if (entry.altContactPerson)
-            formData.append("alt_contact_person", entry.altContactPerson);
-         if (entry.altContactNumber)
-            formData.append("alt_contact_number", entry.altContactNumber);
-         if (entry.altEmail) formData.append("alt_email", entry.altEmail);
-         formData.append("award_category", entry.awardCategory);
-         formData.append("project_title", entry.projectTitle);
-         formData.append("project_description", entry.projectDescription);
-         formData.append("video_link", entry.videoLink);
+         // gather files
+         const dilg = entry.DILGDocument?.[0];
+         const permit = entry.businessPermitDocument?.[0];
+         const dti = entry.DTISecDocument?.[0];
+         const keyVisual = entry.keyVisual?.[0];
+         const bid = entry.bidDocument?.[0];
+         const projDoc = entry.projectDocument?.[0];
+         const supporting = entry.supportingDocument || [];
 
-         if (entry.DILGDocument)
-            formData.append("dilg_document", entry.DILGDocument[0]);
-         if (entry.businessPermitDocument)
-            formData.append(
-               "business_permit_document",
-               entry.businessPermitDocument[0],
-            );
-         if (entry.DTISecDocument)
-            formData.append("dti_sec_document", entry.DTISecDocument[0]);
-         if (entry.keyVisual) formData.append("key_visual", entry.keyVisual[0]);
-         if (entry.bidDocument)
-            formData.append("bid_document", entry.bidDocument[0]);
-         if (entry.projectDocument)
-            formData.append("project_documentation", entry.projectDocument[0]);
-
-         if (entry.supportingDocument?.length) {
-            entry.supportingDocument?.forEach((file) => {
-               formData.append("supporting_docs", file);
-            });
+         if (!dilg || !permit || !dti || !keyVisual || !bid || !projDoc) {
+            alert("Missing required files.");
+            return;
          }
 
-         if (dataPrivacyConcerns) formData.append("data_privacy_consent", "on");
-         if (termsAccepted) formData.append("terms_accepted", "on");
-         if (infoCertified) formData.append("info_certified", "on");
-
-         const response = await fetch("/api/create-bid-entry", {
+         // init signed upload tokens from server
+         const initRes = await fetch("/api/bid-entry/init-upload", {
             method: "POST",
-            body: formData,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               dilg_document: { name: dilg.name, type: dilg.type },
+               business_permit_document: {
+                  name: permit.name,
+                  type: permit.type,
+               },
+               dti_sec_document: { name: dti.name, type: dti.type },
+               key_visual: { name: keyVisual.name, type: keyVisual.type },
+               bid_document: { name: bid.name, type: bid.type },
+               project_documentation: {
+                  name: projDoc.name,
+                  type: projDoc.type,
+               },
+               supporting_docs: supporting.map((f) => ({
+                  name: f.name,
+                  type: f.type,
+               })),
+            }),
          });
 
-         const data = await response.json();
+         const init = await initRes.json();
+         if (!initRes.ok) {
+            alert(`Upload init failed: ${init.error || "Unknown error"}`);
+            return;
+         }
 
-         if (!response.ok) {
-            alert(`Submission failed: ${data.error || "Unknown error"}`);
+         // track uploaded paths for cleanup if DB insert fails
+         const uploaded: Array<{ bucket: string; path: string }> = [];
+
+         const mustUpload = [
+            { meta: init.dilg_document, file: dilg },
+            { meta: init.business_permit_document, file: permit },
+            { meta: init.dti_sec_document, file: dti },
+            { meta: init.key_visual, file: keyVisual },
+            { meta: init.bid_document, file: bid },
+            { meta: init.project_documentation, file: projDoc },
+         ];
+
+         const supportingMetas = (init.supporting_docs || []) as Array<{
+            bucket: string;
+            path: string;
+            token: string;
+         }>;
+
+         // upload all in parallel with retry
+         await Promise.all([
+            ...mustUpload.map(({ meta, file }) =>
+               withRetry(async () => {
+                  await uploadWithToken(
+                     meta.bucket,
+                     meta.path,
+                     meta.token,
+                     file,
+                  );
+                  uploaded.push({ bucket: meta.bucket, path: meta.path });
+               }, 2),
+            ),
+            ...supportingMetas.map((meta, i) =>
+               withRetry(async () => {
+                  const file = supporting[i];
+                  if (!file) return; // safety
+                  await uploadWithToken(
+                     meta.bucket,
+                     meta.path,
+                     meta.token,
+                     file,
+                  );
+                  uploaded.push({ bucket: meta.bucket, path: meta.path });
+               }, 2),
+            ),
+         ]);
+
+         const supportingPaths = supportingMetas
+            .map((m) => m.path)
+            .filter(Boolean);
+
+         // submit DB record
+         const submitRes = await fetch("/api/create-bid-entry", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               org_name: entry.orgName,
+               org_address: entry.orgAddress,
+               full_name: entry.fullName,
+               position: entry.position,
+               email: entry.email,
+               contact_number: entry.contactNumber,
+               website: entry.website || null,
+               company_description:
+                  nominee === "MSME" ? entry.companyDescription || null : null,
+               alt_contact_person: entry.altContactPerson || null,
+               alt_contact_number: entry.altContactNumber || null,
+               alt_email: entry.altEmail || null,
+               award_category: entry.awardCategory,
+               project_title: entry.projectTitle,
+               project_description: entry.projectDescription,
+               video_link: entry.videoLink || null,
+
+               dilg_doc_path: init.dilg_document.path,
+               business_permit_path: init.business_permit_document.path,
+               dti_sec_permit_path: init.dti_sec_document.path,
+               key_visual_path: init.key_visual.path,
+               bid_doc_path: init.bid_document.path,
+               project_doc_path: init.project_documentation.path,
+               supporting_doc_paths: supportingPaths,
+
+               data_privacy_consent: dataPrivacyConcerns,
+               terms_accepted: termsAccepted,
+               info_certified: infoCertified,
+            }),
+         });
+
+         const submitData = await submitRes.json();
+
+         if (!submitRes.ok) {
+            alert(`Submission failed: ${submitData.error || "Unknown error"}`);
             return;
          }
 
@@ -209,6 +293,9 @@ export default function EntrySubmission({
          setTermsAccepted(false);
          setInfoCertified(false);
          setSubmissionCompleted(true);
+      } catch (err: Error | unknown) {
+         const message = err instanceof Error ? err.message : "Submission failed.";
+         alert(message);
       } finally {
          setIsSubmitting(false);
       }
@@ -564,7 +651,10 @@ export default function EntrySubmission({
                            *Upload Bid Documentation
                         </label>
                         <span className="flex items-center">
-                           <a href={`/api/download/${encodeURIComponent(bidDocument)}`} className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
+                           <a
+                              href={`/api/download/${encodeURIComponent(bidDocument)}`}
+                              className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold"
+                           >
                               <FileDown
                                  size={18}
                                  className="inline-block text-white/70"
@@ -586,13 +676,14 @@ export default function EntrySubmission({
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Upload Project Documentation
                         </label>
-                        <button className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
+                        {/* hide for now */}
+                        {/* <button className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
                            <FileDown
                               size={18}
                               className="inline-block text-white/70"
                            />
                            Download Guide
-                        </button>
+                        </button> */}
                      </div>
                      <DragDropUpload
                         name="projectDocument"
@@ -782,8 +873,8 @@ export default function EntrySubmission({
 
 const LGU_AWARD_CATEGORIES: DropdownOption[] = [
    {
-      value: "The Community-Led Ecological Stewardship Award",
-      label: "The Community-Led Ecological Stewardship Award",
+      value: "The LGU-Led Ecological Stewardship Award",
+      label: "The LGU-Led Ecological Stewardship Award",
    },
    {
       value: "The Circular Economy and Waste Management Excellence Award",
