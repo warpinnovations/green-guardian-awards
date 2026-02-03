@@ -319,7 +319,6 @@ export default function EntrySubmission({
 
          // send email on success
          if (submitRes.ok) {
-            console.log("Submission successful:", submitData);
             await sendEmail({
                email: submitData.email,
                fullName: submitData.full_name,
