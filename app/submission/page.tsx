@@ -147,6 +147,39 @@ export default function EntrySubmission({
       });
    };
 
+   const sendEmail = async ({
+      email,
+      fullName,
+      orgName,
+      track,
+      awardCategory,
+      referenceId,
+   }: {
+      email: string;
+      fullName: string;
+      orgName: string;
+      track: "LGU" | "MSME";
+      awardCategory: string;
+      referenceId: string;
+   }) => {
+      try {
+         await fetch("/api/send-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               email,
+               fullName,
+               orgName,
+               track,
+               awardCategory,
+               referenceId,
+            }),
+         });
+      } catch (error) {
+         console.error("Failed to send acceptance email:", error);
+      }
+   };
+
    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       setIsSubmitting(true);
@@ -284,17 +317,34 @@ export default function EntrySubmission({
 
          const submitData = await submitRes.json();
 
-         if (!submitRes.ok) {
+         // send email on success
+         if (submitRes.ok) {
+            await sendEmail({
+               email: submitData.email,
+               fullName: submitData.full_name,
+               orgName: submitData.org_name,
+               track: nominee as "LGU" | "MSME",
+               awardCategory: submitData.award_category,
+               referenceId: submitData.reference_id,
+            })
+               .then(() => {
+                  resetEntryFields();
+                  setTermsAccepted(false);
+                  setInfoCertified(false);
+                  setSubmissionCompleted(true);
+               })
+               .catch(() => {
+                  alert(
+                     "Failed to send confirmation email. Please contact support.",
+                  );
+               });
+         } else {
             alert(`Submission failed: ${submitData.error || "Unknown error"}`);
             return;
          }
-
-         resetEntryFields();
-         setTermsAccepted(false);
-         setInfoCertified(false);
-         setSubmissionCompleted(true);
       } catch (err: Error | unknown) {
-         const message = err instanceof Error ? err.message : "Submission failed.";
+         const message =
+            err instanceof Error ? err.message : "Submission failed.";
          alert(message);
       } finally {
          setIsSubmitting(false);
