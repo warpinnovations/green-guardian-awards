@@ -34,10 +34,17 @@ export function NominationCard(props: NominationCardProps) {
                <ul className="list-disc pl-5 space-y-2">
                   {props.type === "lgu"
                      ? lguEligibility.map((item, index) => (
-                          <li className="mr-2" key={`lgu-eligibility-${index}`}>{item}</li>
+                          <li className="mr-2" key={`lgu-eligibility-${index}`}>
+                             {item}
+                          </li>
                        ))
                      : msmeEligibility.map((item, index) => (
-                          <li className="mr-2" key={`msme-eligibility-${index}`}>{item}</li>
+                          <li
+                             className="mr-2"
+                             key={`msme-eligibility-${index}`}
+                          >
+                             {item}
+                          </li>
                        ))}
                </ul>
             </CollapsibleText>
@@ -45,18 +52,25 @@ export function NominationCard(props: NominationCardProps) {
                <ul className="list-disc pl-5 space-y-2">
                   {props.type === "lgu"
                      ? lguRequirements.map((item, index) => {
-                        if (typeof item === "string") {
-                           return <li className="mr-2" key={`lgu-requirement-${index}`}>{item}</li>;
-                        }
-                        return (
-                           <li key={index}>
-                              {item.text}
-                              <ul className="mt-2 list-disc pl-5 marker:text-white/40">
-                                 <li className="mr-2">{item.subItem}</li>
-                              </ul>
-                           </li>
-                        );
-                     })
+                          if (typeof item === "string") {
+                             return (
+                                <li
+                                   className="mr-2"
+                                   key={`lgu-requirement-${index}`}
+                                >
+                                   {item}
+                                </li>
+                             );
+                          }
+                          return (
+                             <li key={index}>
+                                {item.text}
+                                <ul className="mt-2 list-disc pl-5 marker:text-white/40">
+                                   <li className="mr-2">{item.subItem}</li>
+                                </ul>
+                             </li>
+                          );
+                       })
                      : msmeRequirements.map((item, index) => (
                           <li key={`msme-requirement-${index}`}>{item}</li>
                        ))}
@@ -74,18 +88,20 @@ export function NominationCard(props: NominationCardProps) {
 }
 
 const lguEligibility = [
-   "Must be a duly constituted LGU or barangay within the Province/City of Iloilo.",
+   "Only municipalities, the highly urbanized city (HUC), and the component city within the Province of Iloilo are eligible to participate.",
    "Must have at least one implemented environmental or sustainability initiative aligned with the award category being applied for.",
-   "The project or program must have been implemented for a minimum of six (6) months prior to nomination.",
+   "The project or program must have been implemented for a minimum of three (3) years prior to nomination.",
    "The initiative must be currently active or institutionalized, not a one-time or discontinued activity.",
-   "LGU must be in good standing with relevant national agencies (e.g., DENR, DILG), with no major unresolved environmental violations.",
+   "​​The nominated initiative must not have received recognition or awards from any regional, national, or international award-giving body.",
+   "Only one initiative per award category can be submitted.",
+   "A single initiative cannot be submitted in multiple categories.",
 ];
 
 const lguRequirements = [
-   "Completed nomination form endorsed by the LGU head or authorized representative.",
+   "Completed nomination form endorsed by the Local Chief Executive or authorized representative.",
    "Project description outlining objectives, implementation strategy, timeline, and outcomes.",
    {
-      text: "Proof of implementation, such as:",
+      text: "Proof of implementation, such as",
       subItem:
          "Ordinances, Executive Orders, or Resolutions (if applicable), Program Reports or Monitoring Data, Photographs or Videos of On-ground Activities, Evidence of Community Involvement (MOUs, participation records), Testimonials or Certifications from Beneficiaries.",
    },
@@ -93,9 +109,10 @@ const lguRequirements = [
 ];
 
 const msmeEligibility = [
-   "Must be a legally registered business operating in the Province/City of Iloilo.",
-   "Must have been in operation for at least two (2) years.",
-   "Business must be compliant with relevant environmental laws and regulations, with no major unresolved violations.",
+   "Must be a legally registered business operating in the Province and City of Iloilo.",
+   "MSMEs must have been in operation for at least two (2) years, while large corporations must have been in operation for at least five (5) years.",
+   "Business must be compliant with relevant environmental laws and regulations.",
+   "The nominated initiative must not have received recognition from any regional, national, or international award-giving body.",
 ];
 
 const msmeRequirements = [
