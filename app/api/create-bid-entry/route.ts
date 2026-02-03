@@ -144,12 +144,12 @@ export async function POST(req: Request) {
         terms_accepted,
         info_certified,
       })
-      .select("id")
+      .select("id, email, full_name, org_name, award_category, reference_id, created_at")
       .single();
 
     if (error) throw error;
 
-    return NextResponse.json({ id: data.id }, { status: 201 });
+    return NextResponse.json({ id: data.id, email: data.email, full_name: data.full_name, org_name: data.org_name, award_category: data.award_category, reference_id: data.reference_id, created_at: data.created_at }, { status: 201 });
   } catch (e: unknown) {
     const message =
       e instanceof Error ? e.message : "Submission failed.";
