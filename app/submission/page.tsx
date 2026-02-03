@@ -586,13 +586,14 @@ export default function EntrySubmission({
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Upload Project Documentation
                         </label>
-                        <button className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
+                        {/* hide for now */}
+                        {/* <button className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
                            <FileDown
                               size={18}
                               className="inline-block text-white/70"
                            />
                            Download Guide
-                        </button>
+                        </button> */}
                      </div>
                      <DragDropUpload
                         name="projectDocument"
