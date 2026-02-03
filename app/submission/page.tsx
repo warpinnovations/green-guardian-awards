@@ -780,7 +780,7 @@ export default function EntrySubmission({
          </form>
          {submissionCompleted && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900/90">
-               <div className="flex flex-col items-center w-[30%] bg-green-100/90 rounded-2xl py-20 shadow-lg gap-4">
+               <div className="flex flex-col items-center lg:w-[30%] w-[90%] bg-green-100/90 rounded-2xl py-20 shadow-lg gap-4">
                   <CircleCheck height={50} width={50} color="#18ad31" />
                   <h3 className="text-2xl font-bold text-neutral-700 text-center uppercase mb-2">
                      Success!
