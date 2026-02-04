@@ -16,8 +16,8 @@ export default function HeroSection() {
       <div className="min-h-screen bg-slate-100 text-white relative overflow-hidden">
          <div className="fixed inset-0 bg-gradient-radial " />
          {/* Navigation */}
-         <nav className="relative z-50 px-6 lg:px-20 py-6">
-            <div className="max-w-400 mx-auto flex lg:justify-between justify-center items-center">
+         <nav className="relative z-50 px-4 lg:px-20 py-4">
+            <div className="max-w-400 mx-auto flex justify-between items-center">
                <div className="flex items-center gap-4">
                   <Image
                      src={DGLogo}
@@ -45,50 +45,43 @@ export default function HeroSection() {
          </nav>
          {/* Hero Section */}
          <div className="relative max-w-400 mx-auto px-5 lg:px-20">
-            <div className="grid lg:grid-cols-[1.5fr_1fr] lg:gap-16 items-start">
-               <div className="lg:space-y-4 space-y-6">
-                  <h1 className="text-[48px] lg:text-[60px] font-black leading-none lg:mb-5 tracking-tighter animate-fade-in-up">
-                     <span className="font-alviona block bg-white/90 bg-clip-text text-transparent text-center lg:text-left">
+            <div className="grid lg:grid-cols-[1.5fr_1fr] lg:gap-12 gap-20 items-start">
+               <div className="lg:space-y-3 space-y-4">
+                  <h1 className="text-[40px] lg:text-[60px] font-black leading-none lg:mb-3 tracking-tighter animate-fade-in-up">
+                     <span className="font-alviona block bg-white/90 bg-clip-text text-transparent text-left">
                         GREEN GUARDIAN
                      </span>
-                     <span className="font-alviona block bg-linear-to-r from-[#f3d107]/90 to-[#f3d107]/90 bg-clip-text text-transparent text-center lg:text-left">
+                     <span className="font-alviona block bg-linear-to-r from-[#f3d107]/90 to-[#f3d107]/90 bg-clip-text text-transparent text-left">
                         AWARDS
                      </span>
                   </h1>
                   <h2
-                     className="lg:text-2xl text-[20px] font-semibold text-white animate-fade-in-up text-center lg:text-left"
+                     className="lg:text-2xl text-[20px] font-semibold text-white animate-fade-in-up text-left mb-4"
                      style={{ animationDelay: "0.2s" }}
                   >
                      Celebrating Sustainability and Ecological Innovation in
                      Iloilo
                   </h2>
                   <p
-                     className="lg:text-lg text-[16px] text-white leading-relaxed animate-fade-in-up mt-8 mb-5 text-center lg:text-left"
+                     className="lg:text-lg text-[16px] text-white leading-relaxed animate-fade-in-up my-4 text-left"
                      style={{ animationDelay: "0.4s" }}
                   >
-                     For 25 years, Daily Guardian has told the stories that
-                     shape communities. Now, we recognize the ones protecting
-                     them.
+                     The Green Guardian Awards celebrates and elevates outstanding environmental initiatives across the Province of Iloilo.
                   </p>
                   <div
                      className="animate-fade-in-up"
                      style={{ animationDelay: "0.8s" }}
                   >
-                     <p className="lg:text-lg text-[16px] leading-relaxed text-white/90 text-center lg:text-left">
-                        The Green Guardian Awards aims to foster a culture of
-                        environmental stewardship by recognizing, celebrating,
-                        and amplifying the efforts of{" "}
-                        <span className="text-[#f3d107] font-bold">
-                           Local Government Units (LGUs) in the Province of
-                           Iloilo - including municipalities, highly urbanized
-                           city (HUCs) and component city as well as businesses
-                           in the Province of Iloilo.
-                        </span>
+                     <p className="lg:text-lg text-[16px] leading-relaxed text-white/90 text-left">
+                        It recognizes <strong className="text-[#f3d107]">Local Government Units (LGUs)</strong>—including municipalities, the highly urbanized city (HUC), and the component city—as well as <strong className="text-[#f3d107]">micro, small, and medium enterprises (MSMEs) and large corporations</strong> that champion sustainability, ecological innovation, and community-driven environmental action.{" "}
+                     </p>
+                     <p className="lg:text-lg text-[16px] leading-relaxed text-white/90 text-left mt-4">
+                        Through this program, the Awards aim to foster a strong culture of environmental stewardship by honoring exemplary initiatives, showcasing best practices, and inspiring wider adoption of sustainable solutions throughout Iloilo.
                      </p>
                   </div>
                   {/* CTA Buttons */}
                   <div
-                     className="flex flex-col sm:flex-row gap-6 animate-fade-in-up mt-10"
+                     className="flex flex-col sm:flex-row gap-6 animate-fade-in-up mt-6"
                      style={{ animationDelay: "1s" }}
                   >
                      <button
@@ -105,16 +98,23 @@ export default function HeroSection() {
                      </a>
                   </div>
 
-                  <p
-                     className="text-white/90 animate-fade-in-up text-center lg:text-left"
-                     style={{ animationDelay: "1.2s" }}
-                  >
-                     Need help?{" "}
+                  <p className="text-white/90 text-sm leading-relaxed text-center lg:text-left animate-fade-in-up" style={{ animationDelay: "1.2s" }}>
+                     Need help? Contact committee:
+                     <br className="sm:hidden" />
                      <a
                         href="mailto:dailyguardianmarketing@gmail.com"
-                        className="text-white/90 font-bold hover:underline"
+                        className="font-semibold break-all hover:underline"
                      >
-                        Contact the committee
+                        dailyguardianmarketing@gmail.com
+                     </a>
+                     <span className="hidden sm:inline"> | </span>
+                     <br className="sm:hidden" />
+                     <a href="tel:+639171371799" className="font-semibold hover:underline">
+                        +63&nbsp;917&nbsp;137&nbsp;1799
+                     </a>
+                     {" / "}
+                     <a href="tel:+639171123139" className="font-semibold hover:underline">
+                        +63&nbsp;917&nbsp;112&nbsp;3139
                      </a>
                   </p>
                </div>
