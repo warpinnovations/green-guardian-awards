@@ -12,7 +12,7 @@ import FooterSection from "@/app/components/sections/FooterSection";
 interface BidEntryProps {
    orgName: string;
    orgAddress: string;
-   classification?: string;
+   classification: string;
    fullName: string;
    position: string;
    email: string;
@@ -24,7 +24,6 @@ interface BidEntryProps {
    altContactNumber?: string;
    altEmail?: string;
    authorizationFormDocument: File[] | null;
-   DILGDocument: File[] | null;
    businessPermitDocument: File[] | null;
    DTISecDocument: File[] | null;
    awardCategory: string;
@@ -34,7 +33,7 @@ interface BidEntryProps {
    bidDocument: File[] | null;
    projectDocument: File[] | null;
    supportingDocument: File[] | null;
-   videoLink: string;
+   videoLink?: string;
 }
 
 export default function EntrySubmission({
@@ -44,12 +43,12 @@ export default function EntrySubmission({
 }) {
    const router = useRouter();
    const params = use(searchParams);
-   const nominee = params.nominee === "msme" ? "MSME" : "Local Government Unit";
+   const nominee = params.nominee === "msme" ? "Business" : "Local Government Unit";
 
    const authorizationFormDoc = "Green Guardian - LGU - Authorization Letter.docx";
 
    const bidDocumentTemplate =
-      nominee === "MSME"
+      nominee === "Business"
          ? "MSMEs and Large Corp Bid Requirement Template (Green Guardian Awards).docx"
          : "LGU Bid Requirement Template (Green Guardian Awards).docx";
 
@@ -72,10 +71,8 @@ export default function EntrySubmission({
       altContactNumber: "",
       altEmail: "",
       contactNumber: "",
-      website: "",
-      companyDescription: "",
+      companyDescription: undefined,
       authorizationFormDocument: null,
-      DILGDocument: null,
       businessPermitDocument: null,
       DTISecDocument: null,
       awardCategory: "",
@@ -85,7 +82,6 @@ export default function EntrySubmission({
       bidDocument: null,
       projectDocument: null,
       supportingDocument: null,
-      videoLink: "",
    });
 
    const isEmpty = (v: unknown) => (typeof v === "string" ? !v.trim() : !v);
@@ -94,15 +90,15 @@ export default function EntrySubmission({
       const REQUIRED_FIELDS = [
          "orgName",
          "orgAddress",
-         nominee === "Local Government Unit" ? "classification" : null,
+         "classification",
          "fullName",
          "position",
          "email",
          "contactNumber",
+         nominee === "Business" ? "companyDescription" : null,
          nominee === "Local Government Unit" ? "authorizationFormDocument" : null,
-         nominee === "MSME" ? "DILGDocument" : null,
-         nominee === "MSME" ? "businessPermitDocument" : null,
-         nominee === "MSME" ? "DTISecDocument" : null,
+         nominee === "Business" ? "businessPermitDocument" : null,
+         nominee === "Business" ? "DTISecDocument" : null,
          "awardCategory",
          "projectTitle",
          "projectDescription",
@@ -110,7 +106,6 @@ export default function EntrySubmission({
          "bidDocument",
          "projectDocument",
          "supportingDocument",
-         "videoLink",
       ].filter(Boolean) as Array<keyof BidEntryProps>;
 
       return (
@@ -142,13 +137,11 @@ export default function EntrySubmission({
          position: "",
          email: "",
          contactNumber: "",
-         website: "",
-         companyDescription: "",
+         classification: "",
          altContactPerson: "",
          altContactNumber: "",
          altEmail: "",
          authorizationFormDocument: null,
-         DILGDocument: null,
          businessPermitDocument: null,
          DTISecDocument: null,
          awardCategory: "",
@@ -202,7 +195,6 @@ export default function EntrySubmission({
       try {
          // gather files
          const authorizationForm = entry.authorizationFormDocument?.[0];
-         const dilg = entry.DILGDocument?.[0];
          const permit = entry.businessPermitDocument?.[0];
          const dti = entry.DTISecDocument?.[0];
          const keyVisual = entry.keyVisual?.[0];
@@ -215,7 +207,7 @@ export default function EntrySubmission({
             return;
          }
 
-         if (nominee === "MSME" && (!dilg || !permit || !dti)) {
+         if (nominee === "Business" && (!permit || !dti)) {
             alert("Missing required files.");
             return;
          }
@@ -225,7 +217,10 @@ export default function EntrySubmission({
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-               dilg_document: { name: dilg?.name, type: dilg?.type },
+               authorization_form_document: {
+                  name: authorizationForm?.name,
+                  type: authorizationForm?.type,
+               },
                business_permit_document: {
                   name: permit?.name,
                   type: permit?.type,
@@ -250,12 +245,10 @@ export default function EntrySubmission({
             return;
          }
 
-         // track uploaded paths for cleanup if DB insert fails
          const uploaded: Array<{ bucket: string; path: string }> = [];
 
          const mustUpload = [
             { meta: init.authorization_form_document, file: authorizationForm },
-            { meta: init.dilg_document, file: dilg },
             { meta: init.business_permit_document, file: permit },
             { meta: init.dti_sec_document, file: dti },
             { meta: init.key_visual, file: keyVisual },
@@ -273,6 +266,7 @@ export default function EntrySubmission({
          await Promise.all([
             ...mustUpload.map(({ meta, file }) =>
                withRetry(async () => {
+                  if (!file) return; // safety
                   await uploadWithToken(
                      meta.bucket,
                      meta.path,
@@ -313,8 +307,7 @@ export default function EntrySubmission({
                email: entry.email,
                contact_number: entry.contactNumber,
                website: entry.website || null,
-               company_description:
-                  nominee === "MSME" ? entry.companyDescription || null : null,
+               company_description: entry.companyDescription || null,
                alt_contact_person: entry.altContactPerson || null,
                alt_contact_number: entry.altContactNumber || null,
                alt_email: entry.altEmail || null,
@@ -323,7 +316,7 @@ export default function EntrySubmission({
                project_description: entry.projectDescription,
                video_link: entry.videoLink || null,
 
-               dilg_doc_path: init.dilg_document.path,
+               authorization_form_path: init.authorization_form_document?.path,
                business_permit_path: init.business_permit_document.path,
                dti_sec_permit_path: init.dti_sec_document.path,
                key_visual_path: init.key_visual.path,
@@ -431,7 +424,7 @@ export default function EntrySubmission({
                         handleOnChange("awardCategory", value)
                      }
                      options={
-                        nominee === "MSME"
+                        nominee === "Business"
                            ? MSME_AWARD_CATEGORIES
                            : LGU_AWARD_CATEGORIES
                      }
@@ -467,7 +460,7 @@ export default function EntrySubmission({
                            onChange={(value) =>
                               handleOnChange("classification", value)
                            }
-                           options={LGU_CLASSIFICATIONS}
+                           options={nominee === 'Business' ? MSME_CLASSIFICATIONS : LGU_CLASSIFICATIONS}
 
                         />
                      </div>
@@ -575,7 +568,7 @@ export default function EntrySubmission({
                            className="bg-white/10 border border-white/20 rounded-lg p-2 text-white/90 focus:outline-none focus:ring-2 focus:ring-white"
                         />
                      </div>
-                     {nominee === "MSME" && (
+                     {nominee === "Business" && (
                         <div className="flex flex-col gap-2 mt-1">
                            <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                               *Company Description{" "}
@@ -649,9 +642,9 @@ export default function EntrySubmission({
                      </div>
                      {nominee === "Local Government Unit" && (
                         <>
-                           <div className="flex justify-between items-center mt-2 -mb-2">
-                              <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                                 *  *Upload Authorization Form for Representative
+                           <div className="flex justify-between items-center mt-2 -mb-3">
+                              <label className="lg:text-base text-sm text-white/90 font-sans font-semibold">
+                                 *Upload Authorization Form for Representative
                               </label>
                               <span className="flex items-center">
                                  <a
@@ -667,30 +660,13 @@ export default function EntrySubmission({
                               </span>
                            </div>
                            <DragDropUpload
-                              name="DILGDocument"
-                              value={entry?.DILGDocument}
+                              name="authorizationFormDocument"
+                              value={entry?.authorizationFormDocument}
                               onChange={(file) =>
-                                 handleOnChange("DILGDocument", file)
+                                 handleOnChange("authorizationFormDocument", file)
                               }
-                              placeholder={`Upload DILG Environmental Audit Certificate`}
-                              helperText="(PDF, JPG, or PNG)"
-                              className="mt-6"
-                           />
-                        </>
-                     )}
-                     {nominee !== "Local Government Unit" && (
-                        <>
-                           <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
-                              *Upload DILG Environmental Audit Certificate
-                           </label>
-                           <DragDropUpload
-                              name="DILGDocument"
-                              value={entry?.DILGDocument}
-                              onChange={(file) =>
-                                 handleOnChange("DILGDocument", file)
-                              }
-                              placeholder={`Upload DILG Environmental Audit Certificate`}
-                              helperText="(PDF, JPG, or PNG)"
+                              placeholder={`Upload Authorization Form for Representative`}
+                              helperText="(PDF)"
                               className="mt-6"
                            />
                         </>
@@ -790,14 +766,14 @@ export default function EntrySubmission({
                      <span className="text-white/80 max-w-3xl text-justify text-[13px] italic">
                         (Please upload a single image or graphic that best represents your initiative. This may be a logo, main photo, or poster used for the project. The key visual will be used in Green Guardian Awards materials and presentations. Kindly provide a high-resolution file.)
                      </span>
-                     <div className="flex justify-between items-center mt-2 -mb-2">
+                     <div className="flex justify-between items-center mt-3 -mb-1">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Upload Bid Document
                         </label>
                         <span className="flex items-center">
                            <a
                               href={`/api/download/${encodeURIComponent(bidDocumentTemplate)}`}
-                              className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold"
+                              className="min-w-44 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold"
                            >
                               <FileDown
                                  size={18}
@@ -816,11 +792,12 @@ export default function EntrySubmission({
                         helperText="(PDF)"
                         className="mt-4"
                      />
-                     <div className="flex justify-between items-center mt-2 -mb-2">
+                     <div className="flex justify-between items-center mt-3 -mb-1">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Upload Project Documentation
                         </label>
-                        <a href={`/api/download/${encodeURIComponent(projectDocumentationTemplate)}`} className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
+                        <a href={`/api/download/${encodeURIComponent(projectDocumentationTemplate)}`}
+                           className="min-w-44 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
                            <FileDown
                               size={18}
                               className="inline-block text-white/70"
@@ -1053,4 +1030,11 @@ const LGU_CLASSIFICATIONS: DropdownOption[] = [
    { value: "ComponentCity", label: "Component City" },
    { value: "Municipality", label: "Municipality" },
    { value: "Highly Urbanized City", label: "Urbanized City" },
+];
+
+const MSME_CLASSIFICATIONS: DropdownOption[] = [
+   { value: "Micro", label: "Micro (1-9 employees)" },
+   { value: "Small", label: "Small (10-99 employees)" },
+   { value: "Medium", label: "Medium (100-199 employees)" },
+   { value: "Large", label: "Large (200+ employees)" },
 ];
