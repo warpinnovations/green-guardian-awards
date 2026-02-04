@@ -23,9 +23,9 @@ interface BidEntryProps {
    altContactPerson?: string;
    altContactNumber?: string;
    altEmail?: string;
-   authorizationFormDocument: File[] | null;
-   businessPermitDocument: File[] | null;
-   DTISecDocument: File[] | null;
+   authorizationFormDocument?: File[] | null;
+   businessPermitDocument?: File[] | null;
+   DTISecDocument?: File[] | null;
    awardCategory: string;
    projectTitle: string;
    projectDescription: string;
@@ -72,9 +72,6 @@ export default function EntrySubmission({
       altEmail: "",
       contactNumber: "",
       companyDescription: undefined,
-      authorizationFormDocument: null,
-      businessPermitDocument: null,
-      DTISecDocument: null,
       awardCategory: "",
       projectTitle: "",
       projectDescription: "",
@@ -135,6 +132,8 @@ export default function EntrySubmission({
          orgAddress: "",
          fullName: "",
          position: "",
+         website: "",
+         companyDescription: "",
          email: "",
          contactNumber: "",
          classification: "",
@@ -166,7 +165,7 @@ export default function EntrySubmission({
       email: string;
       fullName: string;
       orgName: string;
-      track: "LGU" | "MSME";
+      track: "Local Government Unit" | "Business";
       awardCategory: string;
       referenceId: string;
    }) => {
@@ -193,7 +192,6 @@ export default function EntrySubmission({
       setIsSubmitting(true);
 
       try {
-         // gather files
          const authorizationForm = entry.authorizationFormDocument?.[0];
          const permit = entry.businessPermitDocument?.[0];
          const dti = entry.DTISecDocument?.[0];
@@ -202,41 +200,48 @@ export default function EntrySubmission({
          const projDoc = entry.projectDocument?.[0];
          const supporting = entry.supportingDocument || [];
 
-         if (nominee === "Local Government Unit" && !authorizationForm) {
+         const isLGU = nominee === "Local Government Unit";
+         const isMSME = nominee === "Business";
+
+         // --- validate required files per track ---
+         const missingRequired =
+            // LGU requires authorization form
+            (isLGU && !authorizationForm) ||
+            // MSME requires business permit + DTI/SEC permit
+            (isMSME && (!permit || !dti));
+
+         if (missingRequired) {
             alert("Missing required files.");
             return;
          }
 
-         if (nominee === "Business" && (!permit || !dti)) {
-            alert("Missing required files.");
-            return;
-         }
-
-         // init signed upload tokens from server
-         const initRes = await fetch("/api/bid-entry/init-upload", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
+         // --- init signed upload tokens from server ---
+         // send ONLY the files that apply (prevents server from generating tokens for non-required docs)
+         const initPayload = {
+            track: nominee,
+            ...(isLGU && {
                authorization_form_document: {
                   name: authorizationForm?.name,
                   type: authorizationForm?.type,
                },
+            }),
+            ...(isMSME && {
                business_permit_document: {
                   name: permit?.name,
                   type: permit?.type,
                },
                dti_sec_document: { name: dti?.name, type: dti?.type },
-               key_visual: { name: keyVisual?.name, type: keyVisual?.type },
-               bid_document: { name: bid?.name, type: bid?.type },
-               project_documentation: {
-                  name: projDoc?.name,
-                  type: projDoc?.type,
-               },
-               supporting_docs: supporting.map((f) => ({
-                  name: f.name,
-                  type: f.type,
-               })),
             }),
+            key_visual: { name: keyVisual?.name, type: keyVisual?.type },
+            bid_document: { name: bid?.name, type: bid?.type },
+            project_documentation: { name: projDoc?.name, type: projDoc?.type },
+            supporting_docs: supporting.map((f) => ({ name: f.name, type: f.type })),
+         };
+
+         const initRes = await fetch("/api/bid-entry/init-upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(initPayload),
          });
 
          const init = await initRes.json();
@@ -247,55 +252,35 @@ export default function EntrySubmission({
 
          const uploaded: Array<{ bucket: string; path: string }> = [];
 
-         const mustUpload = [
-            { meta: init.authorization_form_document, file: authorizationForm },
-            { meta: init.business_permit_document, file: permit },
-            { meta: init.dti_sec_document, file: dti },
-            { meta: init.key_visual, file: keyVisual },
-            { meta: init.bid_document, file: bid },
-            { meta: init.project_documentation, file: projDoc },
-         ];
+         type UploadMeta = { bucket: string; path: string; token: string };
+         const tasks: Array<Promise<void>> = [];
 
-         const supportingMetas = (init.supporting_docs || []) as Array<{
-            bucket: string;
-            path: string;
-            token: string;
-         }>;
-
-         // upload all in parallel with retry
-         await Promise.all([
-            ...mustUpload.map(({ meta, file }) =>
+         const enqueueUpload = (meta: UploadMeta | undefined, file: File | undefined) => {
+            if (!meta || !file) return;
+            tasks.push(
                withRetry(async () => {
-                  if (!file) return; // safety
-                  await uploadWithToken(
-                     meta.bucket,
-                     meta.path,
-                     meta.token,
-                     file,
-                  );
+                  await uploadWithToken(meta.bucket, meta.path, meta.token, file);
                   uploaded.push({ bucket: meta.bucket, path: meta.path });
                }, 2),
-            ),
-            ...supportingMetas.map((meta, i) =>
-               withRetry(async () => {
-                  const file = supporting[i];
-                  if (!file) return; // safety
-                  await uploadWithToken(
-                     meta.bucket,
-                     meta.path,
-                     meta.token,
-                     file,
-                  );
-                  uploaded.push({ bucket: meta.bucket, path: meta.path });
-               }, 2),
-            ),
-         ]);
+            );
+         };
 
-         const supportingPaths = supportingMetas
-            .map((m) => m.path)
-            .filter(Boolean);
+         // --- required / optional uploads (by track) ---
+         enqueueUpload(init.authorization_form_document, authorizationForm); // LGU only
+         enqueueUpload(init.business_permit_document, permit); // MSME only
+         enqueueUpload(init.dti_sec_document, dti); // MSME only
+         enqueueUpload(init.key_visual, keyVisual);
+         enqueueUpload(init.bid_document, bid);
+         enqueueUpload(init.project_documentation, projDoc);
 
-         // submit DB record
+         const supportingMetas = (init.supporting_docs || []) as UploadMeta[];
+         supportingMetas.forEach((meta, i) => enqueueUpload(meta, supporting[i]));
+
+         await Promise.all(tasks);
+
+         const supportingPaths = supportingMetas.map((m) => m.path).filter(Boolean);
+
+         // --- submit DB record ---
          const submitRes = await fetch("/api/create-bid-entry", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -304,9 +289,11 @@ export default function EntrySubmission({
                org_address: entry.orgAddress,
                full_name: entry.fullName,
                position: entry.position,
+               classification: entry.classification,
                email: entry.email,
                contact_number: entry.contactNumber,
                website: entry.website || null,
+               facebook_page: entry.facebookPage || null,
                company_description: entry.companyDescription || null,
                alt_contact_person: entry.altContactPerson || null,
                alt_contact_number: entry.altContactNumber || null,
@@ -316,12 +303,15 @@ export default function EntrySubmission({
                project_description: entry.projectDescription,
                video_link: entry.videoLink || null,
 
-               authorization_form_path: init.authorization_form_document?.path,
-               business_permit_path: init.business_permit_document.path,
-               dti_sec_permit_path: init.dti_sec_document.path,
-               key_visual_path: init.key_visual.path,
-               bid_doc_path: init.bid_document.path,
-               project_doc_path: init.project_documentation.path,
+               // track-specific paths
+               authorization_form_doc_path: init.authorization_form_document?.path ?? null,
+               business_permit_path: init.business_permit_document?.path ?? null,
+               dti_sec_permit_path: init.dti_sec_document?.path ?? null,
+
+               // always paths
+               key_visual_path: init.key_visual?.path,
+               bid_doc_path: init.bid_document?.path,
+               project_doc_path: init.project_documentation?.path,
                supporting_doc_paths: supportingPaths,
 
                data_privacy_consent: dataPrivacyConcerns,
@@ -332,39 +322,37 @@ export default function EntrySubmission({
 
          const submitData = await submitRes.json();
 
-         // send email on success
-         if (submitRes.ok) {
-            await sendEmail({
-               email: submitData.email,
-               fullName: submitData.full_name,
-               orgName: submitData.org_name,
-               track: nominee as "LGU" | "MSME",
-               awardCategory: submitData.award_category,
-               referenceId: submitData.reference_id,
-            })
-               .then(() => {
-                  resetEntryFields();
-                  setTermsAccepted(false);
-                  setInfoCertified(false);
-                  setSubmissionCompleted(true);
-               })
-               .catch(() => {
-                  alert(
-                     "Failed to send confirmation email. Please contact support.",
-                  );
-               });
-         } else {
+         if (!submitRes.ok) {
             alert(`Submission failed: ${submitData.error || "Unknown error"}`);
             return;
          }
-      } catch (err: Error | unknown) {
-         const message =
-            err instanceof Error ? err.message : "Submission failed.";
+
+         // --- send email on success ---
+         await sendEmail({
+            email: submitData.email,
+            fullName: submitData.full_name,
+            orgName: submitData.org_name,
+            track: nominee,
+            awardCategory: submitData.award_category,
+            referenceId: submitData.reference_id,
+         })
+            .then(() => {
+               resetEntryFields();
+               setTermsAccepted(false);
+               setInfoCertified(false);
+               setSubmissionCompleted(true);
+            })
+            .catch(() => {
+               alert("Failed to send confirmation email. Please contact support.");
+            });
+      } catch (err: unknown) {
+         const message = err instanceof Error ? err.message : "Submission failed.";
          alert(message);
       } finally {
          setIsSubmitting(false);
       }
    };
+
 
    const handleSuccess = () => {
       setSubmissionCompleted(true);
@@ -661,7 +649,7 @@ export default function EntrySubmission({
                            </div>
                            <DragDropUpload
                               name="authorizationFormDocument"
-                              value={entry?.authorizationFormDocument}
+                              value={entry?.authorizationFormDocument || null}
                               onChange={(file) =>
                                  handleOnChange("authorizationFormDocument", file)
                               }
@@ -678,7 +666,7 @@ export default function EntrySubmission({
                            </label>
                            <DragDropUpload
                               name="businessPermitDocument"
-                              value={entry?.businessPermitDocument}
+                              value={entry?.businessPermitDocument || null}
                               onChange={(file) =>
                                  handleOnChange("businessPermitDocument", file)
                               }
@@ -695,7 +683,7 @@ export default function EntrySubmission({
                            </label>
                            <DragDropUpload
                               name="DTISecDocument"
-                              value={entry?.DTISecDocument}
+                              value={entry?.DTISecDocument || null}
                               onChange={(file) =>
                                  handleOnChange("DTISecDocument", file)
                               }
