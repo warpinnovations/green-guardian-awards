@@ -3,23 +3,27 @@
 import { useState, use, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { CircleCheck, FileDown, ImageUp } from "lucide-react";
-import DragDropUpload from "../components/DragDropUpload";
-import DropdownMenu, { DropdownOption } from "../components/Dropdown";
-import Header from "../components/Header";
-import { uploadWithToken, withRetry } from "../utils/upload";
+import DragDropUpload from "@/app/components/DragDropUpload";
+import DropdownMenu, { DropdownOption } from "@/app/components/Dropdown";
+import Header from "@/app/components/Header";
+import { uploadWithToken, withRetry } from "@/app/utils/upload";
+import FooterSection from "@/app/components/sections/FooterSection";
 
 interface BidEntryProps {
    orgName: string;
    orgAddress: string;
+   classification?: string;
    fullName: string;
    position: string;
    email: string;
    contactNumber: string;
    website?: string;
+   facebookPage?: string;
    companyDescription?: string;
    altContactPerson?: string;
    altContactNumber?: string;
    altEmail?: string;
+   authorizationFormDocument: File[] | null;
    DILGDocument: File[] | null;
    businessPermitDocument: File[] | null;
    DTISecDocument: File[] | null;
@@ -40,12 +44,16 @@ export default function EntrySubmission({
 }) {
    const router = useRouter();
    const params = use(searchParams);
-   const nominee = params.nominee === "msme" ? "MSME" : "LGU";
+   const nominee = params.nominee === "msme" ? "MSME" : "Local Government Unit";
 
-   const bidDocument =
+   const authorizationFormDoc = "Green Guardian - LGU - Authorization Letter.docx";
+
+   const bidDocumentTemplate =
       nominee === "MSME"
-         ? "MSME Bid Requirement Template (Green Guardian Awards).pdf"
-         : "LGU Bid Requirement Template (Green Guardian Awards).pdf";
+         ? "MSMEs and Large Corp Bid Requirement Template (Green Guardian Awards).docx"
+         : "LGU Bid Requirement Template (Green Guardian Awards).docx";
+
+   const projectDocumentationTemplate = "Supporting Docs (Green Guardian Awards) .pptx";
 
    const [dataPrivacyConcerns, setDataPrivacyConcerns] = useState(false);
    const [termsAccepted, setTermsAccepted] = useState(false);
@@ -56,6 +64,7 @@ export default function EntrySubmission({
    const [entry, setEntry] = useState<BidEntryProps>({
       orgName: "",
       orgAddress: "",
+      classification: "",
       fullName: "",
       position: "",
       email: "",
@@ -63,6 +72,9 @@ export default function EntrySubmission({
       altContactNumber: "",
       altEmail: "",
       contactNumber: "",
+      website: "",
+      companyDescription: "",
+      authorizationFormDocument: null,
       DILGDocument: null,
       businessPermitDocument: null,
       DTISecDocument: null,
@@ -79,16 +91,18 @@ export default function EntrySubmission({
    const isEmpty = (v: unknown) => (typeof v === "string" ? !v.trim() : !v);
 
    const disableSubmit = useMemo(() => {
-      const REQUIRED_FIELDS: (keyof typeof entry)[] = [
+      const REQUIRED_FIELDS = [
          "orgName",
          "orgAddress",
+         nominee === "Local Government Unit" ? "classification" : null,
          "fullName",
          "position",
          "email",
          "contactNumber",
-         "DILGDocument",
-         "businessPermitDocument",
-         "DTISecDocument",
+         nominee === "Local Government Unit" ? "authorizationFormDocument" : null,
+         nominee === "MSME" ? "DILGDocument" : null,
+         nominee === "MSME" ? "businessPermitDocument" : null,
+         nominee === "MSME" ? "DTISecDocument" : null,
          "awardCategory",
          "projectTitle",
          "projectDescription",
@@ -97,7 +111,7 @@ export default function EntrySubmission({
          "projectDocument",
          "supportingDocument",
          "videoLink",
-      ];
+      ].filter(Boolean) as Array<keyof BidEntryProps>;
 
       return (
          REQUIRED_FIELDS.some((field) => isEmpty(entry[field])) ||
@@ -105,7 +119,7 @@ export default function EntrySubmission({
          !infoCertified ||
          !dataPrivacyConcerns
       );
-   }, [termsAccepted, infoCertified, dataPrivacyConcerns, entry]);
+   }, [nominee, termsAccepted, infoCertified, dataPrivacyConcerns, entry]);
 
    const handleOnChange = (
       field: keyof BidEntryProps,
@@ -133,6 +147,7 @@ export default function EntrySubmission({
          altContactPerson: "",
          altContactNumber: "",
          altEmail: "",
+         authorizationFormDocument: null,
          DILGDocument: null,
          businessPermitDocument: null,
          DTISecDocument: null,
@@ -186,6 +201,7 @@ export default function EntrySubmission({
 
       try {
          // gather files
+         const authorizationForm = entry.authorizationFormDocument?.[0];
          const dilg = entry.DILGDocument?.[0];
          const permit = entry.businessPermitDocument?.[0];
          const dti = entry.DTISecDocument?.[0];
@@ -194,7 +210,12 @@ export default function EntrySubmission({
          const projDoc = entry.projectDocument?.[0];
          const supporting = entry.supportingDocument || [];
 
-         if (!dilg || !permit || !dti || !keyVisual || !bid || !projDoc) {
+         if (nominee === "Local Government Unit" && !authorizationForm) {
+            alert("Missing required files.");
+            return;
+         }
+
+         if (nominee === "MSME" && (!dilg || !permit || !dti)) {
             alert("Missing required files.");
             return;
          }
@@ -204,17 +225,17 @@ export default function EntrySubmission({
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-               dilg_document: { name: dilg.name, type: dilg.type },
+               dilg_document: { name: dilg?.name, type: dilg?.type },
                business_permit_document: {
-                  name: permit.name,
-                  type: permit.type,
+                  name: permit?.name,
+                  type: permit?.type,
                },
-               dti_sec_document: { name: dti.name, type: dti.type },
-               key_visual: { name: keyVisual.name, type: keyVisual.type },
-               bid_document: { name: bid.name, type: bid.type },
+               dti_sec_document: { name: dti?.name, type: dti?.type },
+               key_visual: { name: keyVisual?.name, type: keyVisual?.type },
+               bid_document: { name: bid?.name, type: bid?.type },
                project_documentation: {
-                  name: projDoc.name,
-                  type: projDoc.type,
+                  name: projDoc?.name,
+                  type: projDoc?.type,
                },
                supporting_docs: supporting.map((f) => ({
                   name: f.name,
@@ -233,6 +254,7 @@ export default function EntrySubmission({
          const uploaded: Array<{ bucket: string; path: string }> = [];
 
          const mustUpload = [
+            { meta: init.authorization_form_document, file: authorizationForm },
             { meta: init.dilg_document, file: dilg },
             { meta: init.business_permit_document, file: permit },
             { meta: init.dti_sec_document, file: dti },
@@ -357,7 +379,7 @@ export default function EntrySubmission({
    };
 
    return (
-      <>
+      <div className="min-h-screen relative">
          <Header showCTA={false} />
          {!dataPrivacyConcerns && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900/70">
@@ -399,14 +421,30 @@ export default function EntrySubmission({
                </p>
                {/* Nominee details */}
                <div className="rounded-2xl border-green-900/20 bg-amber-100/10 border lg:p-5 p-3">
-                  <p className="text-white/90 lg:text-lg font-semibold mb-2">
+                  <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
+                     *Award Category
+                  </label>
+                  <DropdownMenu
+                     placeholder="Select category"
+                     value={entry?.awardCategory || ""}
+                     onChange={(value) =>
+                        handleOnChange("awardCategory", value)
+                     }
+                     options={
+                        nominee === "MSME"
+                           ? MSME_AWARD_CATEGORIES
+                           : LGU_AWARD_CATEGORIES
+                     }
+                     className="mb-6 mt-4"
+                  />
+                  <p className="text-white/90 lg:text-lg font-semibold">
                      Nominator Information and Requirements
                   </p>
                   <div className="flex flex-col gap-2">
                      <div className="flex flex-col gap-2 mt-2">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                           {nominee === "LGU"
-                              ? "*Name of LGU"
+                           {nominee === "Local Government Unit"
+                              ? "*Name of Local Government Unit"
                               : "*Name of Company/Corporation"}
                         </label>
                         <input
@@ -417,6 +455,20 @@ export default function EntrySubmission({
                            }
                            required
                            className="bg-white/10 border border-white/20 rounded-lg p-2 text-white/90 focus:outline-none focus:ring-2 focus:ring-white"
+                        />
+                     </div>
+                     <div className="flex flex-col gap-2">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
+                           *Classification
+                        </label>
+                        <DropdownMenu
+                           placeholder="Select classification"
+                           value={entry?.classification || ""}
+                           onChange={(value) =>
+                              handleOnChange("classification", value)
+                           }
+                           options={LGU_CLASSIFICATIONS}
+
                         />
                      </div>
                      <div className="flex flex-col gap-2">
@@ -437,7 +489,7 @@ export default function EntrySubmission({
                      <div className="lg:grid grid-cols-2 gap-4 mt-2">
                         <div className="flex flex-col gap-2">
                            <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                              *Full Name
+                              *Full Name of Authorized Representative
                            </label>
                            <input
                               type="text"
@@ -497,20 +549,31 @@ export default function EntrySubmission({
                            />
                         </div>
                      </div>
-                     <div className="mt-2">
-                        <div className="flex flex-col gap-2">
-                           <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                              Website
-                           </label>
-                           <input
-                              type="text"
-                              value={entry?.website}
-                              onChange={(e) =>
-                                 handleOnChange("website", e.target.value)
-                              }
-                              className="bg-white/10 border border-white/20 rounded-lg p-2 text-white/90 focus:outline-none focus:ring-2 focus:ring-white"
-                           />
-                        </div>
+                     <div className="flex flex-col gap-2 mt-2">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
+                           Website <span className="font-normal">(if applicable)</span>
+                        </label>
+                        <input
+                           type="text"
+                           value={entry?.website}
+                           onChange={(e) =>
+                              handleOnChange("website", e.target.value)
+                           }
+                           className="bg-white/10 border border-white/20 rounded-lg p-2 text-white/90 focus:outline-none focus:ring-2 focus:ring-white"
+                        />
+                     </div>
+                     <div className="flex flex-col gap-2 mt-2">
+                        <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
+                           Facebook Page
+                        </label>
+                        <input
+                           type="text"
+                           value={entry?.website}
+                           onChange={(e) =>
+                              handleOnChange("website", e.target.value)
+                           }
+                           className="bg-white/10 border border-white/20 rounded-lg p-2 text-white/90 focus:outline-none focus:ring-2 focus:ring-white"
+                        />
                      </div>
                      {nominee === "MSME" && (
                         <div className="flex flex-col gap-2 mt-1">
@@ -584,45 +647,88 @@ export default function EntrySubmission({
                            />
                         </div>
                      </div>
-                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
-                        *Upload DILG Environmental Audit Certificate
-                     </label>
-                     <DragDropUpload
-                        name="DILGDocument"
-                        value={entry?.DILGDocument}
-                        onChange={(file) =>
-                           handleOnChange("DILGDocument", file)
-                        }
-                        placeholder={`Upload DILG Environmental Audit Certificate`}
-                        helperText="(PDF, JPG, or PNG)"
-                        className="mt-6"
-                     />
-                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
-                        *Upload Business Permit
-                     </label>
-                     <DragDropUpload
-                        name="businessPermitDocument"
-                        value={entry?.businessPermitDocument}
-                        onChange={(file) =>
-                           handleOnChange("businessPermitDocument", file)
-                        }
-                        placeholder={`Upload Business Permit`}
-                        helperText="(PDF, JPG, or PNG)"
-                        className="mt-6"
-                     />
-                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
-                        *Upload SEC/DTI Permit
-                     </label>
-                     <DragDropUpload
-                        name="DTISecDocument"
-                        value={entry?.DTISecDocument}
-                        onChange={(file) =>
-                           handleOnChange("DTISecDocument", file)
-                        }
-                        placeholder={`Upload SEC/DTI Permit`}
-                        helperText="(PDF, JPG, or PNG)"
-                        className="mt-6"
-                     />
+                     {nominee === "Local Government Unit" && (
+                        <>
+                           <div className="flex justify-between items-center mt-2 -mb-2">
+                              <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
+                                 *  *Upload Authorization Form for Representative
+                              </label>
+                              <span className="flex items-center">
+                                 <a
+                                    href={`/api/download/${encodeURIComponent(authorizationFormDoc)}`}
+                                    className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold"
+                                 >
+                                    <FileDown
+                                       size={18}
+                                       className="inline-block text-white/70"
+                                    />
+                                    Download Form
+                                 </a>
+                              </span>
+                           </div>
+                           <DragDropUpload
+                              name="DILGDocument"
+                              value={entry?.DILGDocument}
+                              onChange={(file) =>
+                                 handleOnChange("DILGDocument", file)
+                              }
+                              placeholder={`Upload DILG Environmental Audit Certificate`}
+                              helperText="(PDF, JPG, or PNG)"
+                              className="mt-6"
+                           />
+                        </>
+                     )}
+                     {nominee !== "Local Government Unit" && (
+                        <>
+                           <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
+                              *Upload DILG Environmental Audit Certificate
+                           </label>
+                           <DragDropUpload
+                              name="DILGDocument"
+                              value={entry?.DILGDocument}
+                              onChange={(file) =>
+                                 handleOnChange("DILGDocument", file)
+                              }
+                              placeholder={`Upload DILG Environmental Audit Certificate`}
+                              helperText="(PDF, JPG, or PNG)"
+                              className="mt-6"
+                           />
+                        </>
+                     )}
+                     {nominee !== "Local Government Unit" && (
+                        <>
+                           <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
+                              *Upload Business Permit
+                           </label>
+                           <DragDropUpload
+                              name="businessPermitDocument"
+                              value={entry?.businessPermitDocument}
+                              onChange={(file) =>
+                                 handleOnChange("businessPermitDocument", file)
+                              }
+                              placeholder={`Upload Business Permit`}
+                              helperText="(PDF, JPG, or PNG)"
+                              className="mt-6"
+                           />
+                        </>
+                     )}
+                     {nominee !== "Local Government Unit" && (
+                        <>
+                           <label className="lg:text-base text-md text-white/90 font-sans font-semibold mt-2 -mb-4">
+                              *Upload SEC/DTI Permit
+                           </label>
+                           <DragDropUpload
+                              name="DTISecDocument"
+                              value={entry?.DTISecDocument}
+                              onChange={(file) =>
+                                 handleOnChange("DTISecDocument", file)
+                              }
+                              placeholder={`Upload SEC/DTI Permit`}
+                              helperText="(PDF, JPG, or PNG)"
+                              className="mt-6"
+                           />
+                        </>
+                     )}
                   </div>
                </div>
                <div className="rounded-2xl border-green-900/20 bg-amber-100/10 border p-5 flex flex-col gap-5 mt-4">
@@ -630,21 +736,6 @@ export default function EntrySubmission({
                      Bid Submission
                   </p>
                   <div className="flex flex-col gap-2">
-                     <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                        *Award Category
-                     </label>
-                     <DropdownMenu
-                        placeholder="Select category"
-                        value={entry?.awardCategory || ""}
-                        onChange={(value) =>
-                           handleOnChange("awardCategory", value)
-                        }
-                        options={
-                           nominee === "MSME"
-                              ? MSME_AWARD_CATEGORIES
-                              : LGU_AWARD_CATEGORIES
-                        }
-                     />
                      <div className="flex flex-col gap-2">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Title of the Project/Program Initiative
@@ -696,20 +787,23 @@ export default function EntrySubmission({
                         helperText="(recommended size: 1920 × 1080 px, JPG, or PNG)"
                         className="mt-4"
                      />
+                     <span className="text-white/80 max-w-3xl text-justify text-[13px] italic">
+                        (Please upload a single image or graphic that best represents your initiative. This may be a logo, main photo, or poster used for the project. The key visual will be used in Green Guardian Awards materials and presentations. Kindly provide a high-resolution file.)
+                     </span>
                      <div className="flex justify-between items-center mt-2 -mb-2">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                           *Upload Bid Documentation
+                           *Upload Bid Document
                         </label>
                         <span className="flex items-center">
                            <a
-                              href={`/api/download/${encodeURIComponent(bidDocument)}`}
+                              href={`/api/download/${encodeURIComponent(bidDocumentTemplate)}`}
                               className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold"
                            >
                               <FileDown
                                  size={18}
                                  className="inline-block text-white/70"
                               />
-                              Download Guide
+                              Download Template
                            </a>
                         </span>
                      </div>
@@ -726,14 +820,13 @@ export default function EntrySubmission({
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Upload Project Documentation
                         </label>
-                        {/* hide for now */}
-                        {/* <button className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
+                        <a href={`/api/download/${encodeURIComponent(projectDocumentationTemplate)}`} className="min-w-38 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold">
                            <FileDown
                               size={18}
                               className="inline-block text-white/70"
                            />
-                           Download Guide
-                        </button> */}
+                           Download Template
+                        </a>
                      </div>
                      <DragDropUpload
                         name="projectDocument"
@@ -760,9 +853,12 @@ export default function EntrySubmission({
                         placeholder={`Upload Supporting Document`}
                         helperText="(PDF, PPT, JPG, or PNG) - you may upload multiple files"
                      />
+                     <span className="text-white/80 max-w-3xl text-[13px] text-justify italic">
+                        (Upload any documents that verify your initiative and demonstrate its implementation and impact. These may include: Certificates, permits, or clearances from relevant government agencies, Program reports or monitoring data showing results and outcomes, MOUs, participation logs, or testimonials, Official resolutions or ordinances authorizing or supporting the initiative, Any other relevant documentation.)
+                     </span>
                      <div className="flex flex-col gap-2 mt-2">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                           *Video{" "}
+                           Video{" "}
                            <span className="text-white/50 text-sm ml-1">
                               (Google Drive or YouTube link)
                            </span>
@@ -773,7 +869,6 @@ export default function EntrySubmission({
                            onChange={(e) =>
                               handleOnChange("videoLink", e.target.value)
                            }
-                           required
                            className="bg-white/10 border border-white/20 rounded-lg p-2 text-white/90 focus:outline-none focus:ring-2 focus:ring-white"
                         />
                      </div>
@@ -917,7 +1012,10 @@ export default function EntrySubmission({
                );
             }
          `}</style>
-      </>
+         <div className="pt-40">
+            <FooterSection />
+         </div>
+      </div>
    );
 }
 
@@ -949,4 +1047,10 @@ const MSME_AWARD_CATEGORIES: DropdownOption[] = [
       value: "Community Engagement for Environmental Impact Award",
       label: "Community Engagement for Environmental Impact Award",
    },
+];
+
+const LGU_CLASSIFICATIONS: DropdownOption[] = [
+   { value: "ComponentCity", label: "Component City" },
+   { value: "Municipality", label: "Municipality" },
+   { value: "Highly Urbanized City", label: "Urbanized City" },
 ];
