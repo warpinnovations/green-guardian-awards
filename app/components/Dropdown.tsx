@@ -73,7 +73,7 @@ export default function DropdownMenu({
                tabIndex={-1}
                className="
             absolute z-50 mt-2 lg:w-198 w-[81%] overflow-hidden rounded-lg
-            border border-white/15 bg-white/20 backdrop-blur shadow-lg
+            border border-white/15 bg-white/20 backdrop-blur-xl shadow-lg
           "
             >
                <ul className="max-h-60 overflow-auto py-1">
@@ -86,7 +86,7 @@ export default function DropdownMenu({
                            onMouseEnter={() => setActiveIndex(idx)}
                            onClick={() => selectOption(opt)}
                            className={`
-                    px-4 py-2 cursor-pointer text-sm transition text-white
+                    px-4 py-2 cursor-pointer text-sm transition text-white font-medium
 
                     ${isActive ? "bg-white/10" : ""}
                     hover:bg-white/10
