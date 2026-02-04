@@ -549,9 +549,9 @@ export default function EntrySubmission({
                         </label>
                         <input
                            type="text"
-                           value={entry?.website}
+                           value={entry?.facebookPage}
                            onChange={(e) =>
-                              handleOnChange("website", e.target.value)
+                              handleOnChange("facebookPage", e.target.value)
                            }
                            className="bg-white/10 border border-white/20 rounded-lg p-2 text-white/90 focus:outline-none focus:ring-2 focus:ring-white"
                         />
