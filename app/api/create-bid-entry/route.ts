@@ -188,7 +188,6 @@ export async function POST(req: Request) {
       { status: 201 },
     );
   } catch (e: unknown) {
-    console.log(e);
     const message = e instanceof Error ? e.message : "Submission failed.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
