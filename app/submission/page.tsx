@@ -36,6 +36,50 @@ interface BidEntryProps {
    videoLink?: string;
 }
 
+const LGU_AWARD_CATEGORIES: DropdownOption[] = [
+   {
+      value: "The LGU-Led Ecological Stewardship Award",
+      label: "The LGU-Led Ecological Stewardship Award",
+   },
+   {
+      value: "The Circular Economy and Waste Management Excellence Award",
+      label: "The Circular Economy and Waste Management Excellence Award",
+   },
+   {
+      value: "The Green Infrastructure and Climate Action Award",
+      label: "The Green Infrastructure and Climate Action Award",
+   },
+];
+
+const MSME_AWARD_CATEGORIES: DropdownOption[] = [
+   {
+      value: "Sustainable Operations Excellence Award",
+      label: "Sustainable Operations Excellence Award",
+   },
+   {
+      value: "Green Product/Service Innovation Award",
+      label: "Green Product/Service Innovation Award",
+   },
+   {
+      value: "Community Engagement for Environmental Impact Award",
+      label: "Community Engagement for Environmental Impact Award",
+   },
+];
+
+const LGU_CLASSIFICATIONS: DropdownOption[] = [
+   { value: "ComponentCity", label: "Component City" },
+   { value: "Municipality", label: "Municipality" },
+   { value: "Highly Urbanized City", label: "Highly Urbanized City" },
+];
+
+const MSME_CLASSIFICATIONS: DropdownOption[] = [
+   { value: "Micro", label: "Micro (1-9 employees)" },
+   { value: "Small", label: "Small (10-99 employees)" },
+   { value: "Medium", label: "Medium (100-199 employees)" },
+   { value: "Large", label: "Large (200+ employees)" },
+];
+
+
 export default function EntrySubmission({
    searchParams,
 }: {
@@ -44,15 +88,6 @@ export default function EntrySubmission({
    const router = useRouter();
    const params = use(searchParams);
    const nominee = params.nominee === "msme" ? "Business" : "Local Government Unit";
-
-   const authorizationFormDoc = "Green Guardian - LGU - Authorization Letter.docx";
-
-   const bidDocumentTemplate =
-      nominee === "Business"
-         ? "MSMEs and Large Corp Bid Requirement Template (Green Guardian Awards).docx"
-         : "LGU Bid Requirement Template (Green Guardian Awards).docx";
-
-   const projectDocumentationTemplate = "Supporting Docs (Green Guardian Awards) .pptx";
 
    const [dataPrivacyConcerns, setDataPrivacyConcerns] = useState(false);
    const [termsAccepted, setTermsAccepted] = useState(false);
@@ -80,6 +115,33 @@ export default function EntrySubmission({
       projectDocument: null,
       supportingDocument: null,
    });
+
+   const authorizationFormDoc = "Green Guardian - LGU - Authorization Letter.docx";
+
+   const msmeBidTemplate = {
+      "Sustainable Operations Excellence Award":
+         "MSMEs and Large Corp Bid Requirement Green Guardian Awards (The Sustainable Operations Excellence Award).docx",
+      "Green Product/Service Innovation Award":
+         "public/files/MSMEs and Large Corp Bid Requirement Green Guardian Awards (The Green Product_Service Innovation Award).docx",
+      "Community Engagement for Environmental Impact Award":
+         "MSMEs and Large Corp Bid Requirement Green Guardian Awards (The Community Engagement for Environmental Award).docx",
+   } as const;
+
+   const lguBidTemplate = {
+      "The LGU-Led Ecological Stewardship Award":
+         "LGU Bid Requirement Green Guardian Awards (The LGU-Led Ecological Stewardship Award).docx",
+      "The Circular Economy and Waste Management Excellence Award":
+         "LGU Bid Requirement Green Guardian Awards (The Circular Economy and Waste Management Excellence Award).docx",
+      "The Green Infrastructure and Climate Action Award":
+         "LGU Bid Requirement Green Guardian Awards (The Green Infrastructure and Climate Action Award).docx",
+   } as const;
+
+   const bidDocumentTemplate =
+      nominee === "Business"
+         ? msmeBidTemplate[entry.awardCategory as keyof typeof msmeBidTemplate]
+         : lguBidTemplate[entry.awardCategory as keyof typeof lguBidTemplate];
+
+   const projectDocumentationTemplate = "Supporting Docs (Green Guardian Awards) .pptx";
 
    const isEmpty = (v: unknown) => (typeof v === "string" ? !v.trim() : !v);
 
@@ -761,14 +823,30 @@ export default function EntrySubmission({
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Upload Bid Document
                         </label>
-                        <span className="flex items-center">
+                        <span className="relative group flex items-center">
+                           {!bidDocumentTemplate && (
+                              <span className="absolute -top-8 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition rounded-md bg-white px-3 py-1 text-xs text-black/80 whitespace-nowrap">
+                                 Please select award category
+                              </span>
+                           )}
+
                            <a
-                              href={`/api/download/${encodeURIComponent(bidDocumentTemplate)}`}
-                              className="min-w-44 flex items-center gap-2 rounded-xl border border-white/10 bg-white/20 hover:bg-white/30 py-2 lg:px-3 px-2 cursor-pointer text-white/90 text-sm font-semibold"
+                              href={
+                                 bidDocumentTemplate
+                                    ? `/api/download/${encodeURIComponent(bidDocumentTemplate)}`
+                                    : undefined
+                              }
+                              className={[
+                                 "min-w-44 flex items-center gap-2 rounded-xl border border-white/10 py-2 lg:px-3 px-2 text-sm font-semibold transition",
+                                 bidDocumentTemplate
+                                    ? "bg-white/20 hover:bg-white/30 cursor-pointer text-white/90"
+                                    : "bg-white/10 text-white/40 cursor-not-allowed pointer-events-none",
+                              ].join(" ")}
+                              aria-disabled={!bidDocumentTemplate}
                            >
                               <FileDown
                                  size={18}
-                                 className="inline-block text-white/70"
+                                 className={bidDocumentTemplate ? "text-white/70" : "text-white/30"}
                               />
                               Download Template
                            </a>
@@ -986,46 +1064,3 @@ export default function EntrySubmission({
       </div>
    );
 }
-
-const LGU_AWARD_CATEGORIES: DropdownOption[] = [
-   {
-      value: "The LGU-Led Ecological Stewardship Award",
-      label: "The LGU-Led Ecological Stewardship Award",
-   },
-   {
-      value: "The Circular Economy and Waste Management Excellence Award",
-      label: "The Circular Economy and Waste Management Excellence Award",
-   },
-   {
-      value: "The Green Infrastructure and Climate Action Award",
-      label: "The Green Infrastructure and Climate Action Award",
-   },
-];
-
-const MSME_AWARD_CATEGORIES: DropdownOption[] = [
-   {
-      value: "Sustainable Operations Excellence Award",
-      label: "Sustainable Operations Excellence Award",
-   },
-   {
-      value: "Green Product/Service Innovation Award",
-      label: "Green Product/Service Innovation Award",
-   },
-   {
-      value: "Community Engagement for Environmental Impact Award",
-      label: "Community Engagement for Environmental Impact Award",
-   },
-];
-
-const LGU_CLASSIFICATIONS: DropdownOption[] = [
-   { value: "ComponentCity", label: "Component City" },
-   { value: "Municipality", label: "Municipality" },
-   { value: "Highly Urbanized City", label: "Highly Urbanized City" },
-];
-
-const MSME_CLASSIFICATIONS: DropdownOption[] = [
-   { value: "Micro", label: "Micro (1-9 employees)" },
-   { value: "Small", label: "Small (10-99 employees)" },
-   { value: "Medium", label: "Medium (100-199 employees)" },
-   { value: "Large", label: "Large (200+ employees)" },
-];

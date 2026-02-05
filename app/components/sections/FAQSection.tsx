@@ -145,7 +145,7 @@ function FAQItem({
 }
 
 export default function FAQSection() {
-  const [openIndex, setOpenIndex] = React.useState<number>(0);
+  const [openIndex, setOpenIndex] = React.useState<number | null>(null);
 
   return (
     <section id="top" className="flex relative min-h-screen overflow-hidden lg:py-5 py-20">
@@ -166,7 +166,7 @@ export default function FAQSection() {
                 faq={faq}
                 isOpen={openIndex === idx}
                 onToggle={() =>
-                  setOpenIndex((prev) => (prev === idx ? -1 : idx))
+                  setOpenIndex((prev) => (prev === idx ? null : idx))
                 }
               />
             ))}
