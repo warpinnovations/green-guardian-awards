@@ -649,6 +649,7 @@ export default function EntrySubmission({
                            </div>
                            <DragDropUpload
                               name="authorizationFormDocument"
+                              accept=".pdf"
                               value={entry?.authorizationFormDocument || null}
                               onChange={(file) =>
                                  handleOnChange("authorizationFormDocument", file)
@@ -672,6 +673,7 @@ export default function EntrySubmission({
                               }
                               placeholder={`Upload Business Permit`}
                               helperText="(PDF, JPG, or PNG)"
+                              accept=".pdf,.jpg,.jpeg,.png"
                               className="mt-6"
                            />
                         </>
@@ -689,6 +691,7 @@ export default function EntrySubmission({
                               }
                               placeholder={`Upload SEC/DTI Permit`}
                               helperText="(PDF, JPG, or PNG)"
+                              accept=".pdf,.jpg,.jpeg,.png"
                               className="mt-6"
                            />
                         </>
@@ -1017,7 +1020,7 @@ const MSME_AWARD_CATEGORIES: DropdownOption[] = [
 const LGU_CLASSIFICATIONS: DropdownOption[] = [
    { value: "ComponentCity", label: "Component City" },
    { value: "Municipality", label: "Municipality" },
-   { value: "Highly Urbanized City", label: "Urbanized City" },
+   { value: "Highly Urbanized City", label: "Highly Urbanized City" },
 ];
 
 const MSME_CLASSIFICATIONS: DropdownOption[] = [
