@@ -16,7 +16,7 @@ export function acceptanceEmailTemplate({
   submittedAt,
 }: AcceptanceEmailProps) {
   return {
-    subject: "Green Guardian Awards – Submission Successfully Received",
+    subject: "Green Guardian Awards – Submission Confirmed",
     html: `
       <div style="font-family: Arial, Helvetica, sans-serif; color: #111; line-height: 1.6;">
         <p>Dear <strong>${fullName}</strong>,</p>
@@ -64,13 +64,8 @@ export function acceptanceEmailTemplate({
         </p>
 
         <p>
-          We sincerely appreciate your participation and commitment to environmental
-          sustainability and good governance.
-        </p>
-
-        <p>
-          Kind regards,<br />
-          <strong>Green Guardian Awards Team</strong>
+          Sincerely,<br />
+          <strong>Daily Guardian</strong>
         </p>
 
         <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
