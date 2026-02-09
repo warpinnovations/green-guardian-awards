@@ -28,7 +28,8 @@ export default function HeroSection() {
                   />
                </div>
                <div className="lg:flex hidden gap-4">
-                  <a
+                  {/* hide for now */ }
+                  {/* <a
                      href={`/api/download/${encodeURIComponent(primer)}`}
                      className="text-center px-8 py-3 rounded-xl border-2 border-[#f3d107]/90 text-[#f3d107]/90 hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-[#8FC73F]/30 cursor-pointer"
                   >
@@ -39,7 +40,7 @@ export default function HeroSection() {
                      className="text-neutral-900/90 lg:px-8 px-3 py-3 rounded-xl bg-linear-to-r from-[#8FC73F] to-[#b5d443] lg:text-base text-sm hover:shadow-xl hover:shadow-[#b5d443]/50 transition-all duration-300 font-bold hover:-translate-y-1 cursor-pointer"
                   >
                      Enter Now!
-                  </button>
+                  </button> */}
                </div>
             </div>
          </nav>
