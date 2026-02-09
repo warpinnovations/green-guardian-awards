@@ -455,7 +455,7 @@ export default function EntrySubmission({
          )}
          <form
             onSubmit={handleSubmit}
-            className="flex flex-col mt-16 items-center justify-center relative min-h-screen"
+            className="flex flex-col mt-28 items-center justify-center relative min-h-screen"
          >
             <div className="fixed inset-0 bg-gradient-radial " />
             <div className="relative z-10 mx-5 flex flex-col lg:min-w-4xl min-w-sm min-h-screen lg:p-8 p-4 my-10 bg-white/20 rounded-2xl gap-6">

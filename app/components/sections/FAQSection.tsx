@@ -148,18 +148,18 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = React.useState<number | null>(null);
 
   return (
-    <section id="top" className="flex relative min-h-screen overflow-hidden lg:py-5 py-20">
+    <section id="top" className="flex relative min-h-screen lg:pb-10 lg:pt-32 py-20">
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-white/10" />
       </div>
 
       <div className="lg:grid lg:grid-cols-[1fr_3fr] items-center relative z-10 mx-auto w-full lg:px-20 px-4 lg:gap-10">
-        <h2 className="lg:text-5xl text-2xl lg:text-start text-center font-bold text-white lg:-mt-14 lg:mb-8 mb-10">
+        <h2 className="lg:text-5xl text-2xl lg:text-start text-center font-bold text-white lg:-mt-20 lg:mb-8 mb-10">
           Frequently Asked Questions
         </h2>
 
-        <div className="rounded-2xl h-full w-full overflow-auto">
-          <div className="lg:mt-10 space-y-4">
+        <div className="rounded-2xl h-full w-full">
+          <div className="space-y-3 overflow-auto h-full">
             {faqs.map((faq, idx) => (
               <FAQItem
                 key={faq.question}

@@ -2,7 +2,7 @@
 
 export default function FooterSection() {
   return (
-     <footer className="bg-[#0c2725]/50 text-white py-6 absolute bottom-0 w-full">
+     <section className="flex relative bg-[#0c2725]/50 text-white py-6 bottom-0 w-full min-h-16">
         <div className="mx-auto max-w-7xl px-4 text-center space-y-3">
            {/* Legal */}
            <p className="text-sm text-white/80">
@@ -23,6 +23,6 @@ export default function FooterSection() {
               , a renascent Iloilo-based publishing firm and media organization.
            </p>
         </div>
-     </footer>
+     </section>
   );
 }

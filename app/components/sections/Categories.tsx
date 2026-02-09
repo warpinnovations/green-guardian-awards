@@ -62,7 +62,7 @@ export default function CategoriesSection() {
          className="flex relative min-h-screen overflow-hidden pt-16"
       >
          <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 bg-black/20" />
          </div>
          <div className="relative z-10 mx-auto lg:max-w-7xl px-4 lg:py-10 py-10">
             <h1 className="font-alviona lg:text-[55px] text-3xl text-white text-center tracking-wide">
