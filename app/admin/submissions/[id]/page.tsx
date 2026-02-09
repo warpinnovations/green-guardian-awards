@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { supabaseAdmin } from "@/app/lib/supabase/admin";
+import Image from "next/image";
+
 
 const BRAND = {
   green: "#0A2724",
@@ -65,7 +67,6 @@ type SignedResult =
 
 
 const isImage = (p: string) => /\.(png|jpg|jpeg|webp)$/i.test(p);
-const isPdf = (p: string) => /\.pdf$/i.test(p);
 const filename = (p: string) => p.split("/").pop() ?? "file";
 
 function format(value: unknown): string {
@@ -165,11 +166,15 @@ function FileBlock({
 
       {signed.ok && path && isImage(path) && (
         <div className="mt-4 rounded-xl overflow-hidden border border-neutral-200 shadow-sm">
-          <img
+          <Image
             src={signed.url}
             alt={name}
+            width={1200}
+            height={800}
             className="w-full max-h-96 object-contain bg-neutral-50"
+            unoptimized
           />
+
         </div>
       )}
     </div>
