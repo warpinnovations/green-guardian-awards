@@ -2,8 +2,8 @@
 
 :root {
   /* Gradient background from your inspo */
-  --background: 
-    radial-gradient(circle at top center, rgba(170,190,60,0.5), rgba(40,90,60,0.9) 30%),
+  --background:
+    radial-gradient(circle at top center, rgba(170, 190, 60, 0.5), rgba(40, 90, 60, 0.9) 30%),
     linear-gradient(105deg, #ffff, #0f3d1f, #1a7f3a);
   --foreground: #171717;
 }
@@ -12,6 +12,22 @@
   font-family: "Alviona";
   src: url("/fonts/Alviona.woff") format("woff");
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-SemiBold.ttf") format("truetype");
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
@@ -26,31 +42,22 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark mode gradient (optional: could tweak colors if needed) */
-    --background: 
-      radial-gradient(circle at top center, rgba(40,90,60,0.5), rgba(0,30,20,0.9) 30%),
+    --background:
+      radial-gradient(circle at top center, rgba(40, 90, 60, 0.5), rgba(0, 30, 20, 0.9) 30%),
       linear-gradient(105deg, #0a0a0a, #07301a, #0f3d1f);
     --foreground: #ededed;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  background-repeat: no-repeat;
-  background-size: cover;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+}
+
+.font-roboto {
+  font-family: "Roboto", sans-serif;
 }
 
 .font-alviona {
   font-family: "Alviona", serif;
   letter-spacing: -0.01em;
-}
-
-.font-awards-title {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  letter-spacing: -0.01em;
-}
-
-.font-awards-body {
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
