@@ -53,16 +53,16 @@ const LGU_AWARD_CATEGORIES: DropdownOption[] = [
 
 const MSME_AWARD_CATEGORIES: DropdownOption[] = [
    {
-      value: "Sustainable Operations Excellence Award",
-      label: "Sustainable Operations Excellence Award",
+      value: "The Sustainable Operations Excellence Award",
+      label: "The Sustainable Operations Excellence Award",
    },
    {
-      value: "Green Product/Service Innovation Award",
-      label: "Green Product/Service Innovation Award",
+      value: "The Green Product/Service Innovation Award",
+      label: "The Green Product/Service Innovation Award",
    },
    {
-      value: "Community Engagement for Environmental Impact Award",
-      label: "Community Engagement for Environmental Impact Award",
+      value: "The Community Engagement for Environmental Impact Award",
+      label: "The Community Engagement for Environmental Impact Award",
    },
 ];
 
@@ -463,7 +463,7 @@ export default function EntrySubmission({
                   {nominee} Entry Submission
                </p>
                {/* Nominee details */}
-               <div className="rounded-2xl border-green-900/20 bg-amber-100/10 border lg:p-5 p-3">
+               <div className="rounded-2xl border-green-900/20 bg-amber-100/10 border lg:p-5 p-3 relative">
                   <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                      *Award Category
                   </label>
@@ -483,7 +483,7 @@ export default function EntrySubmission({
                   <p className="text-white/90 lg:text-lg font-semibold">
                      Nominator Information and Requirements
                   </p>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 relative">
                      <div className="flex flex-col gap-2 mt-2">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            {nominee === "Local Government Unit"
@@ -500,7 +500,7 @@ export default function EntrySubmission({
                            className="bg-white/10 border border-white/20 rounded-lg p-2 text-white/90 focus:outline-none focus:ring-2 focus:ring-white"
                         />
                      </div>
-                     <div className="flex flex-col gap-2">
+                     <div className="flex flex-col gap-2 relative">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
                            *Classification
                         </label>
