@@ -13,10 +13,10 @@ type FAQ = {
 
 const faqs: FAQ[] = [
   {
-    question: "What are the Green Guardian Awards?",
+    question: "What is the Green Guardian Awards?",
     answer: [
       {
-        main: "The Green Guardian Awards is an environmental recognition program that celebrates outstanding sustainability initiatives by Local Government Units (LGUs) and businesses in the Province of Iloilo. It highlights ecological innovation, climate resilience, and community-centered environmental stewardship.",
+        main: "The Green Guardian Awards is an environmental recognition program of The Daily Guardian that celebrates outstanding sustainability initiatives by Local Government Units (LGUs) and businesses in the Province of Iloilo. It highlights ecological innovation, climate resilience, and community-centered environmental stewardship.",
       },
     ],
   },
@@ -57,19 +57,11 @@ const faqs: FAQ[] = [
       {
         main: "Entries will be reviewed by a panel of experts composed of representatives from:",
         sub: [
-          "Environmental agencies",
+          "Environmental agencies - relevant National Government Agencies",
           "Academic institutions",
           "Civil society organizations",
           "Technical specialists in relevant fields",
         ],
-      },
-    ],
-  },
-  {
-    question: "When will winners be announced?",
-    answer: [
-      {
-        main: "Finalists and winners will be announced during the 25th Anniversary Culmination Event of the Daily Guardian, featuring the Green Guardian Awards Ceremony.",
       },
     ],
   },
