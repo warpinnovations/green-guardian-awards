@@ -49,9 +49,9 @@ const LGU_AWARD_CATEGORIES: DropdownOption[] = [
 ];
 
 const MSME_AWARD_CATEGORIES: DropdownOption[] = [
-   { value: "Sustainable Operations Excellence Award", label: "Sustainable Operations Excellence Award" },
-   { value: "Green Product/Service Innovation Award", label: "Green Product/Service Innovation Award" },
-   { value: "Community Engagement for Environmental Impact Award", label: "Community Engagement for Environmental Impact Award" },
+   { value: "The Sustainable Operations Excellence Award", label: "The Sustainable Operations Excellence Award" },
+   { value: "The Green Product/Service Innovation Award", label: "The Green Product/Service Innovation Award" },
+   { value: "The Community Engagement for Environmental Impact Award", label: "The Community Engagement for Environmental Impact Award" },
 ];
 
 const LGU_CLASSIFICATIONS: DropdownOption[] = [
