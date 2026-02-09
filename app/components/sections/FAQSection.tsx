@@ -13,10 +13,10 @@ type FAQ = {
 
 const faqs: FAQ[] = [
   {
-    question: "What are the Green Guardian Awards?",
+    question: "What is the Green Guardian Awards?",
     answer: [
       {
-        main: "The Green Guardian Awards is an environmental recognition program that celebrates outstanding sustainability initiatives by Local Government Units (LGUs) and businesses in the Province of Iloilo. It highlights ecological innovation, climate resilience, and community-centered environmental stewardship.",
+        main: "The Green Guardian Awards is an environmental recognition program of The Daily Guardian that celebrates outstanding sustainability initiatives by Local Government Units (LGUs) and businesses in the Province of Iloilo. It highlights ecological innovation, climate resilience, and community-centered environmental stewardship.",
       },
     ],
   },
@@ -57,19 +57,11 @@ const faqs: FAQ[] = [
       {
         main: "Entries will be reviewed by a panel of experts composed of representatives from:",
         sub: [
-          "Environmental agencies",
+          "Environmental agencies - relevant National Government Agencies",
           "Academic institutions",
           "Civil society organizations",
           "Technical specialists in relevant fields",
         ],
-      },
-    ],
-  },
-  {
-    question: "When will winners be announced?",
-    answer: [
-      {
-        main: "Finalists and winners will be announced during the 25th Anniversary Culmination Event of the Daily Guardian, featuring the Green Guardian Awards Ceremony.",
       },
     ],
   },
@@ -148,18 +140,18 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = React.useState<number | null>(null);
 
   return (
-    <section id="top" className="flex relative min-h-screen overflow-hidden lg:py-5 py-20">
+    <section id="top" className="flex relative min-h-screen lg:pb-10 lg:pt-32 py-20">
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-white/10" />
       </div>
 
       <div className="lg:grid lg:grid-cols-[1fr_3fr] items-center relative z-10 mx-auto w-full lg:px-20 px-4 lg:gap-10">
-        <h2 className="lg:text-5xl text-2xl lg:text-start text-center font-bold text-white lg:-mt-14 lg:mb-8 mb-10">
+        <h2 className="lg:text-5xl text-2xl lg:text-start text-center font-bold text-white lg:-mt-32 lg:mb-8 mb-10">
           Frequently Asked Questions
         </h2>
 
-        <div className="rounded-2xl h-full w-full overflow-auto">
-          <div className="lg:mt-10 space-y-4">
+        <div className="rounded-2xl h-full w-full">
+          <div className="space-y-3 overflow-auto h-full">
             {faqs.map((faq, idx) => (
               <FAQItem
                 key={faq.question}

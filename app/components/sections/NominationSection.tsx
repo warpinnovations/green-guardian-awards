@@ -12,7 +12,7 @@ export default function NominationSection() {
    };
 
    return (
-      <section id="nominate" className="min-h-screen relative overflow-hidden pb-28">
+      <section id="nominate" className="min-h-screen relative overflow-hidden">
          <div className="absolute top-50 -left-240 z-0">
             <Image
                src={"/leaf.png"}
@@ -41,7 +41,7 @@ export default function NominationSection() {
                   Nominate a Green Guardian
                </h2>
             </div>
-            <div className="mb-16 z-10">
+            <div className="mb-10 z-10">
                <div className="flex lg:flex-row flex-col lg:gap-x-12 gap-y-8">
                   {categories.map((award) => (
                      <NominationCard

@@ -45,8 +45,8 @@ export default function HeroSection() {
          </nav>
          {/* Hero Section */}
          <div className="relative max-w-400 mx-auto px-5 lg:px-20">
-            <div className="grid lg:grid-cols-[1.5fr_1fr] lg:gap-12 gap-20 items-start">
-               <div className="lg:space-y-3 space-y-4">
+            <div className="grid lg:grid-cols-[1.9fr_0.7fr] lg:gap-36 gap-20 items-start">
+               <div className="lg:space-y-3 space-y-6">
                   <h1 className="text-[40px] lg:text-[60px] font-black leading-none lg:mb-3 tracking-tighter animate-fade-in-up">
                      <span className="font-alviona block bg-white/90 bg-clip-text text-transparent text-left">
                         GREEN GUARDIAN
@@ -56,7 +56,7 @@ export default function HeroSection() {
                      </span>
                   </h1>
                   <h2
-                     className="lg:text-2xl text-[20px] font-semibold text-white animate-fade-in-up text-left mb-4"
+                     className="lg:text-2xl text-[20px] font-semibold text-white animate-fade-in-up text-left my-6"
                      style={{ animationDelay: "0.2s" }}
                   >
                      Celebrating Sustainability and Ecological Innovation in
@@ -66,22 +66,19 @@ export default function HeroSection() {
                      className="lg:text-lg text-[16px] text-white leading-relaxed animate-fade-in-up my-4 text-left"
                      style={{ animationDelay: "0.4s" }}
                   >
-                     The Green Guardian Awards celebrates and elevates outstanding environmental initiatives across the Province of Iloilo.
+                     The Green Guardian Awards recognizes <span className="text-[#f3d107] font-semibold">Local Government Units (LGUs)</span>—including municipalities, the highly urbanized city (HUC), and the component city—as well as <span className="text-[#f3d107] font-semibold">micro, small, and medium enterprises (MSMEs) and large corporations</span> that champion sustainability, ecological innovation, and community-driven environmental action.
                   </p>
                   <div
                      className="animate-fade-in-up"
                      style={{ animationDelay: "0.8s" }}
                   >
-                     <p className="lg:text-lg text-[16px] leading-relaxed text-white/90 text-left">
-                        It recognizes <strong className="text-[#f3d107]">Local Government Units (LGUs)</strong>—including municipalities, the highly urbanized city (HUC), and the component city—as well as <strong className="text-[#f3d107]">micro, small, and medium enterprises (MSMEs) and large corporations</strong> that champion sustainability, ecological innovation, and community-driven environmental action.{" "}
-                     </p>
                      <p className="lg:text-lg text-[16px] leading-relaxed text-white/90 text-left mt-4">
                         Through this program, the Awards aim to foster a strong culture of environmental stewardship by honoring exemplary initiatives, showcasing best practices, and inspiring wider adoption of sustainable solutions throughout Iloilo.
                      </p>
                   </div>
                   {/* CTA Buttons */}
                   <div
-                     className="flex flex-col sm:flex-row gap-6 animate-fade-in-up mt-6"
+                     className="flex flex-col sm:flex-row gap-6 animate-fade-in-up mt-7"
                      style={{ animationDelay: "1s" }}
                   >
                      <button
@@ -98,7 +95,7 @@ export default function HeroSection() {
                      </a>
                   </div>
 
-                  <p className="text-white/90 text-sm leading-relaxed text-center lg:text-left animate-fade-in-up" style={{ animationDelay: "1.2s" }}>
+                  <p className="text-white/90 text-sm leading-relaxed text-center lg:text-left animate-fade-in-up mt-2" style={{ animationDelay: "1.2s" }}>
                      Need help? Contact committee:
                      <br className="sm:hidden" />
                      <a
@@ -120,22 +117,31 @@ export default function HeroSection() {
                </div>
                {/* Trophy */}
                <div
-                  className="relative h-150 flex items-center justify-center animate-fade-in"
-                  style={{ animationDelay: "0.6s" }}
+                  className="relative lg:h-150 h-120 flex items-center justify-center"
                >
-                  {/* <video
-                     src="/green-guardian-logo.mp4"
-                     autoPlay
-                     loop
-                     muted
-                     playsInline
-                     className="w-96 h-96 object-contain"
-                  /> */}
+                  <Image
+                     src={"/logos/Trophy.png"}
+                     alt="Trophy"
+                     width={260}
+                     height={260}
+                     className="lg:w-64 w-56 
+               animate-[trophyPulse_3s_ease-in-out_infinite]"
+                  />
                </div>
             </div>
          </div>
 
          <style jsx>{`
+            @keyframes trophyPulse {
+               0%, 100% {
+                  transform: scale(1);
+                  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+               }
+               50% {
+                  transform: scale(1.02);
+                  filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.9));
+               }
+            }
             @keyframes pulse-slow {
                0%,
                100% {
@@ -147,7 +153,6 @@ export default function HeroSection() {
                   opacity: 0.8;
                }
             }
-
             @keyframes fade-in-up {
                from {
                   opacity: 0;
