@@ -904,7 +904,7 @@ export default function EntrySubmission({
                      </span>
                      <div className="flex flex-col gap-2 mt-2">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                           Video{" "}
+                           Video, if any 
                            <span className="text-white/50 text-sm ml-1">
                               (Google Drive or YouTube link)
                            </span>

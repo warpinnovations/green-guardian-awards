@@ -57,7 +57,7 @@ const faqs: FAQ[] = [
       {
         main: "Entries will be reviewed by a panel of experts composed of representatives from:",
         sub: [
-          "Environmental agencies - relevant National Government Agencies",
+          "Relevant National Government Agencies",
           "Academic institutions",
           "Civil society organizations",
           "Technical specialists in relevant fields",

@@ -120,11 +120,11 @@ export default function HeroSection() {
                   className="relative lg:h-150 h-120 flex items-center justify-center"
                >
                   <Image
-                     src={"/logos/Trophy.png"}
+                     src={"/logos/trophy.png"}
                      alt="Trophy"
                      width={260}
                      height={260}
-                     className="lg:w-64 w-56 
+                     className="lg:w-65 w-60 object-contain 
                animate-[trophyPulse_3s_ease-in-out_infinite]"
                   />
                </div>
@@ -135,11 +135,11 @@ export default function HeroSection() {
             @keyframes trophyPulse {
                0%, 100% {
                   transform: scale(1);
-                  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+                  filter: drop-shadow(0 0 15px rgba(184, 213, 80, 0.4));
                }
                50% {
                   transform: scale(1.02);
-                  filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.9));
+                  filter: drop-shadow(0 0 35px rgba(184, 213, 80, 0.9));
                }
             }
             @keyframes pulse-slow {
