@@ -11,17 +11,18 @@ export default function FooterSection() {
            </p>
 
            {/* Credentials */}
-           <p className="text-xs text-white/80 leading-relaxed">
+           <p className="text-[13px] text-white/80 leading-relaxed">
               Powered by{" "}
               <span className="font-semibold text-white/90">Prometheus WARP</span>
               .
               <br />
               Organized and administered by{" "}
-              <span className="font-medium text-yellow-400/90">
+              <span className="font-medium text-[#f3d107]">
                  Daily Guardian
               </span>
               , a renascent Iloilo-based publishing firm and media organization.
            </p>
+           <p className="text-[13px] text-white/90">For inquiries, please contact us at <a href="mailto:dailyguardianmarketing@gmail.com" className="text-[#f3d107]">dailyguardianmarketing@gmail.com</a>.</p>
         </div>
      </section>
   );
