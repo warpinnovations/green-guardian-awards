@@ -117,15 +117,31 @@ export default function HeroSection() {
                </div>
                {/* Trophy */}
                <div
-                  className="relative lg:h-150 h-120 flex items-center justify-center animate-fade-in"
-                  style={{ animationDelay: "0.6s" }}
+                  className="relative lg:h-150 h-120 flex items-center justify-center"
                >
-                  <Image src={'/logos/Trophy.png'} alt="Trophy" width={260} height={260} className="lg:w-64 w-56" />
+                  <Image
+                     src={"/logos/Trophy.png"}
+                     alt="Trophy"
+                     width={260}
+                     height={260}
+                     className="lg:w-64 w-56 
+               animate-[trophyPulse_3s_ease-in-out_infinite]"
+                  />
                </div>
             </div>
          </div>
 
          <style jsx>{`
+            @keyframes trophyPulse {
+               0%, 100% {
+                  transform: scale(1);
+                  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+               }
+               50% {
+                  transform: scale(1.02);
+                  filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.9));
+               }
+            }
             @keyframes pulse-slow {
                0%,
                100% {
@@ -137,7 +153,6 @@ export default function HeroSection() {
                   opacity: 0.8;
                }
             }
-
             @keyframes fade-in-up {
                from {
                   opacity: 0;
