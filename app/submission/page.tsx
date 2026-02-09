@@ -55,7 +55,7 @@ const MSME_AWARD_CATEGORIES: DropdownOption[] = [
 ];
 
 const LGU_CLASSIFICATIONS: DropdownOption[] = [
-   { value: "ComponentCity", label: "Component City" },
+   { value: "Component City", label: "Component City" },
    { value: "Municipality", label: "Municipality" },
    { value: "Highly Urbanized City", label: "Highly Urbanized City" },
 ];
