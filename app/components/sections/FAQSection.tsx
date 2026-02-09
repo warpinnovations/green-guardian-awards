@@ -146,7 +146,7 @@ export default function FAQSection() {
       </div>
 
       <div className="lg:grid lg:grid-cols-[1fr_3fr] items-center relative z-10 mx-auto w-full lg:px-20 px-4 lg:gap-10">
-        <h2 className="lg:text-5xl text-2xl lg:text-start text-center font-bold text-white lg:-mt-20 lg:mb-8 mb-10">
+        <h2 className="lg:text-5xl text-2xl lg:text-start text-center font-bold text-white lg:-mt-32 lg:mb-8 mb-10">
           Frequently Asked Questions
         </h2>
 

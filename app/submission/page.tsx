@@ -73,10 +73,10 @@ const LGU_CLASSIFICATIONS: DropdownOption[] = [
 ];
 
 const MSME_CLASSIFICATIONS: DropdownOption[] = [
-   { value: "Micro", label: "Micro (1-9 employees)" },
-   { value: "Small", label: "Small (10-99 employees)" },
-   { value: "Medium", label: "Medium (100-199 employees)" },
-   { value: "Large", label: "Large (200+ employees)" },
+   { value: "Micro", label: "Micro (Assets <= 3,000,000; 1-9 employees)" },
+   { value: "Small", label: "Small (Assets 3,000,000 - 15,000,000; 10-99 employees)" },
+   { value: "Medium", label: "Medium (Assets 15,000,000 - 100,000,000; 100-199 employees)" },
+   { value: "Large", label: "Large (Assets > 100,000,000; 200+ employees)" },
 ];
 
 
@@ -917,6 +917,7 @@ export default function EntrySubmission({
                            }
                            className="bg-white/10 border border-white/20 rounded-lg p-2 text-white/90 focus:outline-none focus:ring-2 focus:ring-white"
                         />
+                        <span className="text-white/80 text-[13px] italic"> If from Google Drive, please make sure the link can be accessed by everyone.</span>
                      </div>
                   </div>
                </div>
