@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import DGLogo from "../../../public/logos/dg-logo-black.png";
 
+
 export default function HeroSection() {
+   const router = useRouter();
    const primer = "Green Guardian Awards Primer.pdf";
 
    const scrollToId = (id: string) => {
@@ -11,6 +14,10 @@ export default function HeroSection() {
       if (!el) return;
       el.scrollIntoView({ behavior: "smooth", block: "start" });
    };
+
+   const goToSubmission = () => {
+      router.push('/submission');
+   }
 
    return (
       <div className="min-h-screen bg-slate-100 text-white relative overflow-hidden">
@@ -83,7 +90,7 @@ export default function HeroSection() {
                      style={{ animationDelay: "1s" }}
                   >
                      <button
-                        onClick={() => scrollToId("nominate")}
+                        onClick={goToSubmission}
                         className="cursor-pointer px-10 py-3 rounded-2xl bg-linear-to-r from-[#f3d107]/90 to-amber-400/90 text-neutral-900/90 hover:shadow-xl hover:shadow-amber-400/50 transition-all duration-300 font-bold text-xl hover:-translate-y-1"
                      >
                         Join the Awards
