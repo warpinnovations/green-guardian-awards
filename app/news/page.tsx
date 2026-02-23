@@ -180,7 +180,7 @@ function FlippingBook({
       style={{ background: "#ffde00", fontFamily: "'Times New Roman', Times, serif" }}
     >
       {/* ── Masthead ── */}
-      <header className="w-full max-w-5xl mb-3">
+      <header className="w-full max-w-2xl mb-3">
         <div
           className="border-t-4 pt-2 pb-1"
           style={{
@@ -198,9 +198,9 @@ function FlippingBook({
           </div>
           <div className="text-center">
             <h1
-              className="font-black leading-none"
+              className="font-black leading-none lg:text-5xl text-2xl"
               style={{
-                fontSize: "clamp(1.7rem, 6vw, 4.0rem)",
+                // fontSize: "clamp(1.7rem, 6vw, 4.0rem)",
                 color: "#1a150e",
                 textShadow: "0 2px 12px rgba(0,0,0,0.2)",
               }}
@@ -227,7 +227,7 @@ function FlippingBook({
 
       {/* ── Paper ── */}
       <div
-        className="relative w-full max-w-5xl cursor-grab active:cursor-grabbing"
+        className="relative w-full max-w-2xl cursor-grab active:cursor-grabbing"
         style={{ perspective: "2800px" }}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
