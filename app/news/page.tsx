@@ -6,8 +6,7 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 //  TYPES
 // ════════════════════════════════════════════════════════════
 interface NewsPage {
-  front: React.ReactNode;
-  back: React.ReactNode;
+  content: React.ReactNode;
 }
 
 type FlipDirection = "forward" | "backward";
@@ -56,29 +55,16 @@ function Leaf({ page, index, currentSpread, isFlipping, flipDirection, activeLea
         zIndex,
       }}
     >
-      {/* Front face */}
+      {/* Single page face */}
       <div
         className="absolute inset-0 overflow-y-auto overflow-x-hidden"
         style={{ backfaceVisibility: "hidden" }}
       >
-        {page.front}
+        {page.content}
         <div
           className="absolute inset-y-0 right-0 w-8 pointer-events-none"
           style={{
             background: "linear-gradient(to right, transparent, rgba(0,0,0,0.05))",
-          }}
-        />
-      </div>
-      {/* Back face */}
-      <div
-        className="absolute inset-0 overflow-y-auto overflow-x-hidden"
-        style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-      >
-        {page.back}
-        <div
-          className="absolute inset-y-0 left-0 w-8 pointer-events-none"
-          style={{
-            background: "linear-gradient(to left, transparent, rgba(0,0,0,0.05))",
           }}
         />
       </div>
@@ -832,63 +818,16 @@ function PageD1() {
   );
 }
 
-function BackCover() {
-  return (
-    <div
-      style={{
-        ...paperStyle,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        gap: 10,
-      }}
-    >
-      <div
-        style={{ fontSize: 9, letterSpacing: "0.22em", color: "#6b4c28" }}
-      >
-        THE DAILY GUARDIAN
-      </div>
-      <div
-        style={{ fontSize: "2.2rem", fontWeight: "bold", color: ink }}
-      >
-        EST. 1842
-      </div>
-      <div
-        style={{
-          width: 60,
-          height: 1,
-          background: rule,
-          opacity: 0.3,
-          margin: "4px 0",
-        }}
-      />
-      <div
-        style={{
-          fontSize: 11,
-          color: "#6b4c28",
-          fontStyle: "italic",
-          textAlign: "center",
-          maxWidth: 280,
-          lineHeight: 1.6,
-        }}
-      >
-        &quot;To give the news impartially, without fear or favour,
-        <br />
-        regardless of any party, sect or interest involved.&quot;
-      </div>
-    </div>
-  );
-}
-
 // ════════════════════════════════════════════════════════════
 //  EXPORTED PAGE
 // ════════════════════════════════════════════════════════════
 export default function NewspaperPage() {
   const pages: NewsPage[] = [
-    { front: <FrontPage />, back: <PageA2 /> },
-    { front: <PageB1 />, back: <PageC1 /> },
-    { front: <PageD1 />, back: <BackCover /> },
+    { content: <FrontPage /> },
+    { content: <PageA2 /> },
+    { content: <PageB1 /> },
+    { content: <PageC1 /> },
+    { content: <PageD1 /> },
   ];
 
   return (
