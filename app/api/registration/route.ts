@@ -26,12 +26,18 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const { data, error } = await supabaseAdmin
-      .from("registrations")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const url = new URL(req.url);
+    const name = url.searchParams.get("name")?.trim();
+
+    let query = supabaseAdmin.from("registrations").select("*").order("created_at", { ascending: false });
+
+    if (name) {
+      query = query.eq("name", name);
+    }
+
+    const { data, error } = await query;
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, data });

@@ -437,7 +437,7 @@ export default function EntrySubmission({
 
    return (
       <div className="min-h-screen relative">
-         <Header showCTA={false} />
+         <Header />
 
          {!dataPrivacyConcerns && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900/70">

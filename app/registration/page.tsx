@@ -6,7 +6,7 @@ export default function RegistrationPage() {
   const [invitees, setInvitees] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
-  const [status, setStatus] = useState<null | "idle" | "saving" | "done">("idle");
+  const [status, setStatus] = useState<null | "idle" | "saving" | "done" | "already" >("idle");
 
   useEffect(() => {
     fetch("/files/invitees.json")
@@ -23,14 +23,31 @@ export default function RegistrationPage() {
 
   async function confirmRegistration(name: string) {
     setStatus("saving");
+
     try {
-      await fetch("/api/registration", {
+      // Check if already registered
+      const res = await fetch(`/api/registration?name=${encodeURIComponent(name)}`);
+      const existing = await res.json();
+
+      if (existing?.data?.length) {
+        // Already registered
+        setSelected(name);
+        setStatus("already"); // custom status
+        return;
+      }
+
+      // Proceed to register
+      const postRes = await fetch("/api/registration", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name }),
       });
-      setStatus("done");
+
+      const data = await postRes.json();
+      if (!data.ok) throw new Error(data.error || "Registration failed");
+
       setSelected(name);
+      setStatus("done");
     } catch (err) {
       console.error(err);
       setStatus("idle");
@@ -51,7 +68,7 @@ export default function RegistrationPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-[#052e2b] via-[#063a36] to-[#031f1d]">
-      <Header />
+      <Header variant="minimal" />
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="p-8 lg:p-12">
           <h1 className="font-alviona text-3xl lg:text-4xl text-neutral-900 mb-2">Registration</h1>
@@ -131,9 +148,33 @@ export default function RegistrationPage() {
             )}
           </div>
 
-          {status === "done" && (
-            <p className="mt-6 text-sm text-green-700">Thanks — you are registered as <strong>{selected}</strong>.</p>
-          )}
+          <div className="mt-6">
+            {status === "done" && selected && (
+              <div className="inline-flex flex-col items-center px-4 py-2 bg-green-50 rounded-full shadow-sm">
+                <span className="text-green-800 font-semibold text-sm">Registered</span>
+                <span className="text-green-700 text-xs">
+                  Registered on {new Date().toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+            )}
+
+            {status === "already" && selected && (
+              <div className="inline-flex flex-col items-center px-4 py-2 bg-yellow-50 rounded-full shadow-sm">
+                <span className="text-yellow-800 font-semibold text-sm">Already Registered</span>
+                <span className="text-yellow-700 text-xs">
+                  Registered on {new Date().toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>
