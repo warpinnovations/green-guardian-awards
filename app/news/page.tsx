@@ -447,24 +447,6 @@ const HRule = ({ thick }: { thick?: boolean }) => (
   />
 );
 
-const Cols = ({
-  children,
-  n = 3,
-}: {
-  children: React.ReactNode;
-  n?: number;
-}) => (
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: `repeat(${n}, 1fr)`,
-      gap: "0 16px",
-    }}
-  >
-    {children}
-  </div>
-);
-
 const Body = ({ children }: { children: React.ReactNode }) => (
   <p
     style={{
@@ -534,24 +516,6 @@ const Byline = ({
   >
     By <strong>{name}</strong>
     {location && <span style={{ fontStyle: "italic" }}> · {location}</span>}
-  </div>
-);
-
-const Pull = ({ children }: { children: React.ReactNode }) => (
-  <div
-    style={{
-      borderTop: `2px solid ${rule}`,
-      borderBottom: `2px solid ${rule}`,
-      padding: "5px 8px",
-      margin: "7px 0",
-      textAlign: "center",
-    }}
-  >
-    <div
-      style={{ fontSize: "13px", fontStyle: "italic", lineHeight: 1.4, color: "#3a2812" }}
-    >
-      {children}
-    </div>
   </div>
 );
 
