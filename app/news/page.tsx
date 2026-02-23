@@ -58,7 +58,7 @@ function Leaf({ page, index, currentSpread, isFlipping, flipDirection, activeLea
     >
       {/* Front face */}
       <div
-        className="absolute inset-0 overflow-hidden"
+        className="absolute inset-0 overflow-y-auto overflow-x-hidden"
         style={{ backfaceVisibility: "hidden" }}
       >
         {page.front}
@@ -71,7 +71,7 @@ function Leaf({ page, index, currentSpread, isFlipping, flipDirection, activeLea
       </div>
       {/* Back face */}
       <div
-        className="absolute inset-0 overflow-hidden"
+        className="absolute inset-0 overflow-y-auto overflow-x-hidden"
         style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
       >
         {page.back}
@@ -427,14 +427,13 @@ const rule = "#2a2018";
 const paperStyle: React.CSSProperties = {
   background: paperBg,
   width: "100%",
-  height: "100%",
+  minHeight: "100%",
   padding: "20px 24px",
   boxSizing: "border-box",
   color: ink,
   fontFamily: "'Times New Roman', Times, serif",
   fontSize: "13px",
   lineHeight: "1.5",
-  overflow: "hidden",
   position: "relative",
 };
 
@@ -929,7 +928,7 @@ export default function NewspaperPage() {
   ];
 
   return (
-    <main className="w-screen min-h-screen">
+    <main className="w-full min-h-screen overflow-x-hidden">
       <FlippingBook
         pages={pages}
         title="THE DAILY GUARDIAN"
