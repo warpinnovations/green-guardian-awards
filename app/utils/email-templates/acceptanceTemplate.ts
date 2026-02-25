@@ -84,7 +84,7 @@ export function acceptanceEmailTemplate({
               <p style="margin:0 0 14px;">
                 Thank you for submitting your nomination to the <strong>Green Guardian Awards</strong>.
                 We are pleased to inform you that your entry has been
-                <strong>successfully received and officially accepted</strong>.
+                <strong>successfully received</strong>.
               </p>
 
               <p style="margin:0 0 18px;">
