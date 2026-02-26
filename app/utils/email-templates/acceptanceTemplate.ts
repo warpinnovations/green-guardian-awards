@@ -21,7 +21,6 @@ export function acceptanceEmailTemplate({
     subject: "Green Guardian Awards – Submission Confirmed",
     html: `
 <div style="margin:0; padding:0; background:#f6f7f8;">
-  <!-- Preheader -->
   <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;">
     Your nomination has been received. Reference ID: ${referenceId}
   </div>
@@ -30,16 +29,14 @@ export function acceptanceEmailTemplate({
     <tr>
       <td align="center" style="padding:24px 16px;">
 
-        <!-- CARD CONTAINER (wider, rounded corners back) -->
         <table width="860" cellpadding="0" cellspacing="0" role="presentation"
           style="border-collapse:separate; border-spacing:0; width:100%; max-width:860px; background:#ffffff; border-radius:16px; overflow:hidden; border:1px solid #eaeaea;">
 
-          <!-- HEADER (inside card, correct spacing) -->
+          <!-- HEADER -->
           <tr>
             <td style="background:#0A2724; border-bottom:8px solid #D4AF37; padding:18px 24px;">
               <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;">
                 <tr>
-                  <!-- Left: DG -->
                   <td align="left" valign="middle" style="width:50%;">
                     <img
                       src="https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/public/email-assets/dg-long-logo.png"
@@ -49,7 +46,6 @@ export function acceptanceEmailTemplate({
                     />
                   </td>
 
-                  <!-- Right: GGA -->
                   <td align="right" valign="middle" style="width:50%;">
                     <table cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;">
                       <tr>
@@ -58,7 +54,7 @@ export function acceptanceEmailTemplate({
                             src="https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/public/email-assets/gga-logo.png"
                             alt="Green Guardian Awards"
                             height="34"
-                            style="display:block; height:34px; width:auto; border:0; outline:none; text-decoration:none;"
+                            style="display:block; height:34px; width:auto; border:0;"
                           />
                         </td>
                         <td valign="middle" style="white-space:nowrap;">
@@ -69,7 +65,6 @@ export function acceptanceEmailTemplate({
                       </tr>
                     </table>
                   </td>
-
                 </tr>
               </table>
             </td>
@@ -131,8 +126,18 @@ export function acceptanceEmailTemplate({
               </ul>
 
               <p style="margin:0 0 18px;">
-                Sincerely,<br />
-                <strong>Daily Guardian</strong>
+                We appreciate your commitment to environmental stewardship and for taking part in this initiative.
+                Like and follow the
+                <a href="https://www.facebook.com/dailyguardian" style="color:#0A2724; text-decoration:none; font-weight:600;">
+                  Daily Guardian Facebook page
+                </a>
+                for updates and further announcements.
+              </p>
+
+              <p style="margin:0 0 18px;">
+                Warm regards,<br /><br />
+                <strong>GREEN GUARDIAN AWARDS Secretariat</strong><br />
+                The Daily Guardian
               </p>
 
               <hr style="border:none; border-top:1px solid #e6e6e6; margin:18px 0;" />
@@ -148,7 +153,7 @@ export function acceptanceEmailTemplate({
             </td>
           </tr>
 
-          <!-- FOOTER (inside card, rounded bottom stays) -->
+          <!-- FOOTER -->
           <tr>
             <td style="background:#0c2725; color:#ffffff; text-align:center; padding:16px 18px; font-family: Arial, Helvetica, sans-serif;">
               <p style="margin:0 0 8px; font-size:12px; color:rgba(255,255,255,0.85);">
@@ -162,7 +167,6 @@ export function acceptanceEmailTemplate({
           </tr>
 
         </table>
-        <!-- END CARD -->
 
       </td>
     </tr>
