@@ -90,7 +90,7 @@ export default function HeroSection() {
                      style={{ animationDelay: "1s" }}
                   >
                      <button
-                        onClick={goToSubmission}
+                        onClick={() => scrollToId("nominate")}
                         className="cursor-pointer px-10 py-3 rounded-2xl bg-linear-to-r from-[#f3d107]/90 to-amber-400/90 text-neutral-900/90 hover:shadow-xl hover:shadow-amber-400/50 transition-all duration-300 font-bold text-xl hover:-translate-y-1"
                      >
                         Join the Awards
