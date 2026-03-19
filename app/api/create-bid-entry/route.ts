@@ -120,19 +120,20 @@ export async function POST(req: Request) {
       );
     }
 
-    if (company_description && wordCount(company_description) > 200) {
+    if (company_description && wordCount(company_description) > 1000) {
       return NextResponse.json(
         { error: "Company description must be 200 words or less." },
         { status: 400 },
       );
     }
 
-    if (wordCount(project_description) > 300) {
+    if (wordCount(project_description) > 1000) {
       return NextResponse.json(
-        { error: "Project description must be 300 words or less." },
+        { error: "Project description must be 1000 words or less." },
         { status: 400 },
       );
     }
+
 
     const { data, error } = await supabaseAdmin
       .from("bid_entries")
