@@ -633,7 +633,6 @@ export default function EntrySubmission({
                               *Company Description <span className="text-white/50 text-sm">(150-200 words)</span>
                            </label>
                            <textarea
-                              maxLength={200}
                               rows={6}
                               className={
                                  showError("companyDescription")
@@ -786,7 +785,6 @@ export default function EntrySubmission({
                            *Brief Project Description <span className="text-white/50 text-sm">(200-300 words)</span>
                         </label>
                         <textarea
-                           maxLength={300}
                            rows={8}
                            className={
                               showError("projectDescription")

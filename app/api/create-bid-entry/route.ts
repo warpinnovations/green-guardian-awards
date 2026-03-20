@@ -122,7 +122,7 @@ export async function POST(req: Request) {
 
     if (company_description && wordCount(company_description) > 1000) {
       return NextResponse.json(
-        { error: "Company description must be 200 words or less." },
+        { error: "Company description must be 1000 words or less." },
         { status: 400 },
       );
     }
