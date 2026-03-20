@@ -437,7 +437,7 @@ export default function EntrySubmission({
 
    return (
       <div className="min-h-screen relative">
-         <Header variant="minimal"/>
+         <Header variant="minimal" />
 
          {!dataPrivacyConcerns && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900/70">
@@ -772,7 +772,7 @@ export default function EntrySubmission({
                         </label>
                         <input
                            type="text"
-                           maxLength={100}
+                           maxLength={1000}
                            value={entry?.projectTitle || ""}
                            onChange={(e) => handleOnChange("projectTitle", e.target.value)}
                            className={fieldClass("projectTitle")}
@@ -785,6 +785,7 @@ export default function EntrySubmission({
                            *Brief Project Description
                         </label>
                         <textarea
+                           maxLength={1000}
                            rows={8}
                            className={
                               showError("projectDescription")
