@@ -437,7 +437,7 @@ export default function EntrySubmission({
 
    return (
       <div className="min-h-screen relative">
-         <Header variant="minimal"/>
+         <Header variant="minimal" />
 
          {!dataPrivacyConcerns && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900/70">
@@ -630,7 +630,7 @@ export default function EntrySubmission({
                      {nominee === "Business" && (
                         <div id="field-companyDescription" className="flex flex-col gap-2 mt-1">
                            <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                              *Company Description <span className="text-white/50 text-sm">(150-200 words)</span>
+                              *Company Description <span className="text-white/50 text-sm">(up to 1000 words)</span>
                            </label>
                            <textarea
                               rows={6}
@@ -772,7 +772,7 @@ export default function EntrySubmission({
                         </label>
                         <input
                            type="text"
-                           maxLength={100}
+                           maxLength={1000}
                            value={entry?.projectTitle || ""}
                            onChange={(e) => handleOnChange("projectTitle", e.target.value)}
                            className={fieldClass("projectTitle")}
@@ -785,6 +785,7 @@ export default function EntrySubmission({
                            *Brief Project Description <span className="text-white/50 text-sm">(200-300 words)</span>
                         </label>
                         <textarea
+                           maxLength={1000}
                            rows={8}
                            className={
                               showError("projectDescription")
