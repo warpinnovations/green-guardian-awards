@@ -120,16 +120,16 @@ export async function POST(req: Request) {
       );
     }
 
-    if (company_description && wordCount(company_description) > 1000) {
+    if (company_description && wordCount(company_description) > 2000) {
       return NextResponse.json(
-        { error: "Company description must be 1000 words or less." },
+        { error: "Company description must be 2000 words or less." },
         { status: 400 },
       );
     }
 
-    if (wordCount(project_description) > 1000) {
+    if (wordCount(project_description) > 2000) {
       return NextResponse.json(
-        { error: "Project description must be 1000 words or less." },
+        { error: "Project description must be 2000 words or less." },
         { status: 400 },
       );
     }

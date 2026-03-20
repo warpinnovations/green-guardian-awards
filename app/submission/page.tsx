@@ -630,7 +630,7 @@ export default function EntrySubmission({
                      {nominee === "Business" && (
                         <div id="field-companyDescription" className="flex flex-col gap-2 mt-1">
                            <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                              *Company Description <span className="text-white/50 text-sm">(150-200 words)</span>
+                              *Company Description
                            </label>
                            <textarea
                               rows={6}
@@ -782,7 +782,7 @@ export default function EntrySubmission({
 
                      <div id="field-projectDescription" className="flex flex-col gap-2 mt-1">
                         <label className="lg:text-base text-md text-white/90 font-sans font-semibold">
-                           *Brief Project Description <span className="text-white/50 text-sm">(200-300 words)</span>
+                           *Brief Project Description
                         </label>
                         <textarea
                            rows={8}
