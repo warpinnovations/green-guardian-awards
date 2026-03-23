@@ -4,88 +4,100 @@ import { FileUp } from "lucide-react";
 
 
 interface DragDropUploadProps {
-   name: string;
-   accept?: string;
-   value: File[] | null;
-   onChange: (files: File[]) => void;
-   placeholder: string;
-   uploadIcon?: JSX.Element;
-   helperText?: string;
-   className?: string;
-   multiple?: boolean;
+  name: string;
+  accept?: string;
+  value: File[] | null;
+  onChange: (files: File[]) => void;
+  placeholder: string;
+  uploadIcon?: JSX.Element;
+  helperText?: string;
+  className?: string;
+  multiple?: boolean;
+  maxSizeMB?: number;
 }
 
 export default function DragDropUpload({
-   name,
-   accept = ".pdf,.jpg,.png",
-   value,
-   onChange,
-   placeholder,
-   helperText,
-   uploadIcon = <FileUp size={34} className="text-white/50" />,
-   className = "",
-   multiple = false,
+  name,
+  accept = ".pdf,.jpg,.png",
+  value,
+  onChange,
+  placeholder,
+  helperText,
+  uploadIcon = <FileUp size={34} className="text-white/50" />,
+  className = "",
+  multiple = false,
+  maxSizeMB = 5,
 }: DragDropUploadProps) {
-   const fileInputRef = useRef<HTMLInputElement>(null);
-   const [isDragging, setIsDragging] = useState(false);
-   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-   const acceptList = useMemo(() => normalizeAccept(accept), [accept]);
+  const acceptList = useMemo(() => normalizeAccept(accept), [accept]);
+  const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
-   const addFiles = (incoming: File[]) => {
-      if (!incoming.length) return;
+  const addFiles = (incoming: File[]) => {
+    if (!incoming.length) return;
 
-      const invalid = incoming.find((f) => !fileMatchesAccept(f, acceptList));
-      if (invalid) {
-         setError(
-            `Please upload a valid file. Accepted format(s): ${acceptList.join(", ")}`,
-         );
-         return;
-      }
-
-      setError(null);
-
-      if (!multiple) {
-         onChange([incoming[0]]);
-         return;
-      }
-
-      const merged = [...(value ?? []), ...incoming];
-      const deduped = Array.from(
-         new Map(
-            merged.map(
-               (f) => [`${f.name}-${f.size}-${f.lastModified}`, f] as const,
-            ),
-         ).values(),
+    const invalid = incoming.find((f) => !fileMatchesAccept(f, acceptList));
+    if (invalid) {
+      setError(
+        `Please upload a valid file. Accepted format(s): ${acceptList.join(", ")}`,
       );
+      return;
+    }
 
-      onChange(deduped);
-   };
+    const tooLarge = incoming.find((f) => f.size > maxSizeBytes);
+    if (tooLarge) {
+      const sizeMB = (tooLarge.size / 1024 / 1024).toFixed(1);
+      setError(
+        `File "${tooLarge.name}" is too large (${sizeMB}MB). Maximum file size is ${maxSizeMB}MB.`,
+      );
+      return;
+    }
 
-   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = Array.from(e.target.files ?? []);
-      addFiles(multiple ? files : files.slice(0, 1));
-      e.target.value = "";
-   };
+    setError(null);
 
-   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      setIsDragging(false);
+    if (!multiple) {
+      onChange([incoming[0]]);
+      return;
+    }
 
-      const files = Array.from(e.dataTransfer.files ?? []);
-      addFiles(multiple ? files : files.slice(0, 1));
-   };
+    const merged = [...(value ?? []), ...incoming];
+    const deduped = Array.from(
+      new Map(
+        merged.map(
+          (f) => [`${f.name}-${f.size}-${f.lastModified}`, f] as const,
+        ),
+      ).values(),
+    );
 
-   const removeFile = (idx: number) => {
-      const next = (value ?? []).filter((_, i) => i !== idx);
-      onChange(next);
-   };
+    onChange(deduped);
+  };
 
-   const displayText = ((value?.length ?? 0) > 0)
-      ? multiple
-         ? `${(value ?? []).length} file(s) selected`
-         : value?.[0]?.name
-      : placeholder;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    addFiles(multiple ? files : files.slice(0, 1));
+    e.target.value = "";
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files ?? []);
+    addFiles(multiple ? files : files.slice(0, 1));
+  };
+
+  const removeFile = (idx: number) => {
+    const next = (value ?? []).filter((_, i) => i !== idx);
+    onChange(next);
+  };
+
+  const displayText = ((value?.length ?? 0) > 0)
+    ? multiple
+      ? `${(value ?? []).length} file(s) selected`
+      : value?.[0]?.name
+    : placeholder;
 
   return (
     <div className={`flex flex-col gap-4 ${className}`}>
@@ -111,14 +123,13 @@ export default function DragDropUpload({
         onDrop={handleDrop}
         className={`flex flex-col items-center gap-2
           cursor-pointer rounded-xl border-2 border-dashed py-16 px-6 text-center transition
-          ${
-            isDragging
-              ? "border-white bg-white/10"
-              : "border-white/30 bg-white/5 hover:bg-white/10"
+          ${isDragging
+            ? "border-white bg-white/10"
+            : "border-white/30 bg-white/5 hover:bg-white/10"
           }
         `}
       >
-        {value?.length && value?.length > 0 ?   <p className="mx-auto max-w-lg whitespace-pre-line text-md font-semibold text-white/60 lg:text-base">
+        {value?.length && value?.length > 0 ? <p className="mx-auto max-w-lg whitespace-pre-line text-md font-semibold text-white/60 lg:text-base">
           {displayText}
         </p> : uploadIcon}
 

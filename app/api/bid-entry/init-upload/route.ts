@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/app/lib/supabase/admin";
 
-type FileManifest = { name: string; type: string };
+type FileManifest = { name: string; type: string; size?: number };
 type UploadToken = { bucket: string; path: string; token: string };
 
 type UploadsRecord = {
@@ -14,6 +14,9 @@ type UploadsRecord = {
   supporting_docs: UploadToken[];
   folder: string;
 };
+
+const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 function extFromName(name: string) {
   const ext = name.split(".").pop()?.toLowerCase();
@@ -104,6 +107,37 @@ export async function POST(req: Request) {
         { error: "Invalid file types." },
         { status: 400 },
       );
+    }
+
+    // --- file size validation ---
+    const filesToCheck: Array<{ file: FileManifest; label: string }> = [
+      { file: body.key_visual, label: "Key Visual" },
+      { file: body.bid_document, label: "Bid Document" },
+      { file: body.project_documentation, label: "Project Documentation" },
+    ];
+
+    if (isLGU && body.authorization_form_document) {
+      filesToCheck.push({ file: body.authorization_form_document, label: "Authorization Form" });
+    }
+    if (isMSME && body.business_permit_document) {
+      filesToCheck.push({ file: body.business_permit_document, label: "Business Permit" });
+    }
+    if (isMSME && body.dti_sec_document) {
+      filesToCheck.push({ file: body.dti_sec_document, label: "DTI/SEC Document" });
+    }
+
+    body.supporting_docs?.forEach((doc, idx) => {
+      filesToCheck.push({ file: doc, label: `Supporting Document ${idx + 1}` });
+    });
+
+    for (const { file, label } of filesToCheck) {
+      if (file.size && file.size > MAX_FILE_SIZE_BYTES) {
+        const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+        return NextResponse.json(
+          { error: `${label} is too large (${sizeMB}MB). Maximum file size is ${MAX_FILE_SIZE_MB}MB.` },
+          { status: 400 },
+        );
+      }
     }
 
     const folder = `submissions/${crypto.randomUUID()}`;

@@ -306,16 +306,16 @@ export default function EntrySubmission({
          const initPayload = {
             track: nominee,
             ...(isLGU && {
-               authorization_form_document: { name: authorizationForm?.name, type: authorizationForm?.type },
+               authorization_form_document: { name: authorizationForm?.name, type: authorizationForm?.type, size: authorizationForm?.size },
             }),
             ...(isMSME && {
-               business_permit_document: { name: permit?.name, type: permit?.type },
-               dti_sec_document: { name: dti?.name, type: dti?.type },
+               business_permit_document: { name: permit?.name, type: permit?.type, size: permit?.size },
+               dti_sec_document: { name: dti?.name, type: dti?.type, size: dti?.size },
             }),
-            key_visual: { name: keyVisual?.name, type: keyVisual?.type },
-            bid_document: { name: bid?.name, type: bid?.type },
-            project_documentation: { name: projDoc?.name, type: projDoc?.type },
-            supporting_docs: supporting.map((f) => ({ name: f.name, type: f.type })),
+            key_visual: { name: keyVisual?.name, type: keyVisual?.type, size: keyVisual?.size },
+            bid_document: { name: bid?.name, type: bid?.type, size: bid?.size },
+            project_documentation: { name: projDoc?.name, type: projDoc?.type, size: projDoc?.size },
+            supporting_docs: supporting.map((f) => ({ name: f.name, type: f.type, size: f.size })),
          };
 
          const initRes = await fetch("/api/bid-entry/init-upload", {
@@ -709,7 +709,7 @@ export default function EntrySubmission({
                                  value={entry?.authorizationFormDocument || null}
                                  onChange={(file) => handleOnChange("authorizationFormDocument", file)}
                                  placeholder={`Upload Authorization Form for Representative`}
-                                 helperText="(PDF)"
+                                 helperText="(PDF, max 5MB)"
                                  className="mt-6"
                               />
                               {showError("authorizationFormDocument") && (
@@ -730,7 +730,7 @@ export default function EntrySubmission({
                                  value={entry?.businessPermitDocument || null}
                                  onChange={(file) => handleOnChange("businessPermitDocument", file)}
                                  placeholder={`Upload Business Permit`}
-                                 helperText="(PDF, JPG, or PNG)"
+                                 helperText="(PDF, JPG, or PNG, max 5MB)"
                                  accept=".pdf,.jpg,.jpeg,.png"
                                  className="mt-6"
                               />
@@ -748,7 +748,7 @@ export default function EntrySubmission({
                                  value={entry?.DTISecDocument || null}
                                  onChange={(file) => handleOnChange("DTISecDocument", file)}
                                  placeholder={`Upload SEC/DTI Permit`}
-                                 helperText="(PDF, JPG, or PNG)"
+                                 helperText="(PDF, JPG, or PNG, max 5MB)"
                                  accept=".pdf,.jpg,.jpeg,.png"
                                  className="mt-6"
                               />
@@ -811,7 +811,7 @@ export default function EntrySubmission({
                            accept=".jpg,.png"
                            onChange={(file) => handleOnChange("keyVisual", file)}
                            placeholder={`Upload Key Visual`}
-                           helperText="(recommended size: 1920 × 1080 px, JPG, or PNG)"
+                           helperText="(recommended size: 1920 × 1080 px, JPG or PNG, max 5MB)"
                            className="mt-4"
                         />
                         {showError("keyVisual") && <p className="text-red-200 text-xs mt-2">{errors.keyVisual}</p>}
@@ -858,7 +858,7 @@ export default function EntrySubmission({
                            accept=".pdf"
                            onChange={(file) => handleOnChange("bidDocument", file)}
                            placeholder={`Upload Bid Document`}
-                           helperText="(PDF)"
+                           helperText="(PDF, max 5MB)"
                            className="mt-4"
                         />
                         {showError("bidDocument") && <p className="text-red-200 text-xs mt-2">{errors.bidDocument}</p>}
@@ -884,7 +884,7 @@ export default function EntrySubmission({
                            accept=".pdf"
                            onChange={(file) => handleOnChange("projectDocument", file)}
                            placeholder={`Upload Project Documentation`}
-                           helperText="(PDF)"
+                           helperText="(PDF, max 5MB)"
                            className="mt-4"
                         />
                         {showError("projectDocument") && (
@@ -904,7 +904,7 @@ export default function EntrySubmission({
                            onChange={(file) => handleOnChange("supportingDocument", file)}
                            multiple={true}
                            placeholder={`Upload Supporting Document`}
-                           helperText="(PDF, PPT, JPG, or PNG) - you may upload multiple files"
+                           helperText="(PDF, PPT, JPG, or PNG, max 5MB each) - you may upload multiple files"
                         />
                         {showError("supportingDocument") && (
                            <p className="text-red-200 text-xs mt-2">{errors.supportingDocument}</p>
