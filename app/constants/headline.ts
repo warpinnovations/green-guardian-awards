@@ -78,8 +78,8 @@ export const headlines: Headline[] = [
     "date": "November 11, 2013",
     "topic": "Typhoon Yolanda",
     "headline": "TRAIL OF DEATH & DESTRUCTION.",
-    "imageUrl": "/dg-headlines/2013.jpg",
-    "link": "https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/sign/dg-headlines/2013.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hMTM0NWQyNy1hYzA5LTRjMzctYmYyZC0wNGUwMjYyNTI0Y2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkZy1oZWFkbGluZXMvMjAxMy5qcGciLCJpYXQiOjE3NzQzNDExODgsImV4cCI6MTgwNTg3NzE4OH0.LBkjF5X14T6d1iHJCoMAQUvcSZGKf8mdGu0xE-35u1A"
+    "imageUrl": "https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/sign/dg-headlines/2013.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hMTM0NWQyNy1hYzA5LTRjMzctYmYyZC0wNGUwMjYyNTI0Y2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkZy1oZWFkbGluZXMvMjAxMy5qcGciLCJpYXQiOjE3NzQzNDE2MDgsImV4cCI6MTgwNTg3NzYwOH0.CLVnkFI1ksA7eSBDn6gUKD74A_KXScmEnGp2rAcjlIw",
+    "link": "https://www.facebook.com/photo.php?fbid=689070457779589&set=a.689049721114996&id=100064403780936&rdid=88DqI1RL5sVrGSxT&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1Ai6fZwBhf#"
   },
   {
     "date": "March 17, 2014",
@@ -129,8 +129,8 @@ export const headlines: Headline[] = [
     "date": "September 1, 2021",
     "topic": "COVID Vaccine",
     "headline": "5.6% of COVID cases were fully vaccinated.",
-    "imageUrl": "/dg-headlines/2021.jpg",
-    "link": "https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/sign/dg-headlines/2021.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hMTM0NWQyNy1hYzA5LTRjMzctYmYyZC0wNGUwMjYyNTI0Y2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkZy1oZWFkbGluZXMvMjAyMS5qcGciLCJpYXQiOjE3NzQzNDEyODIsImV4cCI6MTgwNTg3NzI4Mn0.arvq5lJwCWF3AAiRriXKAKYzekVcJbRzZuhZUENmsqQ"
+    "imageUrl": "https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/sign/dg-headlines/2021.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hMTM0NWQyNy1hYzA5LTRjMzctYmYyZC0wNGUwMjYyNTI0Y2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkZy1oZWFkbGluZXMvMjAyMS5qcGciLCJpYXQiOjE3NzQzNDE2NjQsImV4cCI6MTgwNTg3NzY2NH0.m5lxL1bzdNRdlpAJrWJuEyNOPdjJlG1zJC_if47u0ZQ",
+    "link": "https://www.facebook.com/share/p/17tzKw5WUi/"
   },
   {
     "date": "March 2, 2022",
