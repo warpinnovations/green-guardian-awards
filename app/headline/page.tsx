@@ -73,7 +73,7 @@ function HeadlinePage({ item, pageNum, total, isPriority }: HeadlinePageProps) {
       </div>
 
       {/* ── Hero image ── */}
-      <div className={`flex-1 relative mx-4.5 min-h-0 overflow-hidden border border-black/18 flex items-center justify-center ${pageNum > 21 ?"bg-[#1a150e]" : "bg-white"}`}>
+      <div className={`flex-1 relative mx-4.5 min-h-0 overflow-hidden border border-black/18 flex items-center justify-center ${pageNum > 21 ? "bg-[#1a150e]" : "bg-white"}`}>
         <Image
           src={item.imageUrl}
           alt={item.topic}
@@ -152,7 +152,14 @@ function CoverPage({ total }: CoverPageProps) {
   );
 }
 
-function Leaf({ page, index, currentSpread, isFlipping, flipDirection, activeLeaf }: LeafProps) {
+function Leaf({
+  page,
+  index,
+  currentSpread,
+  isFlipping,
+  flipDirection,
+  activeLeaf,
+}: LeafProps) {
   const isPast = index < currentSpread;
   const isCurrent = index === currentSpread;
   const isPriority = Math.abs(index - currentSpread) <= 2;
@@ -160,16 +167,18 @@ function Leaf({ page, index, currentSpread, isFlipping, flipDirection, activeLea
   const rotation =
     isPast
       ? isFlipping && flipDirection === "backward" && activeLeaf === index
-        ? "rotateY(0deg)"
-        : "rotateY(-180deg)"
+        ? "rotateY(0deg) translateZ(0.1px)"
+        : "rotateY(-180deg) translateZ(0.1px)"
       : isCurrent && isFlipping
         ? flipDirection === "forward"
-          ? "rotateY(-180deg)"
-          : "rotateY(0deg)"
-        : "rotateY(0deg)";
+          ? "rotateY(-180deg) translateZ(0.1px)"
+          : "rotateY(0deg) translateZ(0.1px)"
+        : "rotateY(0deg) translateZ(0.1px)";
 
   const zIndex =
-    isCurrent && isFlipping ? 30 : isCurrent ? 20 : isPast ? index + 1 : 10 - index;
+    isCurrent ? 30 :
+      isPast ? 20 + index :
+        10 - index;
 
   const shouldAnimate =
     (isCurrent && isFlipping) ||
@@ -178,7 +187,12 @@ function Leaf({ page, index, currentSpread, isFlipping, flipDirection, activeLea
   const content =
     page.type === "cover"
       ? <CoverPage total={page.total} />
-      : <HeadlinePage item={page.item} pageNum={page.pageNum} total={page.total} isPriority={isPriority} />;
+      : <HeadlinePage
+        item={page.item}
+        pageNum={page.pageNum}
+        total={page.total}
+        isPriority={isPriority}
+      />;
 
   return (
     <div
@@ -187,13 +201,20 @@ function Leaf({ page, index, currentSpread, isFlipping, flipDirection, activeLea
         transformStyle: "preserve-3d",
         transformOrigin: "left center",
         transform: rotation,
-        transition: shouldAnimate ? "transform 0.75s cubic-bezier(0.645,0.045,0.355,1)" : "none",
+        transition: shouldAnimate
+          ? "transform 0.75s cubic-bezier(0.645,0.045,0.355,1)"
+          : "none",
         zIndex,
+        willChange: "transform", 
       }}
     >
       <div
         className="absolute inset-0 overflow-hidden"
-        style={{ backfaceVisibility: "hidden" }}
+        style={{
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+          transform: "translateZ(0)",
+        }}
       >
         {content}
       </div>
@@ -328,18 +349,23 @@ function FlippingBook({ pages, currentSpread, onSpreadChange }: FlippingBookProp
           {/* Backing sheet */}
           <div className="absolute inset-0 bg-[#e2d9c4]" style={{ zIndex: 0 }} />
 
-          {pages.map((page, i) => (
-            <Leaf
-              key={i}
-              page={page}
-              index={i}
-              currentSpread={currentSpread}
-              isFlipping={animState === "flipping" && activeLeaf === i}
-              flipDirection={flipDirection}
-              activeLeaf={activeLeaf}
-            />
-          ))}
+          {pages.map((page, i) => {
+            const isNear = Math.abs(i - currentSpread) <= 3;
 
+            if (!isNear) return null;
+
+            return (
+              <Leaf
+                key={i}
+                page={page}
+                index={i}
+                currentSpread={currentSpread}
+                isFlipping={animState === "flipping" && activeLeaf === i}
+                flipDirection={flipDirection}
+                activeLeaf={activeLeaf}
+              />
+            );
+          })}
           {/* Left zone */}
           <button
             onClick={() => flip("backward")}
