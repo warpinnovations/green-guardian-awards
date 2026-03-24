@@ -157,7 +157,7 @@ export const headlines: Headline[] = [
     "date": "March 12, 2025",
     "topic": "Duterte Arrested",
     "headline": "‘HE HAD IT COMING’: Ex-Pres Duterte arrested for crimes against humanity.",
-    "imageUrl": "/dg-headlines/2025.jpg",
+    "imageUrl": "/dg-headlines/2025.png",
     "link": "https://dailygcanauardian.com.ph/he-had-it-coming-ex-pres-duterte-arrested-for-crimes-against-humanity/"
   }
 ];
