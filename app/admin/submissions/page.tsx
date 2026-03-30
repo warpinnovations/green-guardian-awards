@@ -4,6 +4,7 @@ import {
   Hash,
   Building2,
   Tag,
+  Mail,
   Phone,
   Calendar,
   FileText,
@@ -32,6 +33,7 @@ type Submission = {
   award_category: string;
   classification: string;
   full_name: string;
+  email: string;
   contact_number: string;
 };
 
@@ -48,17 +50,18 @@ type ColumnDef = {
   key: keyof Submission | "action";
   label: string;
   icon: LucideIcon;
+  className?: string;
 };
 
 const COLUMNS: ColumnDef[] = [
-  { key: "reference_id", label: "Reference", icon: Hash },
-  { key: "org_name", label: "Organization", icon: Building2 },
-  { key: "award_category", label: "Category", icon: Tag },
-  { key: "classification", label: "Classification", icon: Layers },
-  { key: "full_name", label: "Contact Person", icon: User },
-  { key: "contact_number", label: "Contact", icon: Phone },
-  { key: "created_at", label: "Submitted", icon: Calendar },
-  { key: "action", label: "Action", icon: FileText },
+  { key: "reference_id", label: "Reference", icon: Hash, className: "w-36 px-4" },
+  { key: "org_name", label: "Organization", icon: Building2, className: "w-52 px-4" },
+  { key: "award_category", label: "Category", icon: Tag, className: "w-44 px-4" },
+  { key: "classification", label: "Classification", icon: Layers, className: "w-36 px-4" },
+  { key: "full_name", label: "Contact Person", icon: User, className: "w-44 px-4" },
+  { key: "contact_number", label: "Contact", icon: Phone, className: "w-56 px-4" },
+  { key: "created_at", label: "Submitted", icon: Calendar, className: "w-44 px-4" },
+  { key: "action", label: "Action", icon: FileText, className: "w-24 px-4" },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -129,7 +132,7 @@ async function fetchSubmissions({
   let query = supabaseAdmin
     .from("bid_entries")
     .select(
-      "id, created_at, reference_id, org_name, award_category, classification, full_name, contact_number",
+      "id, created_at, reference_id, org_name, award_category, classification, full_name, email, contact_number",
       { count: "exact" }
     )
     .order("created_at", { ascending: false })
@@ -151,8 +154,8 @@ function TableHeader() {
   return (
     <thead>
       <tr style={{ background: `linear-gradient(to right, ${BRAND.green}05, ${BRAND.gold}05)` }}>
-        {COLUMNS.map(({ key, label, icon: Icon }) => (
-          <th key={key} className="px-6 py-4 text-left">
+        {COLUMNS.map(({ key, label, icon: Icon, className }) => (
+          <th key={key} className={`${className ?? "px-4"} py-4 text-left`}>
             <div className="flex items-center gap-2">
               <Icon className="w-4 h-4 opacity-50" />
               <span className="text-xs font-bold uppercase tracking-wider" style={{ color: BRAND.green }}>
@@ -170,7 +173,7 @@ function TableRow({ row }: { row: Submission }) {
   return (
     <tr className="border-t border-neutral-100 hover:bg-neutral-50/50 transition-colors group">
       {/* Reference */}
-      <td className="px-6 py-4">
+      <td className="w-36 px-4 py-4">
         <div
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-bold text-sm shadow-sm"
           style={{ backgroundColor: `${BRAND.green}10`, color: BRAND.green, border: `1px solid ${BRAND.green}20` }}
@@ -181,12 +184,12 @@ function TableRow({ row }: { row: Submission }) {
       </td>
 
       {/* Organization */}
-      <td className="px-6 py-4">
+      <td className="w-52 px-4 py-4">
         <div className="font-semibold text-neutral-900 text-[15px]">{row.org_name}</div>
       </td>
 
       {/* Category */}
-      <td className="px-6 py-4">
+      <td className="w-44 px-4 py-4">
         <div
           className="inline-flex px-3 py-1.5 rounded-lg text-xs font-semibold"
           style={{ backgroundColor: `${BRAND.gold}20`, color: BRAND.green }}
@@ -196,7 +199,7 @@ function TableRow({ row }: { row: Submission }) {
       </td>
 
       {/* Classification */}
-      <td className="px-6 py-4">
+      <td className="w-36 px-4 py-4">
         <div
           className="inline-flex px-3 py-1.5 rounded-lg text-xs font-semibold"
           style={{ backgroundColor: `${BRAND.green}10`, color: BRAND.green, border: `1px solid ${BRAND.green}15` }}
@@ -206,7 +209,7 @@ function TableRow({ row }: { row: Submission }) {
       </td>
 
       {/* Contact Person */}
-      <td className="px-6 py-4">
+      <td className="w-44 px-4 py-4">
         <div className="flex items-center gap-2 text-neutral-600 text-sm">
           <User className="w-4 h-4 text-neutral-400" />
           <span className="truncate max-w-50">{row.full_name || "—"}</span>
@@ -214,20 +217,26 @@ function TableRow({ row }: { row: Submission }) {
       </td>
 
       {/* Contact */}
-      <td className="px-6 py-4">
-        <div className="flex items-center gap-2 text-neutral-600 text-sm">
-          <Phone className="w-4 h-4 text-neutral-400" />
-          {row.contact_number}
+      <td className="w-56 px-4 py-4">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2 text-neutral-600 text-sm">
+            <Phone className="w-4 h-4 text-neutral-400" />
+            {row.contact_number}
+          </div>
+          <div className="flex items-center gap-2 text-neutral-500 text-xs">
+            <Mail className="w-3.5 h-3.5 text-neutral-400" />
+            <span className="truncate max-w-48">{row.email || "—"}</span>
+          </div>
         </div>
       </td>
 
       {/* Date */}
-      <td className="px-6 py-4">
+      <td className="w-44 px-4 py-4">
         <div className="text-sm text-neutral-600">{formatDate(row.created_at)}</div>
       </td>
 
       {/* Action */}
-      <td className="px-6 py-4">
+      <td className="w-24 px-4 py-4">
         <Link
           href={`/admin/submissions/${row.id}`}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all group-hover:shadow-md"
