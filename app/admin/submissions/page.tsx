@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   LucideIcon,
+  Layers,
 } from "lucide-react";
 import { SubmissionsFilterBar } from "./SubmissionFilterBar";
 
@@ -30,6 +31,7 @@ type Submission = {
   reference_id: string;
   org_name: string;
   award_category: string;
+  classification: string;
   email: string;
   contact_number: string;
 };
@@ -37,6 +39,7 @@ type Submission = {
 type SearchParams = Promise<{
   page?: string;
   category?: string;
+  classification?: string;
   search?: string;
 }>;
 
@@ -52,6 +55,7 @@ const COLUMNS: ColumnDef[] = [
   { key: "reference_id", label: "Reference", icon: Hash },
   { key: "org_name", label: "Organization", icon: Building2 },
   { key: "award_category", label: "Category", icon: Tag },
+  { key: "classification", label: "Classification", icon: Layers },
   { key: "email", label: "Email", icon: Mail },
   { key: "contact_number", label: "Contact", icon: Phone },
   { key: "created_at", label: "Submitted", icon: Calendar },
@@ -88,6 +92,10 @@ function formatDate(iso: string | null): string {
   });
 }
 
+function distinct(values: (string | null)[]): string[] {
+  return [...new Set(values.filter((v): v is string => !!v))];
+}
+
 // ─── Supabase queries ─────────────────────────────────────────────────────────
 
 async function fetchDistinctCategories(): Promise<string[]> {
@@ -95,20 +103,26 @@ async function fetchDistinctCategories(): Promise<string[]> {
     .from("bid_entries")
     .select("award_category")
     .order("award_category", { ascending: true });
+  return distinct(data?.map((r) => r.award_category) ?? []);
+}
 
-  if (!data) return [];
-
-  // Deduplicate in JS (Supabase JS v2 doesn't expose DISTINCT directly)
-  return [...new Set(data.map((r) => r.award_category).filter(Boolean))];
+async function fetchDistinctClassifications(): Promise<string[]> {
+  const { data } = await supabaseAdmin
+    .from("bid_entries")
+    .select("classification")
+    .order("classification", { ascending: true });
+  return distinct(data?.map((r) => r.classification) ?? []);
 }
 
 async function fetchSubmissions({
   page,
   category,
+  classification,
   search,
 }: {
   page: number;
   category?: string;
+  classification?: string;
   search?: string;
 }) {
   const { from, to } = toRange(page);
@@ -116,13 +130,14 @@ async function fetchSubmissions({
   let query = supabaseAdmin
     .from("bid_entries")
     .select(
-      "id, created_at, reference_id, org_name, award_category, email, contact_number",
+      "id, created_at, reference_id, org_name, award_category, classification, email, contact_number",
       { count: "exact" }
     )
     .order("created_at", { ascending: false })
     .range(from, to);
 
   if (category) query = query.eq("award_category", category);
+  if (classification) query = query.eq("classification", classification);
   if (search)
     query = query.or(
       `org_name.ilike.%${search}%,reference_id.ilike.%${search}%,email.ilike.%${search}%`
@@ -155,6 +170,7 @@ function TableHeader() {
 function TableRow({ row }: { row: Submission }) {
   return (
     <tr className="border-t border-neutral-100 hover:bg-neutral-50/50 transition-colors group">
+      {/* Reference */}
       <td className="px-6 py-4">
         <div
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-bold text-sm shadow-sm"
@@ -164,32 +180,54 @@ function TableRow({ row }: { row: Submission }) {
           {row.reference_id}
         </div>
       </td>
+
+      {/* Organization */}
       <td className="px-6 py-4">
         <div className="font-semibold text-neutral-900 text-[15px]">{row.org_name}</div>
       </td>
+
+      {/* Category */}
       <td className="px-6 py-4">
         <div
-          className="inline-flex px-5 py-2.5 rounded-lg text-xs font-semibold"
+          className="inline-flex px-3 py-1.5 rounded-lg text-xs font-semibold"
           style={{ backgroundColor: `${BRAND.gold}20`, color: BRAND.green }}
         >
           {row.award_category}
         </div>
       </td>
+
+      {/* Classification */}
+      <td className="px-6 py-4">
+        <div
+          className="inline-flex px-3 py-1.5 rounded-lg text-xs font-semibold"
+          style={{ backgroundColor: `${BRAND.green}10`, color: BRAND.green, border: `1px solid ${BRAND.green}15` }}
+        >
+          {row.classification || "—"}
+        </div>
+      </td>
+
+      {/* Email */}
       <td className="px-6 py-4">
         <div className="flex items-center gap-2 text-neutral-600 text-sm">
           <AtSign className="w-4 h-4 text-neutral-400" />
           <span className="truncate max-w-[200px]">{row.email}</span>
         </div>
       </td>
+
+      {/* Contact */}
       <td className="px-6 py-4">
         <div className="flex items-center gap-2 text-neutral-600 text-sm">
           <Phone className="w-4 h-4 text-neutral-400" />
           {row.contact_number}
         </div>
       </td>
+
+      {/* Date */}
       <td className="px-6 py-4">
         <div className="text-sm text-neutral-600">{formatDate(row.created_at)}</div>
       </td>
+
+      {/* Action */}
       <td className="px-6 py-4">
         <Link
           href={`/admin/submissions/${row.id}`}
@@ -282,15 +320,16 @@ interface Props {
 }
 
 export default async function AdminSubmissionsPage({ searchParams }: Props) {
-  const { page: rawPage, category, search } = await searchParams;
+  const { page: rawPage, category, classification, search } = await searchParams;
 
   const currentPage = parsePage(rawPage);
   const { from, to } = toRange(currentPage);
 
-  // Fetch categories and submissions in parallel
-  const [categories, { data, error, count }] = await Promise.all([
+  // Fetch filter options and submissions in parallel
+  const [categories, classifications, { data, error, count }] = await Promise.all([
     fetchDistinctCategories(),
-    fetchSubmissions({ page: currentPage, category, search }),
+    fetchDistinctClassifications(),
+    fetchSubmissions({ page: currentPage, category, classification, search }),
   ]);
 
   if (error) return <div className="p-10 text-red-600">{error.message}</div>;
@@ -300,6 +339,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
   // Carry active filters through pagination links
   const activeParams: Record<string, string> = {};
   if (category) activeParams.category = category;
+  if (classification) activeParams.classification = classification;
   if (search) activeParams.search = search;
 
   return (
@@ -332,7 +372,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
           </div>
 
           {/* Stats row */}
-          <div className="flex items-center gap-4 mt-4">
+          <div className="flex items-center gap-3 mt-4 flex-wrap">
             <div
               className="px-4 py-2 rounded-lg text-sm font-semibold"
               style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
@@ -349,18 +389,28 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
             ) : null}
             {category && (
               <div
-                className="px-4 py-2 rounded-lg text-sm font-semibold"
+                className="px-3 py-2 rounded-lg text-xs font-semibold"
                 style={{ backgroundColor: "rgba(212,175,55,0.25)", color: BRAND.gold }}
               >
-                Filtered: {category}
+                Category: {category}
+              </div>
+            )}
+            {classification && (
+              <div
+                className="px-3 py-2 rounded-lg text-xs font-semibold"
+                style={{ backgroundColor: "rgba(212,175,55,0.25)", color: BRAND.gold }}
+              >
+                Classification: {classification}
               </div>
             )}
           </div>
 
-          {/* Filter bar — client component */}
+          {/* Filter bar */}
           <SubmissionsFilterBar
             categories={categories}
+            classifications={classifications}
             activeCategory={category ?? ""}
+            activeClassification={classification ?? ""}
             activeSearch={search ?? ""}
           />
         </div>

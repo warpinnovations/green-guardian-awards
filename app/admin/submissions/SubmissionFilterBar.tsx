@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useTransition } from "react";
 import { Search, ChevronDown, X, Loader2 } from "lucide-react";
@@ -8,11 +9,19 @@ const BRAND = { green: "#0A2724", gold: "#D4AF37" } as const;
 
 interface Props {
   categories: string[];
+  classifications: string[];
   activeCategory: string;
+  activeClassification: string;
   activeSearch: string;
 }
 
-export function SubmissionsFilterBar({ categories, activeCategory, activeSearch }: Props) {
+export function SubmissionsFilterBar({
+  categories,
+  classifications,
+  activeCategory,
+  activeClassification,
+  activeSearch,
+}: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -21,7 +30,7 @@ export function SubmissionsFilterBar({ categories, activeCategory, activeSearch 
 
   const buildHref = useCallback((overrides: Record<string, string>) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.delete("page"); // always reset to page 1 on filter change
+    params.delete("page");
     Object.entries(overrides).forEach(([k, v]) => {
       if (v) params.set(k, v);
       else params.delete(k);
@@ -45,17 +54,39 @@ export function SubmissionsFilterBar({ categories, activeCategory, activeSearch 
     [buildHref, router]
   );
 
+  const handleClassification = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      startTransition(() => router.push(buildHref({ classification: e.target.value })));
+    },
+    [buildHref, router]
+  );
+
   const handleClearAll = useCallback(() => {
     startTransition(() => router.push("?"));
   }, [router]);
 
-  const hasActiveFilters = !!activeCategory || !!activeSearch;
+  const hasActiveFilters = !!activeCategory || !!activeClassification || !!activeSearch;
+
+  // ─── Shared dropdown styles ───────────────────────────────────────────────
+
+  function dropdownStyle(active: boolean) {
+    return {
+      backgroundColor: active ? BRAND.gold : "rgba(255,255,255,0.12)",
+      border: `1px solid ${active ? BRAND.gold : "rgba(255,255,255,0.2)"}`,
+      color: active ? BRAND.green : "white",
+      minWidth: "180px",
+    };
+  }
+
+  function chevronColor(active: boolean) {
+    return { color: active ? BRAND.green : "rgba(255,255,255,0.6)" };
+  }
 
   return (
     <div className="flex flex-wrap items-center gap-3 mt-5 relative z-10">
 
-      {/* Search input */}
-      <div className="relative min-w-[220px] flex-1 max-w-sm">
+      {/* Search */}
+      <div className="relative min-w-55 flex-1 max-w-sm">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
           style={{ color: "rgba(255,255,255,0.45)" }}
@@ -80,27 +111,35 @@ export function SubmissionsFilterBar({ categories, activeCategory, activeSearch 
           value={activeCategory}
           onChange={handleCategory}
           className="appearance-none pl-4 pr-9 py-2 rounded-lg text-sm font-semibold outline-none cursor-pointer transition-all"
-          style={{
-            backgroundColor: activeCategory
-              ? BRAND.gold
-              : "rgba(255,255,255,0.12)",
-            border: activeCategory
-              ? `1px solid ${BRAND.gold}`
-              : "1px solid rgba(255,255,255,0.2)",
-            color: activeCategory ? BRAND.green : "white",
-            minWidth: "180px",
-          }}
+          style={dropdownStyle(!!activeCategory)}
         >
           <option value="">All Categories</option>
           {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
+            <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
         <ChevronDown
           className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
-          style={{ color: activeCategory ? BRAND.green : "rgba(255,255,255,0.6)" }}
+          style={chevronColor(!!activeCategory)}
+        />
+      </div>
+
+      {/* Classification dropdown */}
+      <div className="relative">
+        <select
+          value={activeClassification}
+          onChange={handleClassification}
+          className="appearance-none pl-4 pr-9 py-2 rounded-lg text-sm font-semibold outline-none cursor-pointer transition-all"
+          style={dropdownStyle(!!activeClassification)}
+        >
+          <option value="">All Classifications</option>
+          {classifications.map((cls) => (
+            <option key={cls} value={cls}>{cls}</option>
+          ))}
+        </select>
+        <ChevronDown
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+          style={chevronColor(!!activeClassification)}
         />
       </div>
 
