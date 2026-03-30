@@ -15,6 +15,7 @@ import {
   ChevronRight,
   LucideIcon,
 } from "lucide-react";
+import { SubmissionsFilterBar } from "./SubmissionFilterBar";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -72,7 +73,6 @@ function buildPageNumbers(current: number, total: number): (number | "...")[] {
   const pages = Array.from({ length: total }, (_, i) => i + 1).filter(
     (p) => p === 1 || p === total || Math.abs(p - current) <= 1
   );
-
   return pages.reduce<(number | "...")[]>((acc, p, idx, arr) => {
     if (idx > 0 && p - (arr[idx - 1] as number) > 1) acc.push("...");
     acc.push(p);
@@ -83,15 +83,24 @@ function buildPageNumbers(current: number, total: number): (number | "...")[] {
 function formatDate(iso: string | null): string {
   if (!iso) return "—";
   return new Date(iso).toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+    month: "short", day: "numeric", year: "numeric",
+    hour: "2-digit", minute: "2-digit",
   });
 }
 
-// ─── Supabase query builder ───────────────────────────────────────────────────
+// ─── Supabase queries ─────────────────────────────────────────────────────────
+
+async function fetchDistinctCategories(): Promise<string[]> {
+  const { data } = await supabaseAdmin
+    .from("bid_entries")
+    .select("award_category")
+    .order("award_category", { ascending: true });
+
+  if (!data) return [];
+
+  // Deduplicate in JS (Supabase JS v2 doesn't expose DISTINCT directly)
+  return [...new Set(data.map((r) => r.award_category).filter(Boolean))];
+}
 
 async function fetchSubmissions({
   page,
@@ -132,10 +141,7 @@ function TableHeader() {
           <th key={key} className="px-6 py-4 text-left">
             <div className="flex items-center gap-2">
               <Icon className="w-4 h-4 opacity-50" />
-              <span
-                className="text-xs font-bold uppercase tracking-wider"
-                style={{ color: BRAND.green }}
-              >
+              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: BRAND.green }}>
                 {label}
               </span>
             </div>
@@ -149,27 +155,18 @@ function TableHeader() {
 function TableRow({ row }: { row: Submission }) {
   return (
     <tr className="border-t border-neutral-100 hover:bg-neutral-50/50 transition-colors group">
-      {/* Reference */}
       <td className="px-6 py-4">
         <div
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-bold text-sm shadow-sm"
-          style={{
-            backgroundColor: `${BRAND.green}10`,
-            color: BRAND.green,
-            border: `1px solid ${BRAND.green}20`,
-          }}
+          style={{ backgroundColor: `${BRAND.green}10`, color: BRAND.green, border: `1px solid ${BRAND.green}20` }}
         >
           <Hash className="w-3.5 h-3.5" />
           {row.reference_id}
         </div>
       </td>
-
-      {/* Organization */}
       <td className="px-6 py-4">
         <div className="font-semibold text-neutral-900 text-[15px]">{row.org_name}</div>
       </td>
-
-      {/* Category */}
       <td className="px-6 py-4">
         <div
           className="inline-flex px-5 py-2.5 rounded-lg text-xs font-semibold"
@@ -178,29 +175,21 @@ function TableRow({ row }: { row: Submission }) {
           {row.award_category}
         </div>
       </td>
-
-      {/* Email */}
       <td className="px-6 py-4">
         <div className="flex items-center gap-2 text-neutral-600 text-sm">
           <AtSign className="w-4 h-4 text-neutral-400" />
-          <span className="truncate max-w-50">{row.email}</span>
+          <span className="truncate max-w-[200px]">{row.email}</span>
         </div>
       </td>
-
-      {/* Contact */}
       <td className="px-6 py-4">
         <div className="flex items-center gap-2 text-neutral-600 text-sm">
           <Phone className="w-4 h-4 text-neutral-400" />
           {row.contact_number}
         </div>
       </td>
-
-      {/* Date */}
       <td className="px-6 py-4">
         <div className="text-sm text-neutral-600">{formatDate(row.created_at)}</div>
       </td>
-
-      {/* Action */}
       <td className="px-6 py-4">
         <Link
           href={`/admin/submissions/${row.id}`}
@@ -230,41 +219,28 @@ function Pagination({
   }
 
   const pages = buildPageNumbers(currentPage, totalPages);
-  const navBtnBase =
-    "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border text-sm font-semibold transition-all";
+  const navBtnBase = "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border text-sm font-semibold transition-all";
 
   return (
     <div className="flex items-center gap-2">
-      {/* Previous */}
       {currentPage > 1 ? (
         <Link
           href={pageHref(currentPage - 1)}
           className={`${navBtnBase} hover:shadow-sm`}
           style={{ borderColor: `${BRAND.green}30`, color: BRAND.green, backgroundColor: "white" }}
         >
-          <ChevronLeft className="w-4 h-4" />
-          Previous
+          <ChevronLeft className="w-4 h-4" /> Previous
         </Link>
       ) : (
-        <span
-          className={`${navBtnBase} opacity-30 cursor-not-allowed select-none`}
-          style={{ borderColor: `${BRAND.green}20`, color: BRAND.green }}
-        >
-          <ChevronLeft className="w-4 h-4" />
-          Previous
+        <span className={`${navBtnBase} opacity-30 cursor-not-allowed select-none`} style={{ borderColor: `${BRAND.green}20`, color: BRAND.green }}>
+          <ChevronLeft className="w-4 h-4" /> Previous
         </span>
       )}
 
-      {/* Page numbers */}
       <div className="flex items-center gap-1">
         {pages.map((p, idx) =>
           p === "..." ? (
-            <span
-              key={`ellipsis-${idx}`}
-              className="px-2 text-neutral-400 text-sm select-none"
-            >
-              …
-            </span>
+            <span key={`ellipsis-${idx}`} className="px-2 text-neutral-400 text-sm select-none">…</span>
           ) : (
             <Link
               key={p}
@@ -273,11 +249,7 @@ function Pagination({
               style={
                 p === currentPage
                   ? { backgroundColor: BRAND.green, color: "white" }
-                  : {
-                    backgroundColor: "white",
-                    color: BRAND.green,
-                    border: `1px solid ${BRAND.green}20`,
-                  }
+                  : { backgroundColor: "white", color: BRAND.green, border: `1px solid ${BRAND.green}20` }
               }
             >
               {p}
@@ -286,23 +258,17 @@ function Pagination({
         )}
       </div>
 
-      {/* Next */}
       {currentPage < totalPages ? (
         <Link
           href={pageHref(currentPage + 1)}
           className={`${navBtnBase} hover:shadow-sm`}
           style={{ borderColor: `${BRAND.green}30`, color: BRAND.green, backgroundColor: "white" }}
         >
-          Next
-          <ChevronRight className="w-4 h-4" />
+          Next <ChevronRight className="w-4 h-4" />
         </Link>
       ) : (
-        <span
-          className={`${navBtnBase} opacity-30 cursor-not-allowed select-none`}
-          style={{ borderColor: `${BRAND.green}20`, color: BRAND.green }}
-        >
-          Next
-          <ChevronRight className="w-4 h-4" />
+        <span className={`${navBtnBase} opacity-30 cursor-not-allowed select-none`} style={{ borderColor: `${BRAND.green}20`, color: BRAND.green }}>
+          Next <ChevronRight className="w-4 h-4" />
         </span>
       )}
     </div>
@@ -321,12 +287,15 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
   const currentPage = parsePage(rawPage);
   const { from, to } = toRange(currentPage);
 
-  const { data, error, count } = await fetchSubmissions({ page: currentPage, category, search });
+  // Fetch categories and submissions in parallel
+  const [categories, { data, error, count }] = await Promise.all([
+    fetchDistinctCategories(),
+    fetchSubmissions({ page: currentPage, category, search }),
+  ]);
 
   if (error) return <div className="p-10 text-red-600">{error.message}</div>;
-  if (!count) return <div className="p-10 text-neutral-500">No submissions found.</div>;
 
-  const totalPages = Math.ceil(count / PAGE_SIZE);
+  const totalPages = count ? Math.ceil(count / PAGE_SIZE) : 0;
 
   // Carry active filters through pagination links
   const activeParams: Record<string, string> = {};
@@ -348,6 +317,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
+          {/* Title row */}
           <div className="flex items-center gap-3 mb-2">
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
@@ -356,60 +326,83 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-xs opacity-70 uppercase tracking-wider font-medium">
-                Admin Dashboard
-              </div>
+              <div className="text-xs opacity-70 uppercase tracking-wider font-medium">Admin Dashboard</div>
               <div className="text-3xl font-bold">Submissions</div>
             </div>
           </div>
 
+          {/* Stats row */}
           <div className="flex items-center gap-4 mt-4">
             <div
               className="px-4 py-2 rounded-lg text-sm font-semibold"
               style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
             >
-              Total: {count}
+              Total: {count ?? 0}
             </div>
-            <div
-              className="px-4 py-2 rounded-lg text-sm font-semibold"
-              style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
-            >
-              Page {currentPage} of {totalPages}
-            </div>
+            {count ? (
+              <div
+                className="px-4 py-2 rounded-lg text-sm font-semibold"
+                style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
+              >
+                Page {currentPage} of {totalPages}
+              </div>
+            ) : null}
+            {category && (
+              <div
+                className="px-4 py-2 rounded-lg text-sm font-semibold"
+                style={{ backgroundColor: "rgba(212,175,55,0.25)", color: BRAND.gold }}
+              >
+                Filtered: {category}
+              </div>
+            )}
           </div>
+
+          {/* Filter bar — client component */}
+          <SubmissionsFilterBar
+            categories={categories}
+            activeCategory={category ?? ""}
+            activeSearch={search ?? ""}
+          />
         </div>
       </div>
 
       {/* Table */}
       <div className="max-w-7xl mx-auto px-6 py-10">
-        <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <TableHeader />
-              <tbody>
-                {data?.map((row) => (
-                  <TableRow key={row.id} row={row as Submission} />
-                ))}
-              </tbody>
-            </table>
+        {!count ? (
+          <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 p-16 text-center text-neutral-500">
+            No submissions match your filters.
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full">
+                  <TableHeader />
+                  <tbody>
+                    {data?.map((row) => (
+                      <TableRow key={row.id} row={row as Submission} />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-        {/* Footer / Pagination */}
-        <div className="mt-6 flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-2 text-sm text-neutral-500">
-            <CheckCircle2 className="w-4 h-4" />
-            <span>
-              Showing {from + 1}–{Math.min(to + 1, count)} of {count} submissions
-            </span>
-          </div>
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            searchParams={activeParams}
-          />
-        </div>
+            {/* Footer / Pagination */}
+            <div className="mt-6 flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-2 text-sm text-neutral-500">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>
+                  Showing {from + 1}–{Math.min(to + 1, count)} of {count} submissions
+                </span>
+              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                searchParams={activeParams}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
