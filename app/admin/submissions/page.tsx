@@ -356,7 +356,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
           <div className="w-full h-full rounded-full" style={{ background: BRAND.gold }} />
         </div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
+        <div className="px-2 mx-auto relative z-10">
           {/* Title row */}
           <div className="flex items-center gap-3 mb-2">
             <div
@@ -417,14 +417,14 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
       </div>
 
       {/* Table */}
-      <div className="max-w-7xl mx-auto px-6 py-10">
+      <div className="mx-auto px-8 py-10">
         {!count ? (
           <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 p-16 text-center text-neutral-500">
             No submissions match your filters.
           </div>
         ) : (
           <>
-            <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+            <div className="bg-white w-full rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <TableHeader />
