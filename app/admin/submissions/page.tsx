@@ -4,17 +4,16 @@ import {
   Hash,
   Building2,
   Tag,
-  Mail,
   Phone,
   Calendar,
   FileText,
   ArrowRight,
   CheckCircle2,
-  AtSign,
   ChevronLeft,
   ChevronRight,
   LucideIcon,
   Layers,
+  User,
 } from "lucide-react";
 import { SubmissionsFilterBar } from "./SubmissionFilterBar";
 
@@ -32,7 +31,7 @@ type Submission = {
   org_name: string;
   award_category: string;
   classification: string;
-  email: string;
+  full_name: string;
   contact_number: string;
 };
 
@@ -56,7 +55,7 @@ const COLUMNS: ColumnDef[] = [
   { key: "org_name", label: "Organization", icon: Building2 },
   { key: "award_category", label: "Category", icon: Tag },
   { key: "classification", label: "Classification", icon: Layers },
-  { key: "email", label: "Email", icon: Mail },
+  { key: "full_name", label: "Contact Person", icon: User },
   { key: "contact_number", label: "Contact", icon: Phone },
   { key: "created_at", label: "Submitted", icon: Calendar },
   { key: "action", label: "Action", icon: FileText },
@@ -130,7 +129,7 @@ async function fetchSubmissions({
   let query = supabaseAdmin
     .from("bid_entries")
     .select(
-      "id, created_at, reference_id, org_name, award_category, classification, email, contact_number",
+      "id, created_at, reference_id, org_name, award_category, classification, full_name, contact_number",
       { count: "exact" }
     )
     .order("created_at", { ascending: false })
@@ -140,7 +139,7 @@ async function fetchSubmissions({
   if (classification) query = query.eq("classification", classification);
   if (search)
     query = query.or(
-      `org_name.ilike.%${search}%,reference_id.ilike.%${search}%,email.ilike.%${search}%`
+      `org_name.ilike.%${search}%,reference_id.ilike.%${search}%,full_name.ilike.%${search}%`
     );
 
   return query;
@@ -206,11 +205,11 @@ function TableRow({ row }: { row: Submission }) {
         </div>
       </td>
 
-      {/* Email */}
+      {/* Contact Person */}
       <td className="px-6 py-4">
         <div className="flex items-center gap-2 text-neutral-600 text-sm">
-          <AtSign className="w-4 h-4 text-neutral-400" />
-          <span className="truncate max-w-[200px]">{row.email}</span>
+          <User className="w-4 h-4 text-neutral-400" />
+          <span className="truncate max-w-50">{row.full_name || "—"}</span>
         </div>
       </td>
 
