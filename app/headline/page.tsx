@@ -143,7 +143,7 @@ function CoverPage({ total }: CoverPageProps) {
         Two Decades of Headlines
       </p>
       <p className="text-[rgba(200,168,75,0.55)] text-[10px] text-center tracking-[0.14em] m-0 mb-8">
-        2001 — 2025 · {total} FRONT PAGES
+        2002 — 2025
       </p>
 
       <div className="w-full border-t-[3px] border-[#c8a84b] mb-2" />
@@ -205,7 +205,7 @@ function Leaf({
           ? "transform 0.75s cubic-bezier(0.645,0.045,0.355,1)"
           : "none",
         zIndex,
-        willChange: "transform", 
+        willChange: "transform",
       }}
     >
       <div
@@ -301,7 +301,7 @@ function FlippingBook({ pages, currentSpread, onSpreadChange }: FlippingBookProp
         <div className="border-t-4 border-[#c8a84b] pt-2 pb-1">
           <div className="flex items-center justify-between text-[10px] mb-1.5 px-1 text-[#1a150e] tracking-[0.14em]">
             <span>SPECIAL ARCHIVE EDITION</span>
-            <span>✦ EST. 2001 ✦</span>
+            <span>✦ EST. 2002 ✦</span>
           </div>
           <div className="text-center">
             <h1
@@ -310,9 +310,6 @@ function FlippingBook({ pages, currentSpread, onSpreadChange }: FlippingBookProp
             >
               THE DAILY GUARDIAN
             </h1>
-          </div>
-          <div className="flex items-center justify-end text-[10px] mt-1.5 px-1 text-[rgba(26,21,14,0.75)] tracking-widest">
-            <span>PAGE {currentSpread} OF {pages.length - 1}</span>
           </div>
         </div>
         <div className="h-px mt-1 bg-[rgba(200,168,75,0.2)]" />
