@@ -48,10 +48,10 @@ export default function DailyGuardianSplash({
           className="relative z-10 flex flex-1 flex-col justify-center px-5 transition-all duration-700 translate-y-0 opacity-100"
         >
           <div className="flex flex-col items-center">
-            <Image src="/25-years-dg.png" className="-mt-10" alt="25 Years of the Daily Guardian" width={250} height={100} />
+            <Image src="/25-years-dg.png" className="-mt-10" alt="25 Years of the Daily Guardian" width={210} height={100} />
             {/* Headline */}
             <h2
-              className="text-[28px] mb-7 mt-5 font-bold leading-[1.1] text-white"
+              className="text-[32px] mb-7 mt-5 font-bold leading-[1.1] text-white"
               style={{ fontFamily: "'Times New Roman', serif" }}
             >
               {headline.split(" ").map((word, i) => (
