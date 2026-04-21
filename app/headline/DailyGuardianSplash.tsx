@@ -45,11 +45,11 @@ export default function DailyGuardianSplash({
         <div
           className="relative z-10 flex flex-1 flex-col justify-center px-5 transition-all duration-700 translate-y-0 opacity-100"
         >
-          <div className="flex flex-col items-center">
-            <Image src="/25-years-dg.png" className="-mt-10" alt="25 Years of the Daily Guardian" width={190} height={100} />
+          <div className="flex flex-col items-center gap-8">
+            <Image src="/25-years-dg.png" alt="25 Years of the Daily Guardian" width={190} height={100} />
             {/* Headline */}
             <h2
-              className="text-[40px] font-sans mb-24 mt-5 font-bold leading-[1.1] text-white uppercase"
+              className="text-[40px] font-sans font-bold leading-[1.1] text-white uppercase"
             >
               TURNING A<br />
               <span className="text-[#ffde00]">NEW</span> <span className="opacity-20">P</span>AGE
