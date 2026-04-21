@@ -54,7 +54,7 @@ export default function DailyGuardianSplash({
             <Image src="/25-years-dg.png" className="-mt-10" alt="25 Years of the Daily Guardian" width={250} height={100} />
             {/* Headline */}
             <h2
-              className="text-[28px] -mt-2 mb-7 font-bold leading-[1.1] text-white"
+              className="text-[28px] mb-7 mt-3 font-bold leading-[1.1] text-white"
               style={{ fontFamily: "'Times New Roman', serif" }}
             >
               {headline.split(" ").map((word, i) => (
