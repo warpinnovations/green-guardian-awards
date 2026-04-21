@@ -12,8 +12,6 @@ interface DailyGuardianSplashProps {
   volume?: string;
   date?: string;
   headline?: string;
-  subheadline?: string;
-  deck?: string;
   stats?: StatItem[];
   onReadArchive?: () => void;
 }
@@ -22,7 +20,6 @@ export default function DailyGuardianSplash({
   edition = "Special Archive Edition",
   volume = "Vol. XXV · Est. 2001 · April 2026",
   headline = "Turning a New Page",
-  deck = "Two and a half decades of truth-telling, accountability, and stories that shaped our community.",
   onReadArchive,
 }: DailyGuardianSplashProps) {
   return (
@@ -54,7 +51,7 @@ export default function DailyGuardianSplash({
             <Image src="/25-years-dg.png" className="-mt-10" alt="25 Years of the Daily Guardian" width={250} height={100} />
             {/* Headline */}
             <h2
-              className="text-[28px] mb-7 mt-3 font-bold leading-[1.1] text-white"
+              className="text-[28px] mb-7 mt-5 font-bold leading-[1.1] text-white"
               style={{ fontFamily: "'Times New Roman', serif" }}
             >
               {headline.split(" ").map((word, i) => (
@@ -70,11 +67,6 @@ export default function DailyGuardianSplash({
             </h2>
 
           </div>
-
-          {/* Deck copy */}
-          <p className="mb-5 font-sans text-center text-[12px] leading-[1.7] text-[#888]">
-            {deck}
-          </p>
         </div>
       </div>
 
