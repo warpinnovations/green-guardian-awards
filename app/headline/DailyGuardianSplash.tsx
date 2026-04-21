@@ -11,7 +11,6 @@ interface DailyGuardianSplashProps {
   edition?: string;
   volume?: string;
   date?: string;
-  headline?: string;
   stats?: StatItem[];
   onReadArchive?: () => void;
 }
@@ -19,7 +18,6 @@ interface DailyGuardianSplashProps {
 export default function DailyGuardianSplash({
   edition = "Special Archive Edition",
   volume = "Vol. XXV · Est. 2001 · April 2026",
-  headline = "Turning a New Page",
   onReadArchive,
 }: DailyGuardianSplashProps) {
   return (
@@ -51,19 +49,10 @@ export default function DailyGuardianSplash({
             <Image src="/25-years-dg.png" className="-mt-10" alt="25 Years of the Daily Guardian" width={210} height={100} />
             {/* Headline */}
             <h2
-              className="text-[32px] mb-7 mt-5 font-bold leading-[1.1] text-white"
-              style={{ fontFamily: "'Times New Roman', serif" }}
+              className="text-[40px] font-sans mb-7 mt-5 font-bold leading-[1.1] text-white uppercase"
             >
-              {headline.split(" ").map((word, i) => (
-                <span key={i}>
-                  {i === 2 ? (
-                    <em className="not-italic text-[#ffde00]">{word}</em>
-                  ) : (
-                    word
-                  )}
-                  {i < headline.split(" ").length - 1 ? " " : null}
-                </span>
-              ))}
+              TURNING A<br />
+              <span className="text-[#ffde00]">NEW</span> <span className="opacity-20">P</span>AGE
             </h2>
 
           </div>
