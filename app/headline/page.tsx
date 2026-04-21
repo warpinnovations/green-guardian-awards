@@ -7,6 +7,7 @@ import DailyGuardianSplash from "./DailyGuardianSplash";
 
 type NewsPage =
   | { type: "cover"; total: number }
+  | { type: "primer" }
   | { type: "headline"; item: Headline; pageNum: number; total: number }
   | { type: "closing" };
 
@@ -48,6 +49,79 @@ function accentForTopic(topic: string): string {
   if (t.includes("drug") || t.includes("crime") || t.includes("gang") || t.includes("bomb"))
     return "#5c1a6b";
   return "#3a2a1a";
+}
+
+function PrimerPage() {
+  return (
+    <div className="relative items-center flex min-h-screen w-full flex-col bg-[#0e0c00] font-serif overflow-hidden">
+      {/* Masthead */}
+      <div className="shrink-0 border-b border-[#2a2200] px-5 pb-3 text-center py-3">
+        <p className="mb-2 font-sans text-[8px] font-bold uppercase tracking-[4px] text-[#ffde00] mt-4">
+          25th Anniversary Edition
+        </p>
+        <h1 className="mb-1 text-xl font-bold leading-none tracking-[2px] text-white">
+          THE {" "}
+          <span className="text-[#ffde00]">DAILY GUARDIAN</span>
+        </h1>
+        <div className="mx-auto mb-3 h-0.5 w-14 bg-[#ffde00]" />
+        <p className="font-sans text-[8px] uppercase tracking-[2px] text-[#555]">
+          Vol. XXV · Est. 2001 · April 2026
+        </p>
+      </div>
+
+      {/* Content Section */}
+      <div className="relative flex flex-1 flex-col overflow-y-auto bg-[#1a1400] px-8 py-5">
+        {/* Ghost "25" watermark */}
+        <div
+          className="pointer-events-none absolute -bottom-6 -right-2 select-none font-sans text-[150px] font-black leading-none text-[#c9a227]"
+          style={{ opacity: 0.05 }}
+          aria-hidden="true"
+        >
+          25
+        </div>
+
+        <div className="relative z-10 flex flex-col max-w-lg">
+          {/* Title */}
+          <div className="text-center mb-6">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-12 h-px bg-[#c9a227]" />
+              <h2 className="text-[28px] font-sans font-black text-[#ffde00] uppercase tracking-tight">
+                25 Headlines
+              </h2>
+              <div className="w-12 h-px bg-[#c9a227]" />
+            </div>
+            <p className="text-[11px] font-sans uppercase tracking-[3px] text-[#c9a227]">
+              That Shaped Our Community
+            </p>
+          </div>
+
+          {/* Body Copy */}
+          <div className="space-y-3 text-[#ccc] font-sans text-[12px] leading-[1.8]">
+            <p>
+              For 25 years, <span className="text-white font-semibold">The Daily Guardian</span> has stood as a beacon of truth in Western Visayas. Through triumphs and tragedies, elections and emergencies, we&apos;ve chronicled the stories that matter most to our community.
+            </p>
+            <p>
+              On these pages, we&apos;ve curated <span className="text-[#ffde00]">25 defining headlines</span> from our archives—moments that moved us, challenged us, and reminded us of journalism&apos;s vital role in democracy.
+            </p>
+            <p>
+              From the devastation of Typhoon Frank to the resilience shown during the COVID-19 pandemic, from hard-won electoral victories to the ongoing pursuit of justice—each headline represents our unwavering commitment to accountability and service.
+            </p>
+
+            {/* Decorative ornament */}
+            <div className="flex items-center justify-center gap-2 py-4">
+              <div className="w-8 h-px bg-[#c9a227]" />
+              <div className="w-2 h-2 rotate-45 border border-[#c9a227]" />
+              <div className="w-8 h-px bg-[#c9a227]" />
+            </div>
+
+            <p className="text-center text-[13px] italic text-[#999]">
+              Turn the page to journey through the stories<br />that shaped Iloilo and beyond.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ClosingPage() {
@@ -114,20 +188,6 @@ function ClosingPage() {
               <div className="w-1.5 h-1.5 rounded-full bg-[#c9a227]" />
               <div className="flex-1 h-px bg-linear-to-l from-transparent to-[#c9a227]" />
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Section */}
-      <div className="shrink-0 bg-[#ffde00]">
-        <div className="flex items-center justify-center bg-[#0e0c00] px-5 py-4 border-t border-[#2a2200]">
-          <div className="text-center">
-            <p className="text-[#ffde00] font-bold text-[12px] tracking-[3px] uppercase">
-              The Daily Guardian
-            </p>
-            <p className="text-[#888] text-[10px] tracking-[2px] mt-1">
-              Iloilo, Philippines
-            </p>
           </div>
         </div>
       </div>
@@ -221,7 +281,7 @@ function HeadlinePage({ item, pageNum, total, isPriority }: HeadlinePageProps) {
 
       {/* ── Headline caption ── */}
       <div
-        className="shrink-0 px-4.5 pt-2.5 pb-6 bg-white/30 mt-2"
+        className="shrink-0 px-4.5 pt-2.5 pb-6 bg-orange-950/10 mt-2"
         style={{ borderColor: accent }}
       >
         <p className="m-0 text-[clamp(12px,1.8vw,14px)] font-bold leading-tight text-[#1a150e] tracking-[0.01em]">
@@ -289,14 +349,16 @@ function Leaf({
   const content =
     page.type === "cover"
       ? <DailyGuardianSplash onReadArchive={() => onFlip("forward")} />
-      : page.type === "closing"
-        ? <ClosingPage />
-        : <HeadlinePage
-          item={page.item}
-          pageNum={page.pageNum}
-          total={page.total}
-          isPriority={isPriority}
-        />;
+      : page.type === "primer"
+        ? <PrimerPage />
+        : page.type === "closing"
+          ? <ClosingPage />
+          : <HeadlinePage
+            item={page.item}
+            pageNum={page.pageNum}
+            total={page.total}
+            isPriority={isPriority}
+          />;
 
   return (
     <div
@@ -507,6 +569,7 @@ export default function NewspaperPage() {
   // Pure data, no JSX, no currentSpread dep → created once, never changes
   const pages = useMemo<NewsPage[]>(() => [
     { type: "cover", total: headlines.length },
+    { type: "primer" },
     ...headlines.map((item, i) => ({
       type: "headline" as const,
       item,
