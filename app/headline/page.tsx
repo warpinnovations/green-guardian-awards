@@ -7,7 +7,8 @@ import DailyGuardianSplash from "./DailyGuardianSplash";
 
 type NewsPage =
   | { type: "cover"; total: number }
-  | { type: "headline"; item: Headline; pageNum: number; total: number };
+  | { type: "headline"; item: Headline; pageNum: number; total: number }
+  | { type: "closing" };
 
 type FlipDirection = "forward" | "backward";
 type AnimationState = "idle" | "flipping";
@@ -47,6 +48,91 @@ function accentForTopic(topic: string): string {
   if (t.includes("drug") || t.includes("crime") || t.includes("gang") || t.includes("bomb"))
     return "#5c1a6b";
   return "#3a2a1a";
+}
+
+function ClosingPage() {
+  return (
+    <div className="relative flex min-h-screen w-full flex-col bg-[#0e0c00] font-serif overflow-hidden">
+      {/* Masthead */}
+      <div className="shrink-0 border-b border-[#2a2200] px-5 pb-3 text-center py-10">
+        <p className="mb-2 font-sans text-[8px] font-bold uppercase tracking-[4px] text-[#ffde00] mt-6">
+          25th Anniversary Edition
+        </p>
+        <h1 className="mb-1 text-2xl font-bold leading-none tracking-[2px] text-white">
+          THE {" "}
+          <span className="text-[#ffde00]">DAILY GUARDIAN</span>
+        </h1>
+        {/* Gold underline */}
+        <div className="mx-auto mb-3 h-0.5 w-14 bg-[#ffde00]" />
+        <p className="font-sans text-[8px] uppercase tracking-[2px] text-[#555]">
+          Vol. XXV · Est. 2001 · April 2026
+        </p>
+      </div>
+
+      {/* Hero Section — fills remaining space */}
+      <div className="relative flex flex-1 flex-col overflow-hidden bg-[#1a1400]">
+        {/* Ghost "25" watermark */}
+        <div
+          className="pointer-events-none absolute -bottom-6 -right-2 select-none font-sans text-[150px] font-black leading-none text-[#c9a227]"
+          style={{ opacity: 0.05 }}
+          aria-hidden="true"
+        >
+          25
+        </div>
+
+        {/* Hero content */}
+        <div className="relative z-10 flex flex-1 flex-col justify-center px-8 transition-all duration-700 translate-y-0 opacity-100">
+          <div className="flex flex-col items-center gap-10 max-w-md mx-auto">
+            {/* Decorative top line */}
+            <div className="flex items-center gap-3 w-full">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#c9a227]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#c9a227]" />
+              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#c9a227]" />
+            </div>
+
+            <h2 className="text-[42px] font-sans font-black leading-[0.95] text-white uppercase text-center tracking-tight">
+              TURNING A<br />
+              <span className="text-[#ffde00]">NEW</span> <span className="opacity-20">P</span>AGE
+            </h2>
+
+            {/* Decorative middle ornament */}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-px bg-[#c9a227]" />
+              <div className="w-2 h-2 rotate-45 border border-[#c9a227]" />
+              <div className="w-8 h-px bg-[#c9a227]" />
+            </div>
+
+            <div className="text-center space-y-3">
+              <p className="text-[15px] leading-[1.8] text-[#bbb] font-sans">
+                Twenty-five years of stories told, countless more await. As we turn this new page, our promise remains: truth, accountability, and service to our community.
+              </p>
+            </div>
+
+            {/* Decorative bottom line */}
+            <div className="flex items-center gap-3 w-full">
+              <div className="flex-1 h-px bg-linear-to-r from-transparent to-[#c9a227]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#c9a227]" />
+              <div className="flex-1 h-px bg-linear-to-l from-transparent to-[#c9a227]" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Section */}
+      <div className="shrink-0 bg-[#ffde00]">
+        <div className="flex items-center justify-center bg-[#0e0c00] px-5 py-4 border-t border-[#2a2200]">
+          <div className="text-center">
+            <p className="text-[#ffde00] font-bold text-[12px] tracking-[3px] uppercase">
+              The Daily Guardian
+            </p>
+            <p className="text-[#888] text-[10px] tracking-[2px] mt-1">
+              Iloilo, Philippines
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function HeadlinePage({ item, pageNum, total, isPriority }: HeadlinePageProps) {
@@ -96,7 +182,7 @@ function HeadlinePage({ item, pageNum, total, isPriority }: HeadlinePageProps) {
       {/* ── Hero image ── */}
       <div className={`flex-1 relative mx-4.5 min-h-0 overflow-hidden border border-black/18 flex items-center justify-center ${pageNum > 21 ? "bg-[#1a150e]" : "bg-white"}`}>
         {item.link ? (
-          <a 
+          <a
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
@@ -203,12 +289,14 @@ function Leaf({
   const content =
     page.type === "cover"
       ? <DailyGuardianSplash onReadArchive={() => onFlip("forward")} />
-      : <HeadlinePage
-        item={page.item}
-        pageNum={page.pageNum}
-        total={page.total}
-        isPriority={isPriority}
-      />;
+      : page.type === "closing"
+        ? <ClosingPage />
+        : <HeadlinePage
+          item={page.item}
+          pageNum={page.pageNum}
+          total={page.total}
+          isPriority={isPriority}
+        />;
 
   return (
     <div
@@ -425,6 +513,7 @@ export default function NewspaperPage() {
       pageNum: i + 1,
       total: headlines.length,
     })),
+    { type: "closing" },
   ], []);
 
   return (
