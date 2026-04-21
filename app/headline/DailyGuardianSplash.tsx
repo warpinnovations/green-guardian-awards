@@ -46,10 +46,10 @@ export default function DailyGuardianSplash({
           className="relative z-10 flex flex-1 flex-col justify-center px-5 transition-all duration-700 translate-y-0 opacity-100"
         >
           <div className="flex flex-col items-center">
-            <Image src="/25-years-dg.png" className="-mt-10" alt="25 Years of the Daily Guardian" width={210} height={100} />
+            <Image src="/25-years-dg.png" className="-mt-10" alt="25 Years of the Daily Guardian" width={190} height={100} />
             {/* Headline */}
             <h2
-              className="text-[40px] font-sans mb-12 mt-5 font-bold leading-[1.1] text-white uppercase"
+              className="text-[40px] font-sans mb-16 mt-5 font-bold leading-[1.1] text-white uppercase"
             >
               TURNING A<br />
               <span className="text-[#ffde00]">NEW</span> <span className="opacity-20">P</span>AGE
@@ -72,11 +72,6 @@ export default function DailyGuardianSplash({
           </button>
           <span className="text-base text-[#ffde00]">›</span>
         </div>
-      </div>
-
-      {/* Home Indicator */}
-      <div className="flex items-center justify-center bg-[#0e0c00] py-2">
-        <div className="h-1 w-24 rounded-full bg-[#2a2200]" />
       </div>
     </div>
   );
