@@ -40,21 +40,50 @@ export default function DailyGuardianSplash({
 
       {/* Hero Section — fills remaining space */}
       <div className="relative flex flex-1 flex-col overflow-hidden bg-[#1a1400]">
+        {/* Ghost "25" watermark */}
+        <div
+          className="pointer-events-none absolute -bottom-6 -right-2 select-none font-sans text-[150px] font-black leading-none text-[#c9a227]"
+          style={{ opacity: 0.05 }}
+          aria-hidden="true"
+        >
+          25
+        </div>
 
         {/* Hero content */}
         <div
-          className="relative z-10 flex flex-1 flex-col justify-center px-5 transition-all duration-700 translate-y-0 opacity-100"
+          className="relative z-10 flex flex-1 flex-col justify-center px-8 transition-all duration-700 translate-y-0 opacity-100"
         >
-          <div className="flex flex-col items-center gap-8">
-            <Image src="/25-years-dg.png" alt="25 Years of the Daily Guardian" width={190} height={100} />
+          <div className="flex flex-col items-center gap-6 max-w-md mx-auto">
+            {/* Decorative top line */}
+            <div className="flex items-center gap-3 w-full">
+              <div className="flex-1 h-px bg-linear-to-r from-transparent to-[#c9a227]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#c9a227]" />
+              <div className="flex-1 h-px bg-linear-to-l from-transparent to-[#c9a227]" />
+            </div>
+
+            <Image src="/25-years-dg.png" alt="25 Years of the Daily Guardian" width={170} height={60} />
+
+            {/* Decorative middle ornament */}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-px bg-[#c9a227]" />
+              <div className="w-2 h-2 rotate-45 border border-[#c9a227]" />
+              <div className="w-8 h-px bg-[#c9a227]" />
+            </div>
+
             {/* Headline */}
             <h2
-              className="text-[40px] font-sans font-bold leading-[1.1] text-white uppercase"
+              className="text-[42px] font-sans font-black leading-[0.95] text-white uppercase text-center tracking-tight"
             >
               TURNING A<br />
               <span className="text-[#ffde00]">NEW</span> <span className="opacity-20">P</span>AGE
             </h2>
 
+            {/* Decorative bottom line */}
+            <div className="flex items-center gap-3 w-full">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#c9a227]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#c9a227]" />
+              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#c9a227]" />
+            </div>
           </div>
         </div>
       </div>
@@ -66,7 +95,7 @@ export default function DailyGuardianSplash({
         <div className="flex items-center justify-between bg-[#0e0c00] px-5 py-3" onClick={onReadArchive}>
           <button
             onClick={onReadArchive}
-            className="font-sans text-[9px] font-bold uppercase tracking-[2px] text-[#ffde00] transition-opacity hover:opacity-70 active:opacity-50"
+            className="font-sans text-[9px] py-4 font-bold uppercase tracking-[2px] text-[#ffde00] transition-opacity hover:opacity-70 active:opacity-50"
           >
             Read Archive Edition
           </button>
