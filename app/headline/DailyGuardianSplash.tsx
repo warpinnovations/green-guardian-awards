@@ -49,7 +49,7 @@ export default function DailyGuardianSplash({
             <Image src="/25-years-dg.png" className="-mt-10" alt="25 Years of the Daily Guardian" width={190} height={100} />
             {/* Headline */}
             <h2
-              className="text-[40px] font-sans mb-16 mt-5 font-bold leading-[1.1] text-white uppercase"
+              className="text-[40px] font-sans mb-24 mt-5 font-bold leading-[1.1] text-white uppercase"
             >
               TURNING A<br />
               <span className="text-[#ffde00]">NEW</span> <span className="opacity-20">P</span>AGE
