@@ -3,6 +3,7 @@
 import React, { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { Headline, headlines } from "../constants/headline";
+import DailyGuardianSplash from "./DailyGuardianSplash";
 
 type NewsPage =
   | { type: "cover"; total: number }
@@ -19,6 +20,7 @@ interface LeafProps {
   isFlipping: boolean;
   flipDirection: FlipDirection;
   activeLeaf: number | null;
+  onFlip: (direction: FlipDirection) => void;
 }
 
 interface HeadlinePageProps {
@@ -26,10 +28,6 @@ interface HeadlinePageProps {
   pageNum: number;
   total: number;
   isPriority: boolean;
-}
-
-interface CoverPageProps {
-  total: number;
 }
 
 interface FlippingBookProps {
@@ -54,47 +52,93 @@ function accentForTopic(topic: string): string {
 function HeadlinePage({ item, pageNum, total, isPriority }: HeadlinePageProps) {
   const accent = accentForTopic(item.topic);
 
-  return (
-    <div className="w-full h-full flex flex-col relative overflow-hidden bg-[#f5f0e8] font-serif">
+  // Helper to render date with highlighted year
+  const renderDateWithHighlightedYear = (date: string) => {
+    const yearMatch = date.match(/(\d{4})/);
+    if (!yearMatch) return date;
 
-      {/* ── Top rule + kicker ── */}
-      <div className="flex items-start gap-2 my-4 mr-2">
-        <div className="h-1 w-5 mt-1 shrink-0" style={{ background: accent }} />
+    const year = yearMatch[0];
+    const parts = date.split(year);
+
+    return (
+      <div className="flex flex-col items-end gap-1">
         <span
-          className="text-[9px] font-bold uppercase tracking-[0.22em] leading-tight flex-1"
-          style={{ color: accent }}
+          className="inline-block text-gray-800 rounded-lg px-7 py-0.5 text-[30px] -mr-7 font-bold bg-white"
         >
-          {item.topic}
+          {year}
         </span>
-        <div className="shrink-0 h-px w-3 bg-black/15 mt-1.5" />
-        <span className="text-[9px] tracking-[0.12em] text-[#6b5438] italic shrink-0 whitespace-nowrap">
-          {item.date}
+        <span className="text-[14px] -mt-2 font-medium">
+          {parts[0].replace(/,/g, '')}{parts[1].replace(/,/g, '')}
         </span>
+      </div>
+    );
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col relative overflow-hidden bg-[#ffde00] font-serif">
+
+      {/* ── Topic and Date ── */}
+      <div className="flex items-start justify-between px-4 pt-4 pb-2">
+        <div className="flex-1">
+          <span
+            className="text-[12px] font-bold uppercase tracking-[0.22em] leading-tight inline-block"
+            style={{ color: accent }}
+          >
+            {item.topic}
+          </span>
+          <div className="h-1 w-10 mt-1" style={{ background: accent }} />
+        </div>
+        <div className="tracking-[0.12em] text-[#6b5438] italic ml-4">
+          {renderDateWithHighlightedYear(item.date)}
+        </div>
       </div>
 
       {/* ── Hero image ── */}
       <div className={`flex-1 relative mx-4.5 min-h-0 overflow-hidden border border-black/18 flex items-center justify-center ${pageNum > 21 ? "bg-[#1a150e]" : "bg-white"}`}>
-        <Image
-          src={item.imageUrl}
-          alt={item.topic}
-          width={600}
-          height={600}
-          className="object-contain w-full h-full"
-          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-            e.currentTarget.style.display = "none";
-            const parent = e.currentTarget.parentElement as HTMLElement;
-            parent.style.background = `linear-gradient(160deg, ${accent}22, ${accent}55)`;
-          }}
-          priority={isPriority}
-        />
+        {item.link ? (
+          <a 
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full h-full flex items-center justify-center"
+          >
+            <Image
+              src={item.imageUrl}
+              alt={item.topic}
+              width={600}
+              height={600}
+              className="object-contain w-full h-full"
+              onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                e.currentTarget.style.display = "none";
+                const parent = e.currentTarget.parentElement as HTMLElement;
+                parent.style.background = `linear-gradient(160deg, ${accent}22, ${accent}55)`;
+              }}
+              priority={isPriority}
+            />
+          </a>
+        ) : (
+          <Image
+            src={item.imageUrl}
+            alt={item.topic}
+            width={600}
+            height={600}
+            className="object-contain w-full h-full"
+            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+              e.currentTarget.style.display = "none";
+              const parent = e.currentTarget.parentElement as HTMLElement;
+              parent.style.background = `linear-gradient(160deg, ${accent}22, ${accent}55)`;
+            }}
+            priority={isPriority}
+          />
+        )}
       </div>
 
       {/* ── Headline caption ── */}
       <div
-        className="shrink-0 px-4.5 pt-2.5 pb-1.5 bg-[#f5f0e8] border-t-2"
+        className="shrink-0 px-4.5 pt-2.5 pb-6 bg-white/30 mt-2"
         style={{ borderColor: accent }}
       >
-        <p className="m-0 text-[clamp(11px,1.8vw,14px)] font-bold leading-tight text-[#1a150e] tracking-[0.01em]">
+        <p className="m-0 text-[clamp(12px,1.8vw,14px)] font-bold leading-tight text-[#1a150e] tracking-[0.01em]">
           {item.headline}
         </p>
         {item.link && (
@@ -102,8 +146,8 @@ function HeadlinePage({ item, pageNum, total, isPriority }: HeadlinePageProps) {
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block mt-1.5 text-[9px] tracking-[0.12em] uppercase no-underline pb-px"
-            style={{ color: accent, borderBottom: `1px solid ${accent}55` }}
+            className="inline-block mt-1.5 text-[9px] text-black tracking-[0.12em] uppercase no-underline pb-px font-bold"
+            style={{ borderBottom: `1px solid ${accent}55` }}
           >
             Read original ↗
           </a>
@@ -112,42 +156,13 @@ function HeadlinePage({ item, pageNum, total, isPriority }: HeadlinePageProps) {
 
       {/* ── Footer ── */}
       <div className="shrink-0 px-4.5 pt-1 pb-2.5 flex justify-between items-center border-t border-black/10">
-        <span className="text-[8px] tracking-[0.15em] text-[#9b7c5a] uppercase">
+        <span className="text-[10px] tracking-[0.15em] text-[#9b7c5a] uppercase">
           The Daily Guardian
         </span>
-        <span className="text-[8px] tracking-[0.12em] text-[#9b7c5a]">
+        <span className="text-[10px] tracking-[0.12em] text-[#9b7c5a]">
           {pageNum} / {total}
         </span>
       </div>
-    </div>
-  );
-}
-
-function CoverPage({ total }: CoverPageProps) {
-  return (
-    <div className="w-full h-full bg-[#1a150e] flex flex-col items-center justify-center font-serif p-8 box-border relative overflow-hidden">
-      <div className="w-full border-t border-[#c8a84b] mb-3.5" />
-      <div className="w-full border-t-[3px] border-[#c8a84b] mb-5" />
-
-      <p className="text-[#c8a84b] tracking-[0.35em] text-[10px] uppercase m-0 mb-3">
-        Special Edition
-      </p>
-
-      <h1 className="text-[#f5f0e8] font-black text-center leading-[1.05] m-0 mb-2 tracking-[0.04em] text-[clamp(1.6rem,5vw,2.8rem)]">
-        THE DAILY<br />GUARDIAN
-      </h1>
-
-      <div className="w-15 h-0.5 bg-[#c8a84b] mx-auto my-4" />
-
-      <p className="text-[#c8a84b] text-xs text-center italic m-0 mb-1.5 tracking-[0.06em]">
-        Two Decades of Headlines
-      </p>
-      <p className="text-[rgba(200,168,75,0.55)] text-[10px] text-center tracking-[0.14em] m-0 mb-8">
-        2002 — 2025
-      </p>
-
-      <div className="w-full border-t-[3px] border-[#c8a84b] mb-2" />
-      <div className="w-full border-t border-[#c8a84b]" />
     </div>
   );
 }
@@ -159,6 +174,7 @@ function Leaf({
   isFlipping,
   flipDirection,
   activeLeaf,
+  onFlip,
 }: LeafProps) {
   const isPast = index < currentSpread;
   const isCurrent = index === currentSpread;
@@ -186,7 +202,7 @@ function Leaf({
 
   const content =
     page.type === "cover"
-      ? <CoverPage total={page.total} />
+      ? <DailyGuardianSplash onReadArchive={() => onFlip("forward")} />
       : <HeadlinePage
         item={page.item}
         pageNum={page.pageNum}
@@ -294,30 +310,11 @@ function FlippingBook({ pages, currentSpread, onSpreadChange }: FlippingBookProp
   }, [flip]);
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen py-6 px-4 bg-[#ffde00] font-serif">
-
-      {/* ── Masthead ── */}
-      <header className="w-full max-w-2xl mb-3">
-        <div className="border-t-4 border-[#c8a84b] pt-2 pb-1">
-          <div className="flex items-center justify-between text-[10px] mb-1.5 px-1 text-[#1a150e] tracking-[0.14em]">
-            <span>SPECIAL ARCHIVE EDITION</span>
-            <span>✦ EST. 2002 ✦</span>
-          </div>
-          <div className="text-center">
-            <h1
-              className="font-black leading-none text-[#1a150e] text-[clamp(1.7rem,6vw,4rem)]"
-              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.2)" }}
-            >
-              THE DAILY GUARDIAN
-            </h1>
-          </div>
-        </div>
-        <div className="h-px mt-1 bg-[rgba(200,168,75,0.2)]" />
-      </header>
+    <div className="flex flex-col items-center justify-center w-full h-screen bg-[#ffde00] font-serif">
 
       {/* ── Paper ── */}
       <div
-        className="relative w-full max-w-2xl cursor-grab active:cursor-grabbing"
+        className="relative w-full max-w-2xl h-full cursor-grab active:cursor-grabbing"
         style={{ perspective: "2800px" }}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -336,15 +333,14 @@ function FlippingBook({ pages, currentSpread, onSpreadChange }: FlippingBookProp
 
         {/* Page stack */}
         <div
-          className="relative"
+          className="relative h-full"
           style={{
-            height: "min(820px, 78vh)",
             transformStyle: "preserve-3d",
             boxShadow: "0 10px 60px rgba(0,0,0,0.7), 2px 0 0 rgba(0,0,0,0.2)",
           }}
         >
           {/* Backing sheet */}
-          <div className="absolute inset-0 bg-[#e2d9c4]" style={{ zIndex: 0 }} />
+          <div className="absolute inset-0 bg-[#ffde00]" style={{ zIndex: 0 }} />
 
           {pages.map((page, i) => {
             const isNear = Math.abs(i - currentSpread) <= 3;
@@ -360,6 +356,7 @@ function FlippingBook({ pages, currentSpread, onSpreadChange }: FlippingBookProp
                 isFlipping={animState === "flipping" && activeLeaf === i}
                 flipDirection={flipDirection}
                 activeLeaf={activeLeaf}
+                onFlip={flip}
               />
             );
           })}
@@ -411,48 +408,6 @@ function FlippingBook({ pages, currentSpread, onSpreadChange }: FlippingBookProp
             )}
           </button>
         </div>
-      </div>
-
-      {/* ── Bottom nav ── */}
-      <div className="flex items-center gap-6 mt-5">
-        <button
-          onClick={() => flip("backward")}
-          disabled={!canGoBackward || animState !== "idle"}
-          className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase text-[#c8a84b] disabled:opacity-20 transition-opacity"
-        >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M8 2L3 6L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          Prev
-        </button>
-
-        <div className="flex gap-1 items-center overflow-hidden max-w-40">
-          {pages.map((_, i) => (
-            <div
-              key={i}
-              className="rounded-full transition-all duration-300 shrink-0 h-1"
-              style={{
-                width: i === currentSpread ? 16 : 4,
-                background: i === currentSpread
-                  ? "#c8a84b"
-                  : Math.abs(i - currentSpread) <= 4
-                    ? "rgba(200,168,75,0.3)"
-                    : "rgba(200,168,75,0.1)",
-              }}
-            />
-          ))}
-        </div>
-
-        <button
-          onClick={() => flip("forward")}
-          disabled={!canGoForward || animState !== "idle"}
-          className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase text-[#c8a84b] disabled:opacity-20 transition-opacity"
-        >
-          Next
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M4 2L9 6L4 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        </button>
       </div>
     </div>
   );
