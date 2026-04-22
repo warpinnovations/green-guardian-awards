@@ -59,18 +59,14 @@ function PrimerPage() {
         <p className="mb-2 font-sans text-[8px] font-bold uppercase tracking-[4px] text-[#ffde00] mt-4">
           25th Anniversary Edition
         </p>
-        <h1 className="mb-1 text-xl font-bold leading-none tracking-[2px] text-white">
-          THE {" "}
-          <span className="text-[#ffde00]">DAILY GUARDIAN</span>
-        </h1>
-        <div className="mx-auto mb-3 h-0.5 w-14 bg-[#ffde00]" />
+        <Image src={'/dg-logo.png'} alt="Daily Guardian Logo" width={200} height={100} className="mx-auto mb-1" />
         <p className="font-sans text-[8px] uppercase tracking-[2px] text-[#555]">
           Vol. XXV · Est. 2001 · April 2026
         </p>
       </div>
 
       {/* Content Section */}
-      <div className="relative flex flex-1 flex-col overflow-y-auto bg-[#1a1400] px-8 py-5">
+      <div className="relative flex flex-1 flex-col bg-[#1a1400] px-8 py-5">
         {/* Ghost "25" watermark */}
         <div
           className="pointer-events-none absolute -bottom-6 -right-2 select-none font-sans text-[150px] font-black leading-none text-[#c9a227]"
@@ -132,12 +128,7 @@ function ClosingPage() {
         <p className="mb-2 font-sans text-[8px] font-bold uppercase tracking-[4px] text-[#ffde00] mt-6">
           25th Anniversary Edition
         </p>
-        <h1 className="mb-1 text-2xl font-bold leading-none tracking-[2px] text-white">
-          THE {" "}
-          <span className="text-[#ffde00]">DAILY GUARDIAN</span>
-        </h1>
-        {/* Gold underline */}
-        <div className="mx-auto mb-3 h-0.5 w-14 bg-[#ffde00]" />
+        <Image src={'/dg-logo.png'} alt="Daily Guardian Logo" width={200} height={100} className="mx-auto mb-1" />
         <p className="font-sans text-[8px] uppercase tracking-[2px] text-[#555]">
           Vol. XXV · Est. 2001 · April 2026
         </p>
@@ -159,9 +150,9 @@ function ClosingPage() {
           <div className="flex flex-col items-center gap-10 max-w-md mx-auto">
             {/* Decorative top line */}
             <div className="flex items-center gap-3 w-full">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#c9a227]" />
+              <div className="flex-1 h-px bg-linear-to-r from-transparent to-[#c9a227]" />
               <div className="w-1.5 h-1.5 rounded-full bg-[#c9a227]" />
-              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#c9a227]" />
+              <div className="flex-1 h-px bg-linear-to-l from-transparent to-[#c9a227]" />
             </div>
 
             <h2 className="text-[42px] font-sans font-black leading-[0.95] text-white uppercase text-center tracking-tight">

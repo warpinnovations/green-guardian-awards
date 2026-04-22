@@ -27,12 +27,7 @@ export default function DailyGuardianSplash({
         <p className="mb-2 font-sans text-[8px] font-bold uppercase tracking-[4px] text-[#ffde00] mt-6">
           {edition}
         </p>
-        <h1 className="mb-1 text-2xl font-bold leading-none tracking-[2px] text-white">
-          THE {" "}
-          <span className="text-[#ffde00]">DAILY GUARDIAN</span>
-        </h1>
-        {/* Gold underline */}
-        <div className="mx-auto mb-3 h-0.5 w-14 bg-[#ffde00]" />
+        <Image src={'/dg-logo.png'} alt="Daily Guardian Logo" width={200} height={100} className="mx-auto mb-1" />
         <p className="font-sans text-[8px] uppercase tracking-[2px] text-[#555]">
           {volume}
         </p>
