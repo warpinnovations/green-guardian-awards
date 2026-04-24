@@ -151,14 +151,14 @@ export const headlines: Headline[] = [
     "date": "March 9, 2024",
     "topic": "WVSUCAT",
     "headline": "20,925 students to take WVSUCAT: West Visayas State University (WVSU) received its largest number of applications to take its WVSU College Admission test (WVSUCAT), the university said Saturday.",
-    "imageUrl": "https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/sign/dg-headlines/2024.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hMTM0NWQyNy1hYzA5LTRjMzctYmYyZC0wNGUwMjYyNTI0Y2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkZy1oZWFkbGluZXMvMjAyNC5qcGciLCJpYXQiOjE3NzQzNDEzMjIsImV4cCI6MTgwNTg3NzMyMn0.MW68DDSI8uMsxBd8PJfGcK7F8UfmaQtHg-Ii0VgJr4s",
+    "imageUrl": "https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/public/dg-headlines/2024.jpg",
     "link": "https://www.facebook.com/share/p/14d7QKZaorK/"
   },
   {
     "date": "March 12, 2025",
     "topic": "Duterte Arrested",
     "headline": "‘HE HAD IT COMING’: Ex-Pres Duterte Arrested for Crimes Against Humanity",
-    "imageUrl": "https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/sign/dg-headlines/2025.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hMTM0NWQyNy1hYzA5LTRjMzctYmYyZC0wNGUwMjYyNTI0Y2IiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkZy1oZWFkbGluZXMvMjAyNS5wbmciLCJpYXQiOjE3NzQzNDEzMzUsImV4cCI6MTgwNTg3NzMzNX0.s4L_f1Mo4tQK6K4mgEKF1x_gwS07-0aMxWJIDkrZY9Q",
+    "imageUrl": "https://dguqzwftkuulbfctxqrf.supabase.co/storage/v1/object/public/dg-headlines/2025.jpg",
     "link": "https://dailygcanauardian.com.ph/he-had-it-coming-ex-pres-duterte-arrested-for-crimes-against-humanity/"
   }
 ];

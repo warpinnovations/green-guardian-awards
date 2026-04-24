@@ -231,7 +231,7 @@ function HeadlinePage({ item, pageNum, total, isPriority }: HeadlinePageProps) {
       </div>
 
       {/* ── Hero image ── */}
-      <div className={`flex-1 relative mx-4.5 min-h-0 overflow-hidden border border-black/18 flex items-center justify-center ${pageNum > 21 ? "bg-[#1a150e]" : "bg-white"}`}>
+      <div className={`flex-1 relative mx-4.5 min-h-0 overflow-hidden border border-black/18 flex items-center justify-center ${pageNum === 22 ? "bg-[#1a150e]" : "bg-white"}`}>
         {item.link ? (
           <a
             href={item.link}
