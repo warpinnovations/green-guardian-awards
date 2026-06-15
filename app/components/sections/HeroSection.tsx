@@ -119,20 +119,20 @@ export default function HeroSection() {
                   </div>
 
                   <p className="text-white/90 text-sm leading-relaxed text-center lg:text-left animate-fade-in-up pt-5 mt-8" style={{ animationDelay: "1.2s" }}>
-                     Need help? Contact committee:
+                     Need help? Contact committee: 
                      <br className="sm:hidden" />
                      <a
                         href="mailto:dailyguardianmarketing@gmail.com"
                         className="font-semibold break-all hover:underline"
                      >
-                        dailyguardianmarketing@gmail.com
+                        &nbsp;dailyguardianmarketing@gmail.com
                      </a>
                      <span className="hidden sm:inline"> | </span>
                      <br className="sm:hidden" />
                      <a href="tel:+639171371799" className="font-semibold hover:underline">
                         +63&nbsp;917&nbsp;137&nbsp;1799
                      </a>
-                     {" / "}
+                     {" | "}
                      <a href="tel:+639171123139" className="font-semibold hover:underline">
                         +63&nbsp;917&nbsp;112&nbsp;3139
                      </a>
