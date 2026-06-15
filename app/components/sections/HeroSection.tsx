@@ -1,12 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import DGLogo from "../../../public/logos/dg-logo-black.png";
 
 
 export default function HeroSection() {
-   const router = useRouter();
    const primer = "Green Guardian Awards Primer.pdf";
 
    const scrollToId = (id: string) => {
@@ -15,23 +13,19 @@ export default function HeroSection() {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
    };
 
-   const goToSubmission = () => {
-      router.push('/submission');
-   }
-
    return (
-      <div className="min-h-screen bg-slate-100 text-white relative overflow-hidden">
+      <div className="min-h-screen bg-slate-100 text-white relative overflow-hidden font-(family-name:--font-poppins)">
          <div className="fixed inset-0 bg-gradient-radial " />
          {/* Navigation */}
          <nav className="relative z-50 px-4 lg:px-20 py-4">
-            <div className="max-w-400 mx-auto flex justify-between items-center">
+            <div className="max-w-400 mx-auto mt-5 flex justify-between items-center">
                <div className="flex items-center gap-4">
                   <Image
                      src={DGLogo}
                      alt="Daily Guardian"
                      width={250}
                      height={150}
-                     className="mb-2 mt-2 object-contain lg:w-62.5 w-48 invert"
+                     className="mb-2 mt-2 object-contain lg:w-72 w-52 invert"
                   />
                </div>
                <div className="lg:flex hidden gap-4">
@@ -52,10 +46,10 @@ export default function HeroSection() {
             </div>
          </nav>
          {/* Hero Section */}
-         <div className="relative max-w-400 mx-auto px-5 lg:px-20">
+         <div className="relative max-w-400 mx-auto px-5 lg:px-20 lg:pt-10">
             <div className="grid lg:grid-cols-[1.9fr_0.7fr] lg:gap-36 gap-20 items-start">
                <div className="lg:space-y-3 space-y-6">
-                  <h1 className="text-[40px] lg:text-[60px] font-black leading-none lg:mb-3 tracking-tighter animate-fade-in-up">
+                  <h1 className="text-[34px] lg:text-[52px] font-black leading-none lg:mb-3 tracking-tighter animate-fade-in-up">
                      <span className="font-alviona block bg-white/90 bg-clip-text text-transparent text-left">
                         GREEN GUARDIAN
                      </span>
@@ -64,14 +58,14 @@ export default function HeroSection() {
                      </span>
                   </h1>
                   <h2
-                     className="lg:text-2xl text-[20px] font-semibold text-white animate-fade-in-up text-left my-6"
+                     className="lg:text-xl text-[17px] font-semibold text-white animate-fade-in-up text-left my-6"
                      style={{ animationDelay: "0.2s" }}
                   >
                      Celebrating Sustainability and Ecological Innovation in
                      Iloilo
                   </h2>
                   <p
-                     className="lg:text-lg text-[16px] text-white leading-relaxed animate-fade-in-up my-4 text-left"
+                     className="lg:text-[15px] text-[14px] text-white leading-relaxed animate-fade-in-up my-4 text-left"
                      style={{ animationDelay: "0.4s" }}
                   >
                      The Green Guardian Awards recognizes <span className="text-[#f3d107] font-semibold">Local Government Units (LGUs)</span>—including municipalities, the highly urbanized city (HUC), and the component city—as well as <span className="text-[#f3d107] font-semibold">micro, small, and medium enterprises (MSMEs) and large corporations</span> that champion sustainability, ecological innovation, and community-driven environmental action.
@@ -80,30 +74,51 @@ export default function HeroSection() {
                      className="animate-fade-in-up"
                      style={{ animationDelay: "0.8s" }}
                   >
-                     <p className="lg:text-lg text-[16px] leading-relaxed text-white/90 text-left mt-4">
+                     <p className="lg:text-[15px] text-[14px] leading-relaxed text-white/90 text-left mt-4">
                         Through this program, the Awards aim to foster a strong culture of environmental stewardship by honoring exemplary initiatives, showcasing best practices, and inspiring wider adoption of sustainable solutions throughout Iloilo.
                      </p>
                   </div>
                   {/* CTA Buttons */}
                   <div
-                     className="flex flex-col sm:flex-row gap-6 animate-fade-in-up mt-7"
+                     className="flex flex-col sm:flex-row gap-6 animate-fade-in-up mt-7 mb-5 pb-5"
                      style={{ animationDelay: "1s" }}
                   >
                      <button
                         onClick={() => scrollToId("nominate")}
-                        className="cursor-pointer px-10 py-3 rounded-2xl bg-linear-to-r from-[#f3d107]/90 to-amber-400/90 text-neutral-900/90 hover:shadow-xl hover:shadow-amber-400/50 transition-all duration-300 font-bold text-xl hover:-translate-y-1"
+                        className="cursor-pointer px-10 py-3 rounded-2xl bg-linear-to-r from-[#f3d107]/90 to-amber-400/90 text-neutral-900/90 hover:shadow-xl hover:shadow-amber-400/50 transition-all duration-300 font-bold text-lg hover:-translate-y-1"
                      >
                         Join the Awards
                      </button>
                      <a
                         href={`/api/download/${encodeURIComponent(primer)}`}
-                        className="text-center cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-xl hover:-translate-y-1"
+                        className="text-center cursor-pointer px-10 py-3 rounded-2xl border-2 border-white text-white hover:bg-[#8FC73F]/10 transition-all duration-300 font-bold text-lg hover:-translate-y-1"
                      >
                         Download Primer
                      </a>
                   </div>
 
-                  <p className="text-white/90 text-sm leading-relaxed text-center lg:text-left animate-fade-in-up mt-2" style={{ animationDelay: "1.2s" }}>
+                  {/* Co-presented by */}
+                  <div className="animate-fade-in-up mt-3 mb-5" style={{ animationDelay: "1.1s" }}>
+                     <p className="text-white/60 text-xs uppercase tracking-widest mb-3 text-center lg:text-left">Co-presented by</p>
+                     <div className="flex items-center gap-8 mt-3 justify-center lg:justify-start">
+                        <Image
+                           src="/logos/jci-logo.png"
+                           alt="JCI Philippines"
+                           width={140}
+                           height={140}
+                           className="object-contain h-14 w-auto"
+                        />
+                        <Image
+                           src="/logos/jci-regatta-2026-white.png"
+                           alt="Regatta 2026 All Aboard"
+                           width={260}
+                           height={120}
+                           className="object-contain h-14 w-auto"
+                        />
+                     </div>
+                  </div>
+
+                  <p className="text-white/90 text-sm leading-relaxed text-center lg:text-left animate-fade-in-up pt-5 mt-8" style={{ animationDelay: "1.2s" }}>
                      Need help? Contact committee:
                      <br className="sm:hidden" />
                      <a
