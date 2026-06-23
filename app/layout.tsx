@@ -19,11 +19,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Green Guardian Awards",
-  description: "Celebrating Sustainability and Ecological Innovation in Iloilo",
-  icons: {
-    icon: "/logos/asset-colored.png",
-  },
+  title: "Green Guardian Awards - Evaluator",
+  description: "Evaluator-Side for the Green Guardian Awards",
 };
 
 export default function RootLayout({
